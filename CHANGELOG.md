@@ -1,3 +1,15 @@
+## 0.1.9 - Thread Safety & Auto-Detection (2025-12-27)
+
+### Fixed
+- **CRITICAL**: Add threading lock to fix transaction ID mismatch errors causing sensor data loss.
+- ModbusTcpClient is not thread-safe; now all Modbus operations are serialized with threading.Lock().
+- Always create all sensor entities (show unavailable if data missing) instead of conditional creation.
+- Improve diagnostic logging with failed register tracking and data key reporting.
+
+### Added
+- Automatic hardware model detection via VENT_MACHINE register (eliminates manual model selection).
+- Enhanced logging showing which registers fail to read with addresses.
+
 ## 0.1.8 - Extended Legacy Compatibility (2025-12-27)
 
 ### Fixed

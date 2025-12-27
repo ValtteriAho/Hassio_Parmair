@@ -119,6 +119,12 @@ For issues, feature requests, or questions, please open an issue on GitHub.
 
 ## Release Notes
 
+### 0.1.9
+- **CRITICAL**: Fix transaction ID mismatch errors with threading lock (resolves sensor data loss).
+- Automatic hardware model detection via VENT_MACHINE register.
+- Always create all sensors (show unavailable if hardware missing).
+- Enhanced diagnostic logging for troubleshooting.
+
 ### 0.1.8
 - Add `device_id` keyword argument as additional Modbus fallback for pre-2.0 era pymodbus builds.
 - Enhanced compatibility chain: `unit` → `slave` → `device_id` → attribute assignment → positional.
