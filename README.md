@@ -163,3 +163,13 @@ For issues, feature requests, or questions, please open an issue on GitHub.
 ## License
 
 MIT License
+
+---
+
+## Disclaimer
+
+This is an independent, personal project developed by a community member and is **not affiliated with, endorsed by, or supported by Parmair or its parent companies**. This integration is provided as-is, without any warranty or guarantee. The Parmair name and product references are used solely for identification purposes.
+
+For official support, product information, or warranty claims, please contact Parmair directly through their official channels.
+
+Use of this integration is at your own risk. The author assumes no liability for any damage, malfunction, or warranty voidance that may result from using this software with your Parmair ventilation system.
