@@ -72,11 +72,10 @@ async def validate_connection(hass: HomeAssistant, data: dict[str, Any]) -> dict
     return {"title": data[CONF_NAME]}
 
 
-class ParmairConfigFlow(config_entries.ConfigFlow):
+class ParmairConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     """Handle a config flow for Parmair."""
 
     VERSION = 1
-    DOMAIN = DOMAIN
 
     async def async_step_user(
         self, user_input: dict[str, Any] | None = None
