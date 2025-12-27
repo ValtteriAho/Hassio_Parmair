@@ -33,6 +33,11 @@ async def async_setup_entry(
     """Set up Parmair sensor platform."""
     coordinator: ParmairCoordinator = hass.data[DOMAIN][entry.entry_id]
     
+    _LOGGER.debug(
+        "Setting up Parmair sensors. Available data keys: %s",
+        list(coordinator.data.keys()) if coordinator.data else "None",
+    )
+    
     entities = [
         # Temperature sensors
         ParmairTemperatureSensor(coordinator, entry, "fresh_air_temp", "Fresh Air Temperature"),
@@ -50,15 +55,11 @@ async def async_setup_entry(
         ParmairTimerSensor(coordinator, entry, "boost_timer", "Boost Timer"),
         ParmairAlarmSensor(coordinator, entry, "alarm_count", "Alarm Count"),
         ParmairAlarmSensor(coordinator, entry, "sum_alarm", "Summary Alarm"),
+        
+        # Optional sensors (will show unavailable if hardware not present)
+        ParmairHumiditySensor(coordinator, entry, "humidity", "Humidity"),
+        ParmairCO2Sensor(coordinator, entry, "co2", "CO2"),
     ]
-    
-    # Add humidity sensor if available
-    if "humidity" in coordinator.data:
-        entities.append(ParmairHumiditySensor(coordinator, entry, "humidity", "Humidity"))
-    
-    # Add CO2 sensor if available
-    if "co2" in coordinator.data:
-        entities.append(ParmairCO2Sensor(coordinator, entry, "co2", "CO2"))
     
     async_add_entities(entities)
 

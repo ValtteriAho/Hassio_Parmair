@@ -25,6 +25,7 @@ This document catalogs the Modbus holding registers used by the Parmair Ventilat
 | 31 | 30 | CO2 | R | ppm | Indoor CO₂ (available when hardware fitted). |
 | 4 | 3 | ALARM_COUNT | R | 1 | Active alarm count. |
 | 5 | 4 | SUM_ALARM | R | 1 | Summary alarm flag. |
+| 126 | 125 | VENT_MACHINE | R | 1 | Hardware type code (used for model auto-detection). |
 | 206 | 205 | ALARMS_STATE | R | 1 | Bitmask of alarm states. |
 
 ## Operating Modes

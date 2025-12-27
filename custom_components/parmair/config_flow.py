@@ -34,6 +34,9 @@ from .const import (
     DEFAULT_PORT,
     DEFAULT_SLAVE_ID,
     DOMAIN,
+    HARDWARE_TYPE_MAP,
+    MODEL_UNKNOWN,
+    REG_HARDWARE_TYPE,
     REG_POWER,
     SUPPORTED_MODELS,
     get_register_definition,
@@ -53,7 +56,6 @@ STEP_USER_DATA_SCHEMA = vol.Schema(
         vol.Required(CONF_SLAVE_ID, default=DEFAULT_SLAVE_ID): vol.All(
             vol.Coerce(int), vol.Range(min=1, max=247)
         ),
-        vol.Required(CONF_MODEL, default=DEFAULT_MODEL): vol.In(SUPPORTED_MODELS),
         vol.Optional(CONF_NAME, default=DEFAULT_NAME): cv.string,
     }
 )
@@ -62,8 +64,6 @@ STEP_USER_DATA_SCHEMA = vol.Schema(
 async def validate_connection(hass: HomeAssistant, data: dict[str, Any]) -> dict[str, Any]:
     """Validate the user input allows us to connect."""
     client = ModbusTcpClient(host=data[CONF_HOST], port=data[CONF_PORT])
-    model = data.get(CONF_MODEL, DEFAULT_MODEL)
-    power_register = get_register_definition(model, REG_POWER)
     
     def _connect():
         """Connect to the Modbus device."""
@@ -75,6 +75,62 @@ async def validate_connection(hass: HomeAssistant, data: dict[str, Any]) -> dict
     if not connected:
         client.close()
         raise CannotConnect
+    
+    # Auto-detect hardware model by reading VENT_MACHINE register
+    def _detect_model():
+        """Detect hardware model from device."""
+        try:
+            # Try to read hardware type register using same fallback pattern
+            hardware_reg = get_register_definition(DEFAULT_MODEL, REG_HARDWARE_TYPE)
+            try:
+                result = client.read_holding_registers(
+                    hardware_reg.address, 1, unit=data[CONF_SLAVE_ID]
+                )
+            except TypeError:
+                try:
+                    result = client.read_holding_registers(
+                        hardware_reg.address, 1, slave=data[CONF_SLAVE_ID]
+                    )
+                except TypeError:
+                    try:
+                        result = client.read_holding_registers(
+                            hardware_reg.address, 1, device_id=data[CONF_SLAVE_ID]
+                        )
+                    except TypeError:
+                        _set_legacy_unit(client, data[CONF_SLAVE_ID])
+                        try:
+                            result = client.read_holding_registers(
+                                hardware_reg.address, 1
+                            )
+                        except TypeError:
+                            result = client.read_holding_registers(
+                                hardware_reg.address
+                            )
+            
+            # Extract hardware type value
+            if hasattr(result, "registers"):
+                hardware_type = result.registers[0]
+            elif isinstance(result, (list, tuple)):
+                hardware_type = result[0]
+            else:
+                hardware_type = result
+            
+            # Map hardware type to model
+            detected_model = HARDWARE_TYPE_MAP.get(hardware_type, MODEL_UNKNOWN)
+            _LOGGER.info(
+                "Auto-detected hardware type %s, mapped to model: %s",
+                hardware_type,
+                detected_model,
+            )
+            return detected_model
+        except Exception as ex:
+            _LOGGER.warning("Could not auto-detect model, using default: %s", ex)
+            return DEFAULT_MODEL
+    
+    detected_model = await hass.async_add_executor_job(_detect_model)
+    
+    # Verify communication by reading a register with detected model
+    power_register = get_register_definition(detected_model, REG_POWER)
     
     # Try to read a register to verify communication
     def _read_test():
@@ -115,7 +171,7 @@ async def validate_connection(hass: HomeAssistant, data: dict[str, Any]) -> dict
     finally:
         client.close()
     
-    return {"title": data[CONF_NAME], "model": model}
+    return {"title": data[CONF_NAME], "model": detected_model}
 
 
 class ParmairConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
@@ -150,6 +206,8 @@ class ParmairConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             
             try:
                 info = await validate_connection(self.hass, user_input)
+                # Add auto-detected model to the data
+                user_input[CONF_MODEL] = info["model"]
                 return self.async_create_entry(title=info["title"], data=user_input)
             except CannotConnect:
                 errors["base"] = "cannot_connect"

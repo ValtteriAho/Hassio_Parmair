@@ -19,7 +19,14 @@ DEFAULT_SLAVE_ID = 1
 # Supported hardware profiles
 MODEL_MAC80 = "MAC80"
 MODEL_MAC150 = "MAC150"
+MODEL_UNKNOWN = "Unknown"
 DEFAULT_MODEL = MODEL_MAC80
+
+# Hardware type code to model mapping (from VENT_MACHINE register)
+HARDWARE_TYPE_MAP = {
+    1: MODEL_MAC80,
+    # Add more mappings as hardware codes are discovered
+}
 
 
 @dataclass(frozen=True)
@@ -42,6 +49,7 @@ class RegisterDefinition:
 
 
 # Register keys
+REG_HARDWARE_TYPE = "hardware_type"
 REG_POWER = "power"
 REG_CONTROL_STATE = "control_state"
 REG_SPEED_CONTROL = "speed_control"
@@ -68,6 +76,7 @@ def _build_mac80_registers() -> Dict[str, RegisterDefinition]:
     """Return register map for the MAC80 firmware."""
 
     return {
+        REG_HARDWARE_TYPE: RegisterDefinition(REG_HARDWARE_TYPE, 124, "VENT_MACHINE"),
         REG_POWER: RegisterDefinition(REG_POWER, 207, "POWER_BTN", writable=True),
         REG_CONTROL_STATE: RegisterDefinition(
             REG_CONTROL_STATE, 184, "IV01_CONTROLSTATE", writable=True

@@ -79,18 +79,28 @@ class ParmairCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                 raise ModbusException("Failed to connect to Modbus device")
         
         data: dict[str, Any] = {"model": self.model}
+        failed_registers = []
 
         try:
             for definition in self._poll_registers:
                 value = self._read_register_value(definition)
                 if value is None:
+                    failed_registers.append(f"{definition.label}({definition.register_id})")
                     continue
                 data[definition.key] = value
 
+            if failed_registers:
+                _LOGGER.debug(
+                    "Failed to read %d registers: %s",
+                    len(failed_registers),
+                    ", ".join(failed_registers),
+                )
+            
             _LOGGER.debug(
-                "Read data from Parmair %s (model %s): %s",
+                "Read data from Parmair %s (model %s): %d values - %s",
                 self.host,
                 self.model,
+                len(data) - 1,  # Exclude 'model' key
                 data,
             )
             return data
@@ -181,10 +191,11 @@ class ParmairCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                             definition.address
                         )
         if not result or (hasattr(result, "isError") and result.isError()):
-            _LOGGER.debug(
-                "Failed reading register %s (%s)",
+            _LOGGER.warning(
+                "Failed reading register %s (%s) at address %d",
                 definition.register_id,
                 definition.label,
+                definition.address,
             )
             return None
 

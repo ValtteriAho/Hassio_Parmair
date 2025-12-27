@@ -24,7 +24,7 @@ A custom Home Assistant integration for Parmair ventilation systems via Modbus T
   - Register metadata exposed via entity attributes for diagnostics
   
 - **Local Polling**: Direct communication with your device via Modbus TCP
-- **Model-Aware Registers**: Select the matching Parmair hardware profile (MAC80 today, MAC150 placeholder) so the integration reads and writes the correct register map
+- **Automatic Model Detection**: Reads hardware type register to identify MAC80/MAC150 automatically
 
 ## System Information
 
@@ -42,8 +42,9 @@ This integration targets Parmair "My Air Control" firmware V1.87 behaviour obser
    - IP Address
    - Port (default: 502)
    - Modbus Slave ID (default: 1)
-  - Parmair Model (MAC80 default, MAC150 placeholder)
    - Name (optional)
+   
+   Hardware model will be auto-detected from the device.
 
 ## Configuration
 
@@ -52,6 +53,8 @@ The integration is configured through the Home Assistant UI. You'll need:
 - **IP Address**: The IP address of your Parmair device
 - **Port**: The Modbus TCP port (typically 502)
 - **Slave ID**: The Modbus slave ID of your device (typically 1)
+
+The hardware model (MAC80/MAC150) is automatically detected by reading the VENT_MACHINE register.
 
 ## Entities Created
 
