@@ -77,9 +77,15 @@ class ParmairCoordinator(DataUpdateCoordinator[dict[str, Any]]):
     def _read_modbus_data(self) -> dict[str, Any]:
         """Read data from Modbus (runs in executor)."""
         with self._lock:
-            if not self._client.connected:
-                if not self._client.connect():
-                    raise ModbusException("Failed to connect to Modbus device")
+            # Close and reconnect to flush any stale responses in buffer
+            if self._client.connected:
+                try:
+                    self._client.close()
+                except:
+                    pass  # Ignore close errors
+            
+            if not self._client.connect():
+                raise ModbusException("Failed to connect to Modbus device")
             
             data: dict[str, Any] = {"model": self.model}
             failed_registers = []
@@ -111,6 +117,12 @@ class ParmairCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             except Exception as ex:
                 _LOGGER.error("Error reading from Modbus: %s", ex)
                 raise ModbusException(f"Failed to read data: {ex}") from ex
+            finally:
+                # Always close after reading to prevent buffer buildup
+                try:
+                    self._client.close()
+                except:
+                    pass
 
     def write_register(self, key: str, value: float | int) -> bool:
         """Write a value to a Modbus register respecting scaling."""
