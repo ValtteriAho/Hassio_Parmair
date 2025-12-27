@@ -87,6 +87,9 @@ class ParmairCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             if not self._client.connect():
                 raise ModbusException("Failed to connect to Modbus device")
             
+            # Ensure slave_id is set on the client for legacy pymodbus
+            _set_legacy_unit(self._client, self.slave_id)
+            
             data: dict[str, Any] = {"model": self.model}
             failed_registers = []
 
