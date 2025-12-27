@@ -1,0 +1,23 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connect to Parmair Ventilation",
+        "description": "Enter the connection details for your Parmair ventilation system.",
+        "data": {
+          "host": "IP Address",
+          "port": "Port",
+          "slave_id": "Modbus Slave ID",
+          "name": "Name"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Failed to connect to the device. Please check the IP address, port, and slave ID.",
+      "unknown": "An unexpected error occurred."
+    },
+    "abort": {
+      "already_configured": "This device is already configured."
+    }
+  }
+}
