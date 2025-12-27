@@ -8,6 +8,18 @@ A custom Home Assistant integration for Parmair MAC ventilation systems via Modb
   - Power on/off
   - Mode selection (Away, Home, Boost)
   - Speed control via presets
+
+- **Number Controls**: Adjust ventilation settings:
+  - Home Speed Preset (0-4)
+  - Away Speed Preset (0-4)
+  - Boost Setting (2-4)
+  - Exhaust Temperature Setpoint (18-26°C)
+  - Supply Temperature Setpoint (15-25°C)
+
+- **Switch Controls**: Toggle system features:
+  - Summer Mode Enable/Disable
+  - Time Program Enable/Disable
+  - Heater Enable/Disable
   
 - **Temperature Monitoring**: Real-time monitoring of:
   - Fresh air temperature
@@ -62,6 +74,18 @@ The hardware model (MAC80/MAC150) is automatically detected by reading the VENT_
 - **parmair_mac**: Main control for the ventilation system
   - Presets: Away, Home, Boost
   - Speed control (percentage based on preset)
+
+### Number Entities
+- **Home Speed Preset**: Adjust fan speed for Home mode (0-4)
+- **Away Speed Preset**: Adjust fan speed for Away mode (0-4)
+- **Boost Setting**: Set boost fan speed level (2-4)
+- **Exhaust Temperature Setpoint**: Target exhaust air temperature (18-26°C)
+- **Supply Temperature Setpoint**: Target supply air temperature (15-25°C)
+
+### Switch Entities
+- **Summer Mode**: Enable/disable summer mode operation
+- **Time Program Enable**: Enable/disable scheduled time programs
+- **Heater Enable**: Enable/disable heating element
 
 ### Sensor Entities
 - **Fresh Air Temperature**: Outdoor air temperature
@@ -118,6 +142,13 @@ For issues, feature requests, or questions, please open an issue on GitHub.
 - [Modbus Register Documentation](MODBUS_REGISTERS.md)
 
 ## Release Notes
+
+### 0.2.0
+- **Number Platform**: Added 5 controllable entities for fan speed presets and temperature setpoints.
+- **Switch Platform**: Added 3 toggle entities for Summer Mode, Time Program Enable, and Heater Enable.
+- **Finnish Translation**: Complete localization support (fi.json).
+- **Write Capability**: Full read/write control via coordinator.async_write_register().
+- **HACS Metadata**: Updated with number and switch domains.
 
 ### 0.1.9
 - **CRITICAL**: Fix transaction ID mismatch errors with threading lock (resolves sensor data loss).
