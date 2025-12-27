@@ -137,10 +137,6 @@ This integration follows Home Assistant's development guidelines and uses:
 
 For issues, feature requests, or questions, please open an issue on GitHub.
 
-## Documentation
-
-- [Modbus Register Documentation](MODBUS_REGISTERS.md)
-
 ## Release Notes
 
 ### 0.2.0
