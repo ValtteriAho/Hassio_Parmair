@@ -98,9 +98,14 @@ class ParmairCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                     return False
 
             raw_value = self._to_raw(definition, value)
-            result = self._client.write_register(
-                definition.address, raw_value, unit=self.slave_id
-            )
+            try:
+                result = self._client.write_register(
+                    definition.address, raw_value, unit=self.slave_id
+                )
+            except TypeError:
+                result = self._client.write_register(
+                    definition.address, raw_value, slave=self.slave_id
+                )
             return not result.isError() if hasattr(result, 'isError') else result is not None
         except Exception as ex:
             _LOGGER.error(
@@ -129,9 +134,14 @@ class ParmairCoordinator(DataUpdateCoordinator[dict[str, Any]]):
     def _read_register_value(self, definition: RegisterDefinition) -> Any | None:
         """Read and scale a single register."""
 
-        result = self._client.read_holding_registers(
-            definition.address, 1, unit=self.slave_id
-        )
+        try:
+            result = self._client.read_holding_registers(
+                definition.address, 1, unit=self.slave_id
+            )
+        except TypeError:
+            result = self._client.read_holding_registers(
+                definition.address, 1, slave=self.slave_id
+            )
         if not result or result.isError():
             _LOGGER.debug(
                 "Failed reading register %s (%s)",

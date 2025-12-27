@@ -116,6 +116,10 @@ For issues, feature requests, or questions, please open an issue on GitHub.
 
 ## Release Notes
 
+### 0.1.4
+- Fix config flow connection tests against pymodbus builds that still require the `slave` keyword.
+- Apply the same compatibility fallback to runtime reads and writes so older libraries keep working.
+
 ### 0.1.3
 - Model selector in the config flow with placeholder support for MAC150.
 - Register metadata exposed via entity attributes for easier troubleshooting.

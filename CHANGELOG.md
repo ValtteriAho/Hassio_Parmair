@@ -1,3 +1,9 @@
+## 0.1.4 - Modbus Compatibility (2025-12-27)
+
+### Fixed
+- Restore compatibility with deployments running older pymodbus builds by falling back to the legacy `slave` keyword when `unit` is rejected during reads or writes.
+- Prevent config flow connection tests from crashing with a `TypeError` when the Modbus client lacks `unit` support.
+
 ## 0.1.3 - Model-Aware Registers (2025-12-27)
 
 ### Added

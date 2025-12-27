@@ -66,9 +66,15 @@ async def validate_connection(hass: HomeAssistant, data: dict[str, Any]) -> dict
     # Try to read a register to verify communication
     def _read_test():
         """Test reading from the device."""
-        result = client.read_holding_registers(
-            power_register.address, 1, unit=data[CONF_SLAVE_ID]
-        )
+        try:
+            result = client.read_holding_registers(
+                power_register.address, 1, unit=data[CONF_SLAVE_ID]
+            )
+        except TypeError:
+            # Older pymodbus versions expect the keyword 'slave'
+            result = client.read_holding_registers(
+                power_register.address, 1, slave=data[CONF_SLAVE_ID]
+            )
         return not result.isError() if hasattr(result, 'isError') else result is not None
     
     try:
