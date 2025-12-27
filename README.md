@@ -26,7 +26,7 @@ A custom Home Assistant integration for Parmair ventilation systems via Modbus T
 
 ## System Information
 
-This integration is based on the Parmair "My Air Control" V1.87 Modbus specification.
+This integration targets Parmair "My Air Control" firmware V1.87 behaviour observed on production units.
 
 ## Installation
 
@@ -86,7 +86,7 @@ All register mappings are documented in `MODBUS_REGISTERS.md`. The integration u
 ## Development
 
 This integration follows Home Assistant's development guidelines and uses:
-- `pymodbus 3.7.4` for Modbus communication
+- `pymodbus` (tested with 3.11.x bundled in Home Assistant 2025.12) for Modbus communication
 - `DataUpdateCoordinator` for efficient data fetching (30-second polling)
 - Config flow for user-friendly setup
 - Proper error handling and retry logic
@@ -109,7 +109,6 @@ For issues, feature requests, or questions, please open an issue on GitHub.
 ## Documentation
 
 - [Modbus Register Documentation](MODBUS_REGISTERS.md)
-- [Parmair My Air Control V1.87](Modbus%20Parmair%20v1.87.pdf)
 
 ## License
 
