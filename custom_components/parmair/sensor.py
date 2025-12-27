@@ -146,7 +146,11 @@ class ParmairHumiditySensor(ParmairRegisterEntity, SensorEntity):
     @property
     def native_value(self) -> int | None:
         """Return the sensor value."""
-        return self.coordinator.data.get(self._data_key)
+        value = self.coordinator.data.get(self._data_key)
+        # 65535 (0xFFFF) indicates sensor not installed
+        if value == 65535:
+            return None
+        return value
 
 
 class ParmairCO2Sensor(ParmairRegisterEntity, SensorEntity):
@@ -170,7 +174,11 @@ class ParmairCO2Sensor(ParmairRegisterEntity, SensorEntity):
     @property
     def native_value(self) -> int | None:
         """Return the sensor value."""
-        return self.coordinator.data.get(self._data_key)
+        value = self.coordinator.data.get(self._data_key)
+        # 65535 (0xFFFF) indicates sensor not installed
+        if value == 65535:
+            return None
+        return value
 
 
 class ParmairStateSensor(ParmairRegisterEntity, SensorEntity):

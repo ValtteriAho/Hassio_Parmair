@@ -1,3 +1,13 @@
+## 0.1.11 - Register Documentation & Sensor Fixes (2025-12-27)
+
+### Fixed
+- Handle 65535 (0xFFFF) value for CO2 and humidity sensors (indicates sensor not installed)
+- Corrected VENT_MACHINE register address from 1124 to 1243
+
+### Changed
+- Updated register documentation with official Parmair register IDs (TE01_M, TE10_M, etc.)
+- All register definitions now use official IDs from Parmair documentation
+
 ## 0.1.10 - Register Address Fix (2025-12-27)
 
 ### Fixed

@@ -76,13 +76,13 @@ def _build_mac80_registers() -> Dict[str, RegisterDefinition]:
     """Return register map for the MAC80 firmware."""
 
     return {
-        REG_HARDWARE_TYPE: RegisterDefinition(REG_HARDWARE_TYPE, 1124, "VENT_MACHINE"),
-        REG_POWER: RegisterDefinition(REG_POWER, 1207, "POWER_BTN", writable=True),
+        REG_HARDWARE_TYPE: RegisterDefinition(REG_HARDWARE_TYPE, 1243, "VENT_MACHINE"),
+        REG_POWER: RegisterDefinition(REG_POWER, 1207, "POWER_BTN_FI", writable=True),
         REG_CONTROL_STATE: RegisterDefinition(
-            REG_CONTROL_STATE, 1184, "IV01_CONTROLSTATE", writable=True
+            REG_CONTROL_STATE, 1184, "IV01_CONTROLSTATE_FO", writable=True
         ),
         REG_SPEED_CONTROL: RegisterDefinition(
-            REG_SPEED_CONTROL, 1186, "IV01_SPEED", writable=True
+            REG_SPEED_CONTROL, 1186, "IV01_SPEED_FOC", writable=True
         ),
         REG_FRESH_AIR_TEMP: RegisterDefinition(
             REG_FRESH_AIR_TEMP, 1019, "TE01_M", scale=0.1
