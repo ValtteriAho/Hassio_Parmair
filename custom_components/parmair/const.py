@@ -11,7 +11,7 @@ DOMAIN = "parmair"
 CONF_SLAVE_ID = "slave_id"
 CONF_MODEL = "model"
 
-DEFAULT_NAME = "Parmair Ventilation"
+DEFAULT_NAME = "Parmair MAC"
 DEFAULT_SCAN_INTERVAL = 30  # seconds
 DEFAULT_PORT = 502
 DEFAULT_SLAVE_ID = 1
@@ -43,9 +43,9 @@ class RegisterDefinition:
 
     @property
     def register_id(self) -> int:
-        """Return the human friendly (1-based) register ID."""
+        """Return the register ID (Address - 1000 = Register ID)."""
 
-        return self.address + 1
+        return self.address - 1000
 
 
 # Register keys

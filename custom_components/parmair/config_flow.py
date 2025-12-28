@@ -115,14 +115,12 @@ async def validate_connection(hass: HomeAssistant, data: dict[str, Any]) -> dict
             else:
                 hardware_type = result
             
-            # Map hardware type to model
-            detected_model = HARDWARE_TYPE_MAP.get(hardware_type, MODEL_UNKNOWN)
+            # Return raw hardware type number as model
             _LOGGER.info(
-                "Auto-detected hardware type %s, mapped to model: %s",
+                "Auto-detected hardware type: %s",
                 hardware_type,
-                detected_model,
             )
-            return detected_model
+            return str(hardware_type)
         except Exception as ex:
             _LOGGER.warning("Could not auto-detect model, using default: %s", ex)
             return DEFAULT_MODEL
