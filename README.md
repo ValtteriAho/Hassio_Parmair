@@ -139,6 +139,14 @@ For issues, feature requests, or questions, please open an issue on GitHub.
 
 ## Release Notes
 
+### 0.2.1
+- **Configurable Polling Interval**: Added polling interval configuration (5-300 seconds, default 30).
+- **Improved Model Detection**: VENT_MACHINE register value directly maps to model (80→MAC80, 100→MAC100, 150→MAC150).
+- **MAC100 Support**: Added MAC100 model to register map.
+- **Fixed Default Name**: Changed from "Parmair Ventilation" to "Parmair MAC".
+- **Fixed Register ID Calculation**: Corrected formula to Address - 1000 = Register ID.
+- **Translations**: Added Finnish/English translations for polling interval field.
+
 ### 0.2.0
 - **Number Platform**: Added 5 controllable entities for fan speed presets and temperature setpoints.
 - **Switch Platform**: Added 3 toggle entities for Summer Mode, Time Program Enable, and Heater Enable.
