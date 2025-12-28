@@ -1,5 +1,7 @@
 # Parmair MAC - Home Assistant Integration
 
+![Parmair MAC Logo](parmair_logo.jpg)
+
 A custom Home Assistant integration for Parmair MAC ventilation systems via Modbus TCP communication.
 
 ## Features

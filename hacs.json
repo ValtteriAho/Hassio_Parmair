@@ -2,5 +2,7 @@
   "name": "Parmair MAC",
   "content_in_root": false,
   "render_readme": true,
-  "domains": ["fan", "number", "sensor", "switch"]
+  "domains": ["fan", "number", "sensor", "switch"],
+  "homeassistant": "2025.1.0",
+  "logo": "parmair_logo.jpg"
 }
