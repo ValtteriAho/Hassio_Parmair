@@ -139,6 +139,11 @@ For issues, feature requests, or questions, please open an issue on GitHub.
 
 ## Release Notes
 
+### 0.2.2
+- **Fixed Missing Sensor**: Added TE05_M temperature sensor (Register 22, Address 1022).
+- **Supply Air Temperature (After Recovery)**: Now properly monitored alongside other temperature sensors.
+- **Complete Temperature Monitoring**: All 5 measurement sensors now present (registers 20, 22, 23, 24, 25).
+
 ### 0.2.1
 - **Configurable Polling Interval**: Added polling interval configuration (5-300 seconds, default 30).
 - **Improved Model Detection**: VENT_MACHINE register value directly maps to model (80→MAC80, 100→MAC100, 150→MAC150).

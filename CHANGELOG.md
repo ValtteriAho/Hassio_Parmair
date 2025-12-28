@@ -18,6 +18,13 @@
 - Expanded integration from read-only monitoring to full control capabilities
 - Users can now adjust fan speeds, temperature targets, and system modes directly from Home Assistant
 
+## 0.2.2 - Temperature Sensor Fix (2025-12-28)
+
+### Fixed
+- Added missing TE05_M temperature sensor (Register 22, Address 1022)
+- Supply Air Temperature (After Recovery) sensor now properly monitored
+- All 5 temperature measurement sensors now present (registers 20, 22, 23, 24, 25)
+
 ## 0.2.1 - Model Detection & Configuration Improvements (2025-12-28)
 
 ### Added
