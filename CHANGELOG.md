@@ -18,6 +18,22 @@
 - Expanded integration from read-only monitoring to full control capabilities
 - Users can now adjust fan speeds, temperature targets, and system modes directly from Home Assistant
 
+## 0.2.1 - Model Detection & Configuration Improvements (2025-12-28)
+
+### Added
+- Configurable polling interval in config flow (5-300 seconds, default 30)
+- MAC100 model support to register map
+- Translations for polling interval field (English/Finnish)
+
+### Changed
+- Improved model auto-detection: VENT_MACHINE register value directly maps to model (80→MAC80, 100→MAC100, 150→MAC150)
+- Updated coordinator to use configured scan_interval from config entry
+
+### Fixed
+- Default integration name changed from "Parmair Ventilation" to "Parmair MAC"
+- Register ID calculation corrected: Address - 1000 = Register ID (was incorrectly Address + 1)
+- Model detection now returns formatted model names (MAC80/MAC100/MAC150) instead of raw numbers
+
 ## 0.2.0 - Control Features & Localization (2025-12-27)
 
 ### Added
