@@ -1,3 +1,25 @@
+## 0.2.5 - Critical Fixes & UX Improvements (2026-01-03)
+
+### Fixed
+- **CRITICAL: Negative Temperature Handling**: Fixed signed int16 conversion for temperature sensors
+  - Temperatures below 0°C were displaying as huge values (e.g., -8.6°C showed as 6545°C)
+  - All temperature sensors now properly handle negative values
+- **Software Version Sensor**: Corrected register address to 1018 (register 18 + 1000 offset)
+
+### Added
+- **Human-Readable State Sensors**: State sensors now display meaningful text instead of numbers
+  - **Control State**: Stop, Away, Home, Boost, Overpressure, Timer modes, Manual
+  - **Power State**: Off, Shutting Down, Starting, Running
+  - **Home/Away State**: Now shows "Home" or "Away" instead of 1/0
+  - **Boost State**: Shows "On" or "Off" instead of 1/0
+  - **Defrost State**: Shows "Active" or "Off" instead of 1/0
+  - **Filter Status**: Shows "Replace" or "OK" instead of 0/1
+- **Missing Hardware Indication**: CO2 and Humidity sensors now display "Not Installed" when hardware is absent
+
+### Changed
+- All state sensors use ENUM device class with proper options for better Home Assistant integration
+- Improved sensor display consistency across the board
+
 ## 0.2.4 - Software Version Monitoring (2026-01-03)
 
 ### Added

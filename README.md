@@ -156,7 +156,11 @@ For issues, feature requests, or questions, please open an issue on GitHub.
 
 ### 0.2.
 ## Release Notes
-
+### 0.2.5
+- **CRITICAL FIX**: Negative temperature handling - temperatures below 0°C now display correctly
+- **Human-Readable States**: All state sensors now show meaningful text (Home/Away, On/Off, etc.)
+- **Missing Hardware**: CO2/Humidity sensors display "Not Installed" when hardware is absent
+- **Software Version**: Corrected register address for proper firmware version display
 ### 0.2.3
 - **Button Platform**: Acknowledge Alarms, Filter Replaced buttons
 - **Select Platform**: Heater Type selector (Water/Electric)

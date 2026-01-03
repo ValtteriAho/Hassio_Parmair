@@ -52,18 +52,18 @@ async def async_setup_entry(
         ParmairTemperatureSensor(coordinator, entry, "supply_temp_setpoint", "Supply Temperature Setpoint"),
         
         # Other sensors
-        ParmairStateSensor(coordinator, entry, "control_state", "Control State"),
-        ParmairStateSensor(coordinator, entry, "power", "Power State"),
-        ParmairStateSensor(coordinator, entry, "home_state", "Home/Away State"),
-        ParmairStateSensor(coordinator, entry, "boost_state", "Boost State"),
+        ParmairControlStateSensor(coordinator, entry, "control_state", "Control State"),
+        ParmairPowerStateSensor(coordinator, entry, "power", "Power State"),
+        ParmairBinarySensor(coordinator, entry, "home_state", "Home/Away State", {0: "Away", 1: "Home"}),
+        ParmairBinarySensor(coordinator, entry, "boost_state", "Boost State", {0: "Off", 1: "On"}),
         ParmairTimerSensor(coordinator, entry, "boost_timer", "Boost Timer"),
         ParmairTimerSensor(coordinator, entry, "overpressure_timer", "Overpressure Timer"),
         ParmairAlarmSensor(coordinator, entry, "alarm_count", "Alarm Count"),
         ParmairAlarmSensor(coordinator, entry, "sum_alarm", "Summary Alarm"),
         
         # State sensors
-        ParmairStateSensor(coordinator, entry, "defrost_state", "Defrost State"),
-        ParmairStateSensor(coordinator, entry, "filter_state", "Filter Status"),
+        ParmairBinarySensor(coordinator, entry, "defrost_state", "Defrost State", {0: "Off", 1: "Active"}),
+        ParmairBinarySensor(coordinator, entry, "filter_state", "Filter Status", {0: "Replace", 1: "OK"}),
         
         # Performance sensors
         ParmairPercentageSensor(coordinator, entry, "heat_recovery_efficiency", "Heat Recovery Efficiency"),
@@ -143,7 +143,6 @@ class ParmairHumiditySensor(ParmairRegisterEntity, SensorEntity):
     """Representation of a Parmair humidity sensor."""
 
     _attr_has_entity_name = True
-    _attr_device_class = SensorDeviceClass.HUMIDITY
     _attr_state_class = SensorStateClass.MEASUREMENT
     _attr_native_unit_of_measurement = PERCENTAGE
 
@@ -158,20 +157,27 @@ class ParmairHumiditySensor(ParmairRegisterEntity, SensorEntity):
         super().__init__(coordinator, entry, data_key, name)
 
     @property
-    def native_value(self) -> int | None:
+    def native_value(self) -> int | str | None:
         """Return the sensor value."""
         value = self.coordinator.data.get(self._data_key)
-        # 0 or 65535 (0xFFFF) indicates sensor not installed
-        if value == 0 or value == 65535:
-            return None
+        # 0 or 65535 (0xFFFF) or -1 indicates sensor not installed
+        if value in (0, 65535, -1, None):
+            return "Not Installed"
         return value
+
+    @property
+    def device_class(self) -> str | None:
+        """Return device class only if sensor is installed."""
+        value = self.coordinator.data.get(self._data_key)
+        if value in (0, 65535, -1, None):
+            return None
+        return SensorDeviceClass.HUMIDITY
 
 
 class ParmairCO2Sensor(ParmairRegisterEntity, SensorEntity):
     """Representation of a Parmair CO2 sensor."""
 
     _attr_has_entity_name = True
-    _attr_device_class = SensorDeviceClass.CO2
     _attr_state_class = SensorStateClass.MEASUREMENT
     _attr_native_unit_of_measurement = CONCENTRATION_PARTS_PER_MILLION
 
@@ -186,13 +192,21 @@ class ParmairCO2Sensor(ParmairRegisterEntity, SensorEntity):
         super().__init__(coordinator, entry, data_key, name)
 
     @property
-    def native_value(self) -> int | None:
+    def native_value(self) -> int | str | None:
         """Return the sensor value."""
         value = self.coordinator.data.get(self._data_key)
-        # 0 or 65535 (0xFFFF) indicates sensor not installed
-        if value == 0 or value == 65535:
-            return None
+        # 0 or 65535 (0xFFFF) or -1 indicates sensor not installed
+        if value in (0, 65535, -1, None):
+            return "Not Installed"
         return value
+
+    @property
+    def device_class(self) -> str | None:
+        """Return device class only if sensor is installed."""
+        value = self.coordinator.data.get(self._data_key)
+        if value in (0, 65535, -1, None):
+            return None
+        return SensorDeviceClass.CO2
 
 
 class ParmairStateSensor(ParmairRegisterEntity, SensorEntity):
@@ -306,3 +320,103 @@ class ParmairSoftwareVersionSensor(ParmairRegisterEntity, SensorEntity):
     def native_value(self) -> float | None:
         """Return the sensor value."""
         return self.coordinator.data.get(self._data_key)
+
+
+class ParmairControlStateSensor(ParmairRegisterEntity, SensorEntity):
+    """Representation of control state with mapped values."""
+
+    _attr_has_entity_name = True
+    _attr_device_class = SensorDeviceClass.ENUM
+    _attr_options = ["Stop", "Away", "Home", "Boost", "Overpressure", "Away Timer", "Home Timer", "Boost Timer", "Overpressure Timer", "Manual"]
+
+    STATE_MAP = {
+        0: "Stop",
+        1: "Away",
+        2: "Home",
+        3: "Boost",
+        4: "Overpressure",
+        5: "Away Timer",
+        6: "Home Timer",
+        7: "Boost Timer",
+        8: "Overpressure Timer",
+        9: "Manual"
+    }
+
+    def __init__(
+        self,
+        coordinator: ParmairCoordinator,
+        entry: ConfigEntry,
+        data_key: str,
+        name: str,
+    ) -> None:
+        """Initialize the sensor."""
+        super().__init__(coordinator, entry, data_key, name)
+
+    @property
+    def native_value(self) -> str | None:
+        """Return the sensor value."""
+        raw_value = self.coordinator.data.get(self._data_key)
+        if raw_value is None:
+            return None
+        return self.STATE_MAP.get(raw_value, f"Unknown ({raw_value})")
+
+
+class ParmairPowerStateSensor(ParmairRegisterEntity, SensorEntity):
+    """Representation of power state with mapped values."""
+
+    _attr_has_entity_name = True
+    _attr_device_class = SensorDeviceClass.ENUM
+    _attr_options = ["Off", "Shutting Down", "Starting", "Running"]
+
+    STATE_MAP = {
+        0: "Off",
+        1: "Shutting Down",
+        2: "Starting",
+        3: "Running"
+    }
+
+    def __init__(
+        self,
+        coordinator: ParmairCoordinator,
+        entry: ConfigEntry,
+        data_key: str,
+        name: str,
+    ) -> None:
+        """Initialize the sensor."""
+        super().__init__(coordinator, entry, data_key, name)
+
+    @property
+    def native_value(self) -> str | None:
+        """Return the sensor value."""
+        raw_value = self.coordinator.data.get(self._data_key)
+        if raw_value is None:
+            return None
+        return self.STATE_MAP.get(raw_value, f"Unknown ({raw_value})")
+
+
+class ParmairBinarySensor(ParmairRegisterEntity, SensorEntity):
+    """Representation of a binary state sensor with custom mapping."""
+
+    _attr_has_entity_name = True
+
+    def __init__(
+        self,
+        coordinator: ParmairCoordinator,
+        entry: ConfigEntry,
+        data_key: str,
+        name: str,
+        state_map: dict[int, str],
+    ) -> None:
+        """Initialize the sensor."""
+        super().__init__(coordinator, entry, data_key, name)
+        self._state_map = state_map
+        self._attr_device_class = SensorDeviceClass.ENUM
+        self._attr_options = list(state_map.values())
+
+    @property
+    def native_value(self) -> str | None:
+        """Return the sensor value."""
+        raw_value = self.coordinator.data.get(self._data_key)
+        if raw_value is None:
+            return None
+        return self._state_map.get(raw_value, f"Unknown ({raw_value})")

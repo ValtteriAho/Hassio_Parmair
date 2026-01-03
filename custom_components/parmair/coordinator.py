@@ -231,6 +231,10 @@ class ParmairCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         else:
             raw = result
 
+        # Convert to signed int16 if value is > 32767 (handle negative temperatures)
+        if raw > 32767:
+            raw = raw - 65536
+
         if definition.optional and raw < 0:
             # Device reports -1 when module isn't installed
             return None
