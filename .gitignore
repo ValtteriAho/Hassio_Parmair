@@ -26,3 +26,10 @@ Thumbs.db
 # Documentation
 MODBUS_REGISTERS.md
 *.pdf
+
+# Excel and data files
+*.xls
+*.xlsx
+*.xlsm
+*.xlsb
+*.csv

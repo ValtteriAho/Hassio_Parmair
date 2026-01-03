@@ -39,6 +39,9 @@ async def async_setup_entry(
     )
     
     entities = [
+        # System information
+        ParmairSoftwareVersionSensor(coordinator, entry, "software_version", "Software Version"),
+        
         # Temperature sensors
         ParmairTemperatureSensor(coordinator, entry, "fresh_air_temp", "Fresh Air Temperature"),
         ParmairTemperatureSensor(coordinator, entry, "supply_after_recovery_temp", "Supply Air Temperature (After Recovery)"),
@@ -265,6 +268,29 @@ class ParmairPercentageSensor(ParmairRegisterEntity, SensorEntity):
     _attr_state_class = SensorStateClass.MEASUREMENT
     _attr_native_unit_of_measurement = PERCENTAGE
     _attr_icon = "mdi:gauge"
+
+    def __init__(
+        self,
+        coordinator: ParmairCoordinator,
+        entry: ConfigEntry,
+        data_key: str,
+        name: str,
+    ) -> None:
+        """Initialize the sensor."""
+        super().__init__(coordinator, entry, data_key, name)
+
+    @property
+    def native_value(self) -> float | None:
+        """Return the sensor value."""
+        return self.coordinator.data.get(self._data_key)
+
+
+class ParmairSoftwareVersionSensor(ParmairRegisterEntity, SensorEntity):
+    """Representation of a Parmair software version sensor."""
+
+    _attr_has_entity_name = True
+    _attr_icon = "mdi:information-outline"
+    _attr_entity_category = "diagnostic"
 
     def __init__(
         self,

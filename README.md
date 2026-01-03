@@ -35,6 +35,7 @@ A custom Home Assistant integration for Parmair MAC ventilation systems via Modb
   - CO2 levels
   - Alarm status
   - Boost timer
+  - Software version (Multi24 firmware)
   - Register metadata exposed via entity attributes for diagnostics
   
 - **Local Polling**: Direct communication with your device via Modbus TCP
@@ -115,6 +116,9 @@ Optional sensors (if hardware is present):
 - **CO2**: Indoor CO2 concentration
 - Entity attributes include the selected model plus register id, address, and scaling to aid troubleshooting
 
+Diagnostic sensors:
+- **Software Version**: Multi24 firmware application version
+
 ## Modbus Registers
 
 All register mappings are documented in `MODBUS_REGISTERS.md`. The integration uses:
@@ -145,7 +149,12 @@ This integration follows Home Assistant's development guidelines and uses:
 ## Support
 
 For issues, feature requests, or questions, please open an issue on GitHub.
+4
+- **Software Version Sensor**: Monitor Multi24 firmware application version
+- **Diagnostic Entity**: Automatically polled firmware version display (e.g., 2.00)
+- **System Monitoring**: Helps identify firmware-related issues and compatibility
 
+### 0.2.
 ## Release Notes
 
 ### 0.2.3

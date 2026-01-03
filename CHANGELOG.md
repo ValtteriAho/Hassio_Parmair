@@ -1,3 +1,14 @@
+## 0.2.4 - Software Version Monitoring (2026-01-03)
+
+### Added
+- **Software Version Sensor**: Monitor Multi24 firmware application version (MULTI_SW_VER, Register 18)
+  - Diagnostic sensor showing firmware version (e.g., 2.00)
+  - Automatically polled with other system data
+  - Helps identify firmware-related issues and compatibility
+
+### Changed
+- Software version now included in polling cycle for system monitoring
+
 ## 0.2.3 - Enhanced Control & Monitoring (2025-12-28)
 
 ### Added

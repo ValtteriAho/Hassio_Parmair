@@ -52,6 +52,7 @@ class RegisterDefinition:
 
 # Register keys
 REG_HARDWARE_TYPE = "hardware_type"
+REG_SOFTWARE_VERSION = "software_version"
 REG_POWER = "power"
 REG_CONTROL_STATE = "control_state"
 REG_SPEED_CONTROL = "speed_control"
@@ -104,6 +105,7 @@ def _build_mac80_registers() -> Dict[str, RegisterDefinition]:
 
     return {
         REG_HARDWARE_TYPE: RegisterDefinition(REG_HARDWARE_TYPE, 1244, "VENT_MACHINE"),
+        REG_SOFTWARE_VERSION: RegisterDefinition(REG_SOFTWARE_VERSION, 1018, "MULTI_SW_VER", scale=0.01),
         REG_POWER: RegisterDefinition(REG_POWER, 1208, "POWER_BTN_FI", writable=True),
         REG_CONTROL_STATE: RegisterDefinition(
             REG_CONTROL_STATE, 1185, "IV01_CONTROLSTATE_FO", writable=True
@@ -229,6 +231,7 @@ SUPPORTED_MODELS = tuple(REGISTER_MAP.keys())
 
 # Ordered list of registers to poll on each update.
 POLLING_REGISTER_KEYS = (
+    REG_SOFTWARE_VERSION,
     REG_POWER,
     REG_CONTROL_STATE,
     REG_SPEED_CONTROL,
