@@ -76,6 +76,7 @@ REG_HOME_STATE = "home_state"
 REG_BOOST_STATE = "boost_state"
 REG_BOOST_TIMER = "boost_timer"
 REG_HUMIDITY = "humidity"
+REG_HUMIDITY_24H_AVG = "humidity_24h_avg"
 REG_CO2 = "co2"
 REG_ALARM_COUNT = "alarm_count"
 REG_SUM_ALARM = "sum_alarm"
@@ -160,6 +161,9 @@ def _build_v1_registers() -> Dict[str, RegisterDefinition]:
         ),
         REG_HUMIDITY: RegisterDefinition(
             REG_HUMIDITY, 1180, "MEXX_FM", optional=True
+        ),
+        REG_HUMIDITY_24H_AVG: RegisterDefinition(
+            REG_HUMIDITY_24H_AVG, 1192, "ME05_AVG_FM", scale=0.1, optional=True
         ),
         REG_CO2: RegisterDefinition(
             REG_CO2, 1031, "QE20_M", optional=True
@@ -278,6 +282,7 @@ POLLING_REGISTER_KEYS = (
     REG_BOOST_STATE,
     REG_BOOST_TIMER,
     REG_HUMIDITY,
+    REG_HUMIDITY_24H_AVG,
     REG_CO2,
     REG_ALARM_COUNT,
     REG_SUM_ALARM,

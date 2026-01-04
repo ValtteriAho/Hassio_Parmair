@@ -1,3 +1,12 @@
+## 0.3.1 - 24-Hour Humidity Average Sensor (2026-01-04)
+
+### Added
+- **24-Hour Humidity Average Sensor**: New sensor for monitoring 24-hour averaged humidity
+  - Uses ME05_AVG_FM register (192/1192)
+  - Displays percentage humidity averaged over 24 hours
+  - Shows "Not Available" when measurement is not present
+  - Optional sensor - marked unavailable if hardware doesn't support it
+
 ## 0.3.0 - Multi-Firmware Support (2026-01-04)
 
 ### Added

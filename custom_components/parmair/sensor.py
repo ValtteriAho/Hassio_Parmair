@@ -73,6 +73,7 @@ async def async_setup_entry(
         
         # Optional sensors (will show unavailable if hardware not present)
         ParmairHumiditySensor(coordinator, entry, "humidity", "Humidity"),
+        ParmairHumidity24hAvgSensor(coordinator, entry, "humidity_24h_avg", "Humidity 24h Average"),
         ParmairCO2Sensor(coordinator, entry, "co2", "CO2"),
     ]
     
@@ -171,6 +172,41 @@ class ParmairHumiditySensor(ParmairRegisterEntity, SensorEntity):
         """Return device class only if sensor is installed."""
         value = self.coordinator.data.get(self._data_key)
         if value in (0, 65535, -1, None):
+            return None
+        return SensorDeviceClass.HUMIDITY
+
+
+class ParmairHumidity24hAvgSensor(ParmairRegisterEntity, SensorEntity):
+    """Representation of a Parmair 24-hour humidity average sensor."""
+
+    _attr_has_entity_name = True
+    _attr_state_class = SensorStateClass.MEASUREMENT
+    _attr_native_unit_of_measurement = PERCENTAGE
+
+    def __init__(
+        self,
+        coordinator: ParmairCoordinator,
+        entry: ConfigEntry,
+        data_key: str,
+        name: str,
+    ) -> None:
+        """Initialize the sensor."""
+        super().__init__(coordinator, entry, data_key, name)
+
+    @property
+    def native_value(self) -> float | str | None:
+        """Return the sensor value."""
+        value = self.coordinator.data.get(self._data_key)
+        # -1 or None indicates sensor not available
+        if value in (-1, None) or value < 0:
+            return "Not Available"
+        return value
+
+    @property
+    def device_class(self) -> str | None:
+        """Return device class only if sensor has valid data."""
+        value = self.coordinator.data.get(self._data_key)
+        if value in (-1, None) or value < 0:
             return None
         return SensorDeviceClass.HUMIDITY
 
