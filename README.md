@@ -175,7 +175,7 @@ For issues, feature requests, or questions, please open an issue on GitHub.
 - **Extended Polling**: 6 additional registers for enhanced monitoring
 
 ### 0.2.2
-- **Fixed Missing Sensor**: Added TE05_M temperature sensor (Register 22, Address 1022).
+- **Fixed Missing Sensor**: Added TE05_M temperature sensor.
 - **Supply Air Temperature (After Recovery)**: Now properly monitored alongside other temperature sensors.
 - **Complete Temperature Monitoring**: All 5 measurement sensors now present (registers 20, 22, 23, 24, 25).
 
@@ -184,7 +184,7 @@ For issues, feature requests, or questions, please open an issue on GitHub.
 - **Improved Model Detection**: VENT_MACHINE register value directly maps to model (80→MAC80, 100→MAC100, 150→MAC150).
 - **MAC100 Support**: Added MAC100 model to register map.
 - **Fixed Default Name**: Changed from "Parmair Ventilation" to "Parmair MAC".
-- **Fixed Register ID Calculation**: Corrected formula to Address - 1000 = Register ID.
+- **Fixed Register ID Calculation**: Corrected formula to properly calculate register addresses.
 - **Translations**: Added Finnish/English translations for polling interval field.
 
 ### 0.2.0

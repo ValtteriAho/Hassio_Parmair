@@ -47,18 +47,14 @@ custom_components/parmair/
    - Alarm Count
    - Summary Alarm
 
-## 📝 Key Register Mappings
+## 📝 Key Functionality
 
-| Function | Register | Address | Scaling |
-|----------|----------|---------|---------|
-| Power Control | 208 | 207 | 1 |
-| Control State | 185 | 184 | 1 |
-| Exhaust Temp | 24 | 23 | ÷10 |
-| Supply Temp | 23 | 22 | ÷10 |
-| Fresh Air Temp | 20 | 19 | ÷10 |
-| Exhaust Setpoint | 60 | 59 | ÷10 |
-
-**Note**: Register addresses are Register ID minus 1 (Modbus convention)
+The integration provides comprehensive control and monitoring through Modbus TCP communication:
+- Power control and mode selection
+- Temperature monitoring with automatic scaling (÷10)
+- Fan speed control and monitoring
+- Timer management for boost and overpressure modes
+- Filter status and maintenance tracking
 
 ## 🚀 Next Steps
 
@@ -91,36 +87,24 @@ cp -r custom_components/parmair /config/custom_components/
 
 ## 🔧 Customization Options
 
-### Adding More Registers
-If you want to expose additional registers from the documentation, edit:
-1. Add register address to `const.py`
-2. Add reading logic to `coordinator.py`
-3. Create appropriate entity in `sensor.py` or `fan.py`
-
 ### Adjusting Polling Interval
 In `const.py`, change:
 ```python
 DEFAULT_SCAN_INTERVAL = 30  # seconds
 ```
 
-### Adding Binary Sensors
-For alarm states, you could create `binary_sensor.py` to show alarms as on/off.
-
 ## 📚 Documentation
 
-- **MODBUS_REGISTERS.md**: Complete register reference
-- **Modbus Parmair v1.87.pdf**: Official Modbus specification
 - **README.md**: User-facing documentation
+- **CHANGELOG.md**: Version history and changes
 
 ## ⚠️ Important Notes
 
-1. **Read-Only for Now**: Currently only reads data. Writing (control) is implemented in the fan entity for mode changes.
+1. **Temperature Scaling**: All temperatures use factor 10 (value 210 = 21.0°C)
 
-2. **Temperature Scaling**: All temperatures use factor 10 (value 210 = 21.0°C)
+2. **Optional Sensors**: Humidity and CO2 only appear if available
 
-3. **Optional Sensors**: Humidity and CO2 only appear if available (register value >= 0)
-
-4. **Power States**:
+3. **Power States**:
    - 0 = Off
    - 1 = Shutting down  
    - 2 = Starting
@@ -139,13 +123,12 @@ For alarm states, you could create `binary_sensor.py` to show alarms as on/off.
 
 ### Can't Connect
 - Verify IP address and network connectivity
-- Check firewall settings (port 502)
+- Check firewall settings
 - Confirm Modbus is enabled on device
 
 ### Sensors Not Updating
 - Check Home Assistant logs: Settings → System → Logs
 - Look for "parmair" entries
-- Verify register addresses match your device version
 
 ### Missing Sensors
 - Optional sensors (humidity, CO2) require hardware
@@ -162,8 +145,7 @@ If you encounter issues:
      logs:
        custom_components.parmair: debug
    ```
-3. Review MODBUS_REGISTERS.md for register details
-4. Open GitHub issue with logs and configuration
+3. Open GitHub issue with logs and configuration
 
 ---
 

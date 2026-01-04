@@ -3,8 +3,8 @@
 ### Added
 - New sensor: **Filter Last Changed** - displays when air filter was last changed (YYYY-MM-DD format)
 - Sensor includes `next_change_date` attribute showing when next filter change is due
-- Reads from FILTER_DAY, FILTER_MONTH, FILTER_YEAR registers (86-88/1086-1088)
-- Also polls FILTERNEXT_DAY, FILTERNEXT_MONTH, FILTERNEXT_YEAR registers (89-91/1089-1091)
+- Reads from FILTER_DAY, FILTER_MONTH, FILTER_YEAR registers
+- Also polls FILTERNEXT_DAY, FILTERNEXT_MONTH, FILTERNEXT_YEAR registers
 
 ### Technical
 - Added filter date registers to const.py (REG_FILTER_DAY, REG_FILTER_MONTH, etc.)
@@ -69,7 +69,7 @@
 ## 0.5.0 - Device Info Enhancement (2026-01-04)
 
 ### Changed
-- **Firmware Version**: Now reads actual firmware version from MULTI_FW_VER register (17/1017)
+- **Firmware Version**: Now reads actual firmware version from MULTI_FW_VER register
 - **Device Info**: Software version and firmware version now displayed in device information
   - Software version shown in "Software version" field
   - Firmware version shown in "Hardware version" field
@@ -94,7 +94,7 @@
 - **Boost Timer**: Number slider to set boost mode timer (0-300 minutes)
 - **Overpressure Timer**: Number slider to set overpressure mode timer (0-300 minutes)
 - Firmware version now displayed during installation alongside hardware model
-- Registers: BOOST_STATE_FI (1201), BOOST_TIMER_FM (1202, writable), OVERP_STATE_FI (1203), OVERP_TIMER_FM (1204, writable)
+- Registers: BOOST_STATE_FI, BOOST_TIMER_FM (writable), OVERP_STATE_FI, OVERP_TIMER_FM (writable)
 
 ### Changed
 - Config flow now shows detected firmware version during setup
@@ -119,7 +119,7 @@
 
 ### Added
 - **24-Hour Humidity Average Sensor**: New sensor for monitoring 24-hour averaged humidity
-  - Uses ME05_AVG_FM register (192/1192)
+  - Uses ME05_AVG_FM register
   - Displays percentage humidity averaged over 24 hours
   - Shows "Not Available" when measurement is not present
   - Optional sensor - marked unavailable if hardware doesn't support it
@@ -164,7 +164,7 @@
 - **CRITICAL: Negative Temperature Handling**: Fixed signed int16 conversion for temperature sensors
   - Temperatures below 0°C were displaying as huge values (e.g., -8.6°C showed as 6545°C)
   - All temperature sensors now properly handle negative values
-- **Software Version Sensor**: Corrected register address to 1018 (register 18 + 1000 offset)
+- **Software Version Sensor**: Corrected register address
 
 ### Added
 - **Human-Readable State Sensors**: State sensors now display meaningful text instead of numbers
@@ -183,7 +183,7 @@
 ## 0.2.4 - Software Version Monitoring (2026-01-03)
 
 ### Added
-- **Software Version Sensor**: Monitor Multi24 firmware application version (MULTI_SW_VER, Register 18)
+- **Software Version Sensor**: Monitor Multi24 firmware application version (MULTI_SW_VER)
   - Diagnostic sensor showing firmware version (e.g., 2.00)
   - Automatically polled with other system data
   - Helps identify firmware-related issues and compatibility
@@ -195,20 +195,20 @@
 
 ### Added
 - **Button Platform** with 2 actions:
-  - Acknowledge Alarms button - Clear active alarms (register 3)
-  - Filter Replaced button - Acknowledge filter change (register 205)
+  - Acknowledge Alarms button - Clear active alarms
+  - Filter Replaced button - Acknowledge filter change
 - **Select Platform** with configuration:
-  - Heater Type selector - Choose between Water/Electric heater (register 240)
+  - Heater Type selector - Choose between Water/Electric heater
 - **Number Entities** (2 additional):
-  - Summer Mode Temperature Limit (15-30°C, register 78) - Outdoor temp to disable heat recovery
-  - Filter Change Interval (3/4/6 months, register 85) - Set maintenance schedule
+  - Summer Mode Temperature Limit (15-30°C) - Outdoor temp to disable heat recovery
+  - Filter Change Interval (3/4/6 months) - Set maintenance schedule
 - **Sensor Entities** (7 additional):
-  - Heat Recovery Efficiency - Real-time efficiency % (register 190)
-  - Overpressure Timer - Fireplace mode time remaining (register 204)
-  - Defrost State - Heat recovery defrost active (register 183)
-  - Supply Fan Speed - Current fan output % (register 40)
-  - Exhaust Fan Speed - Current fan output % (register 42)
-  - Filter Status - Replace/OK status (register 205)
+  - Heat Recovery Efficiency - Real-time efficiency %
+  - Overpressure Timer - Fireplace mode time remaining
+  - Defrost State - Heat recovery defrost active
+  - Supply Fan Speed - Current fan output %
+  - Exhaust Fan Speed - Current fan output %
+  - Filter Status - Replace/OK status
 
 ### Changed
 - Updated HACS domains to include "button" and "select"
@@ -217,19 +217,19 @@
 ## 0.2.2 - Temperature Sensor Fix (2025-12-28)
 
 ### Fixed
-- Added missing TE05_M temperature sensor (Register 22, Address 1022)
+- Added missing TE05_M temperature sensor
 
 ### Added
 - **Number Platform**: Control fan speed presets and temperature setpoints
-  - Home speed preset (0-4, register 128)
-  - Away speed preset (0-4, register 129)
-  - Boost setting preset (2-4, register 130)
-  - Exhaust temperature setpoint (18-26°C, register 10)
-  - Supply temperature setpoint (15-25°C, register 12)
+  - Home speed preset (0-4)
+  - Away speed preset (0-4)
+  - Boost setting preset (2-4)
+  - Exhaust temperature setpoint (18-26°C)
+  - Supply temperature setpoint (15-25°C)
 - **Switch Platform**: Control system features
-  - Summer mode toggle (register 79)
-  - Time program enable toggle (register 108)
-  - Heater enable toggle (register 109)
+  - Summer mode toggle
+  - Time program enable toggle
+  - Heater enable toggle
 - **Finnish Translation**: Complete fi.json translation for broader user base
 - Updated HACS configuration with number and switch domains
 
@@ -240,7 +240,7 @@
 ## 0.2.2 - Temperature Sensor Fix (2025-12-28)
 
 ### Fixed
-- Added missing TE05_M temperature sensor (Register 22, Address 1022)
+- Added missing TE05_M temperature sensor
 - Supply Air Temperature (After Recovery) sensor now properly monitored
 - All 5 temperature measurement sensors now present (registers 20, 22, 23, 24, 25)
 
@@ -257,7 +257,7 @@
 
 ### Fixed
 - Default integration name changed from "Parmair Ventilation" to "Parmair MAC"
-- Register ID calculation corrected: Address - 1000 = Register ID (was incorrectly Address + 1)
+- Register ID calculation corrected to use proper addressing formula
 - Model detection now returns formatted model names (MAC80/MAC100/MAC150) instead of raw numbers
 
 ## 0.2.0 - Control Features & Localization (2025-12-27)
@@ -275,7 +275,7 @@
   - Heater Enable/Disable
 - **Finnish Translation** (fi.json) for complete localization support
 - Write capability via coordinator.async_write_register() method
-- New register definitions: REG_SUMMER_MODE (1079), REG_TIME_PROGRAM_ENABLE (1108), REG_HEATER_ENABLE (1109)
+- New register definitions: REG_SUMMER_MODE, REG_TIME_PROGRAM_ENABLE, REG_HEATER_ENABLE
 
 ### Changed
 - Updated HACS metadata with "number" and "switch" domains
@@ -292,14 +292,14 @@
 
 ### Fixed
 - **CRITICAL**: Fixed off-by-one error in all register addresses
-- Register ID + 1000 = Address (e.g., Register 20 = Address 1020, not 1019)
+- Register ID + 1000 = Address calculation corrected
 - All addresses were off by 1, preventing proper communication
 
 ## 0.1.11 - Register Documentation & Sensor Fixes (2025-12-27)
 
 ### Fixed
 - Handle 65535 (0xFFFF) value for CO2 and humidity sensors (indicates sensor not installed)
-- Corrected VENT_MACHINE register address from 1124 to 1243
+- Corrected VENT_MACHINE register address
 
 ### Changed
 - Updated register documentation with official Parmair register IDs (TE01_M, TE10_M, etc.)
@@ -308,8 +308,8 @@
 ## 0.1.10 - Register Address Fix (2025-12-27)
 
 ### Fixed
-- **CRITICAL**: Fixed all Modbus register addresses by adding +1000 offset to match actual device addressing
-- Register 20 is now correctly addressed as 1019 (not 19), register 124 as 1124, etc.
+- **CRITICAL**: Fixed all Modbus register addresses to match actual device addressing
+- Register addressing corrected to use proper +1000 offset formula
 - This was the root cause preventing all sensor data from being read correctly
 - Slave ID 0 should be used instead of default slave ID 1 for most devices
 
