@@ -98,7 +98,7 @@ class ParmairCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             # Ensure slave_id is set on the client for legacy pymodbus
             _set_legacy_unit(self._client, self.slave_id)
             
-            data: dict[str, Any] = {"model": self.model, "firmware_version": self.firmware_version}
+            data: dict[str, Any] = {"model": self.model}
             failed_registers = []
 
             try:
@@ -110,9 +110,6 @@ class ParmairCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                     data[definition.key] = value
                     # Small delay between reads to prevent transaction ID conflicts
                     time.sleep(0.01)
-                
-                # Always include firmware version in data for sensors
-                data["firmware_version"] = self.firmware_version
                 
                 # Check if we need to update firmware version detection
                 if "software_version" in data and data["software_version"]:

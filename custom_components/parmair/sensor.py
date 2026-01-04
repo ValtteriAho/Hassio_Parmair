@@ -378,7 +378,9 @@ class ParmairFirmwareFamilySensor(CoordinatorEntity[ParmairCoordinator], SensorE
         """Return the firmware version."""
         fw_version = self.coordinator.data.get("firmware_version")
         if fw_version is not None:
-            return f"{fw_version:.2f}"
+            if isinstance(fw_version, (int, float)):
+                return f"{fw_version:.2f}"
+            return str(fw_version)
         return None
 
 

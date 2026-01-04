@@ -1,3 +1,11 @@
+## 0.5.3 - Firmware Version Sensor Fix (2026-01-04)
+
+### Fixed
+- Fixed firmware version sensor showing "unavailable"
+- Removed code that was overwriting firmware_version data with string constant
+- Now properly displays the numeric value from MULTI_FW_VER register
+- Added type safety for firmware version display
+
 ## 0.5.2 - Device Info Type Fix (2026-01-04)
 
 ### Fixed
