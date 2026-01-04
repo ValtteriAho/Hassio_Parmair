@@ -202,14 +202,21 @@ class ParmairCoordinator(DataUpdateCoordinator[dict[str, Any]]):
     def device_info(self) -> dict[str, Any]:
         """Return device information."""
         sw_version = self.data.get("software_version")
+        hw_type = self.data.get("hardware_type")
+        
+        # Determine MAC model from hardware type (80, 100, or 150)
+        model = "MAC"
+        if hw_type is not None:
+            model = f"MAC {int(hw_type)}"
         
         device_info = {
             "identifiers": {(DOMAIN, self.entry.entry_id)},
             "name": self.entry.data.get("name", DEFAULT_NAME),
             "manufacturer": "Parmair",
-            "model": "MAC",
+            "model": model,
         }
         
+        # Add software version
         if sw_version is not None:
             if isinstance(sw_version, (int, float)):
                 device_info["sw_version"] = f"{sw_version:.2f}"

@@ -297,6 +297,7 @@ REGISTERS = _build_registers_v1()
 # Ordered list of registers to poll on each update.
 POLLING_REGISTER_KEYS = (
     REG_SOFTWARE_VERSION,
+    REG_HARDWARE_TYPE,
     REG_POWER,
     REG_CONTROL_STATE,
     REG_SPEED_CONTROL,

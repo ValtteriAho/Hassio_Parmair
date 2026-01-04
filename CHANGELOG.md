@@ -1,3 +1,15 @@
+## 0.7.4.2 - Fix Device Info Display (2026-01-04)
+
+### Fixed
+- **Device model now shows MAC type** - Shows "MAC 80", "MAC 100", or "MAC 150" based on hardware type
+- **Added hardware type polling** - Reads VENT_MACHINE register (1244) to determine MAC model
+- Device info now displays correct model information in Home Assistant
+
+### Technical
+- Added REG_HARDWARE_TYPE to polling registers
+- Updated device_info property to read hardware_type and format model string
+- Software version continues to display correctly as sw_version
+
 ## 0.7.4.1 - Fix Pymodbus Compatibility and Auto-Detection (2026-01-04)
 
 ### Fixed
