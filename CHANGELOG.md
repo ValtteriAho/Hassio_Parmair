@@ -1,3 +1,18 @@
+## 0.7.2 - Display Timer Remaining Time (2026-01-04)
+
+### Added
+- Boost Mode switch now displays `remaining_time` attribute showing minutes left when active
+- Overpressure Mode switch now displays `remaining_time` attribute showing minutes left when active
+
+### Changed
+- Enhanced extra_state_attributes on boost and overpressure switches
+- Timer values update in real-time during mode operation
+
+### Technical
+- Added REG_BOOST_TIMER and REG_OVERPRESSURE_TIMER to switch.py imports
+- Reads BOOST_TIMER_FM (register 1202) and OVERP_TIMER_FM (register 1204)
+- Displays remaining time only when timer > 0 (mode is active)
+
 ## 0.7.1 - Fix Config Flow Import Error (2026-01-04)
 
 ### Fixed

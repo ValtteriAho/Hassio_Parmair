@@ -15,10 +15,12 @@ from .const import (
     REG_BOOST_SETTING,
     REG_BOOST_STATE,
     REG_BOOST_TIME_SETTING,
+    REG_BOOST_TIMER,
     REG_CONTROL_STATE,
     REG_HEATER_ENABLE,
     REG_OVERPRESSURE_STATE,
     REG_OVERPRESSURE_TIME_SETTING,
+    REG_OVERPRESSURE_TIMER,
     REG_SUMMER_MODE,
     REG_SUMMER_MODE_TEMP_LIMIT,
     REG_TIME_PROGRAM_ENABLE,
@@ -171,7 +173,7 @@ class ParmairBoostSwitch(CoordinatorEntity[ParmairCoordinator], SwitchEntity):
 
     @property
     def extra_state_attributes(self) -> dict[str, Any]:
-        """Return boost mode predefined settings."""
+        """Return boost mode predefined settings and current timer."""
         # Boost time setting: 0=30min, 1=60min, 2=90min, 3=120min, 4=180min
         boost_time_map = {0: "30 minutes", 1: "60 minutes", 2: "90 minutes", 3: "120 minutes", 4: "180 minutes"}
         # Boost speed setting: 2-4 maps to speed 3-5
@@ -179,12 +181,15 @@ class ParmairBoostSwitch(CoordinatorEntity[ParmairCoordinator], SwitchEntity):
         
         boost_time_value = self.coordinator.data.get(REG_BOOST_TIME_SETTING)
         boost_speed_value = self.coordinator.data.get(REG_BOOST_SETTING)
+        boost_timer_remaining = self.coordinator.data.get(REG_BOOST_TIMER)
         
         attrs = {}
         if boost_time_value is not None:
             attrs["preset_duration"] = boost_time_map.get(boost_time_value, f"Unknown ({boost_time_value})")
         if boost_speed_value is not None:
             attrs["preset_speed"] = boost_speed_map.get(boost_speed_value, f"Unknown ({boost_speed_value})")
+        if boost_timer_remaining is not None and boost_timer_remaining > 0:
+            attrs["remaining_time"] = f"{boost_timer_remaining} minutes"
         
         return attrs
 
@@ -239,15 +244,18 @@ class ParmairOverpressureSwitch(CoordinatorEntity[ParmairCoordinator], SwitchEnt
 
     @property
     def extra_state_attributes(self) -> dict[str, Any]:
-        """Return overpressure mode predefined settings."""
+        """Return overpressure mode predefined settings and current timer."""
         # Overpressure time setting: 0=15min, 1=30min, 2=45min, 3=60min, 4=120min
         overp_time_map = {0: "15 minutes", 1: "30 minutes", 2: "45 minutes", 3: "60 minutes", 4: "120 minutes"}
         
         overp_time_value = self.coordinator.data.get(REG_OVERPRESSURE_TIME_SETTING)
+        overp_timer_remaining = self.coordinator.data.get(REG_OVERPRESSURE_TIMER)
         
         attrs = {}
         if overp_time_value is not None:
             attrs["preset_duration"] = overp_time_map.get(overp_time_value, f"Unknown ({overp_time_value})")
+        if overp_timer_remaining is not None and overp_timer_remaining > 0:
+            attrs["remaining_time"] = f"{overp_timer_remaining} minutes"
         
         return attrs
 
