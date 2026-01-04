@@ -1,3 +1,21 @@
+## 0.6.9 - Switch Predefined Values Display (2026-01-04)
+
+### Added
+- Display predefined settings as attributes on switches
+- Boost Mode switch now shows preset_duration (30-180 minutes) and preset_speed (Speed 3-5)
+- Overpressure Mode switch now shows preset_duration (15-120 minutes)
+- Summer Mode switch now shows temperature_limit
+
+### Technical
+- Added REG_BOOST_TIME_SETTING register (1106, BOOST_TIME_S)
+- Added REG_OVERPRESSURE_TIME_SETTING register (1107, OVERP_TIME_S)
+- Added REG_SUMMER_MODE_TEMP_LIMIT to predefined settings section
+- Added extra_state_attributes methods to switch entities
+- Added new registers to polling list for real-time display
+- Boost time maps: 0=30min, 1=60min, 2=90min, 3=120min, 4=180min
+- Overpressure time maps: 0=15min, 1=30min, 2=45min, 3=60min, 4=120min
+- Boost speed maps: 2=Speed 3, 3=Speed 4, 4=Speed 5
+
 ## 0.6.8 - Remove Firmware Version (2026-01-04)
 
 ### Removed

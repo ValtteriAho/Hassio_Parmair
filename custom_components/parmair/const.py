@@ -69,6 +69,11 @@ REG_SUMMER_MODE = "summer_mode"
 REG_TIME_PROGRAM_ENABLE = "time_program_enable"
 REG_HEATER_ENABLE = "heater_enable"
 
+# Predefined settings register keys
+REG_BOOST_TIME_SETTING = "boost_time_setting"
+REG_OVERPRESSURE_TIME_SETTING = "overpressure_time_setting"
+REG_SUMMER_MODE_TEMP_LIMIT = "summer_mode_temp_limit"
+
 # Button register keys
 REG_ACKNOWLEDGE_ALARMS = "acknowledge_alarms"
 REG_FILTER_REPLACED = "filter_replaced"
@@ -77,7 +82,6 @@ REG_FILTER_REPLACED = "filter_replaced"
 REG_HEATER_TYPE = "heater_type"
 
 # Additional number register keys
-REG_SUMMER_MODE_TEMP_LIMIT = "summer_mode_temp_limit"
 REG_FILTER_INTERVAL = "filter_interval"
 
 # Additional sensor register keys
@@ -191,10 +195,17 @@ def _build_registers() -> Dict[str, RegisterDefinition]:
         REG_HEATER_TYPE: RegisterDefinition(
             REG_HEATER_TYPE, 1240, "HEAT_RADIATOR_TYPE", writable=True
         ),
-        # Additional number registers
+        # Predefined settings registers
+        REG_BOOST_TIME_SETTING: RegisterDefinition(
+            REG_BOOST_TIME_SETTING, 1106, "BOOST_TIME_S", writable=True
+        ),
+        REG_OVERPRESSURE_TIME_SETTING: RegisterDefinition(
+            REG_OVERPRESSURE_TIME_SETTING, 1107, "OVERP_TIME_S", writable=True
+        ),
         REG_SUMMER_MODE_TEMP_LIMIT: RegisterDefinition(
             REG_SUMMER_MODE_TEMP_LIMIT, 1078, "SUMMER_MODE_TE01_LIMIT", scale=0.1, writable=True
         ),
+        # Additional number registers
         REG_FILTER_INTERVAL: RegisterDefinition(
             REG_FILTER_INTERVAL, 1085, "FILTER_INTERVAL_S", writable=True
         ),
@@ -279,6 +290,14 @@ POLLING_REGISTER_KEYS = (
     REG_FILTER_NEXT_DAY,
     REG_FILTER_NEXT_MONTH,
     REG_FILTER_NEXT_YEAR,
+    REG_SUMMER_MODE,
+    REG_TIME_PROGRAM_ENABLE,
+    REG_HEATER_ENABLE,
+    REG_BOOST_TIME_SETTING,
+    REG_OVERPRESSURE_TIME_SETTING,
+    REG_SUMMER_MODE_TEMP_LIMIT,
+    REG_BOOST_SETTING,
+    REG_FILTER_INTERVAL,
 )
 
 
