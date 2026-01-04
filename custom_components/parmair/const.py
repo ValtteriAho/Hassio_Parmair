@@ -88,6 +88,12 @@ REG_DEFROST_STATE = "defrost_state"
 REG_SUPPLY_FAN_SPEED = "supply_fan_speed"
 REG_EXHAUST_FAN_SPEED = "exhaust_fan_speed"
 REG_FILTER_STATE = "filter_state"
+REG_FILTER_DAY = "filter_day"
+REG_FILTER_MONTH = "filter_month"
+REG_FILTER_YEAR = "filter_year"
+REG_FILTER_NEXT_DAY = "filter_next_day"
+REG_FILTER_NEXT_MONTH = "filter_next_month"
+REG_FILTER_NEXT_YEAR = "filter_next_year"
 
 
 def _build_registers() -> Dict[str, RegisterDefinition]:
@@ -213,6 +219,24 @@ def _build_registers() -> Dict[str, RegisterDefinition]:
         REG_FILTER_STATE: RegisterDefinition(
             REG_FILTER_STATE, 1205, "FILTER_STATE_FI"
         ),
+        REG_FILTER_DAY: RegisterDefinition(
+            REG_FILTER_DAY, 1086, "FILTER_DAY", writable=True
+        ),
+        REG_FILTER_MONTH: RegisterDefinition(
+            REG_FILTER_MONTH, 1087, "FILTER_MONTH", writable=True
+        ),
+        REG_FILTER_YEAR: RegisterDefinition(
+            REG_FILTER_YEAR, 1088, "FILTER_YEAR", writable=True
+        ),
+        REG_FILTER_NEXT_DAY: RegisterDefinition(
+            REG_FILTER_NEXT_DAY, 1089, "FILTERNEXT_DAY", writable=True
+        ),
+        REG_FILTER_NEXT_MONTH: RegisterDefinition(
+            REG_FILTER_NEXT_MONTH, 1090, "FILTERNEXT_MONTH", writable=True
+        ),
+        REG_FILTER_NEXT_YEAR: RegisterDefinition(
+            REG_FILTER_NEXT_YEAR, 1091, "FILTERNEXT_YEAR", writable=True
+        ),
     }
 
 
@@ -252,6 +276,12 @@ POLLING_REGISTER_KEYS = (
     REG_SUPPLY_FAN_SPEED,
     REG_EXHAUST_FAN_SPEED,
     REG_FILTER_STATE,
+    REG_FILTER_DAY,
+    REG_FILTER_MONTH,
+    REG_FILTER_YEAR,
+    REG_FILTER_NEXT_DAY,
+    REG_FILTER_NEXT_MONTH,
+    REG_FILTER_NEXT_YEAR,
 )
 
 

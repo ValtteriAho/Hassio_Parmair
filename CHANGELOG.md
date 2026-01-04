@@ -1,3 +1,17 @@
+## 0.6.2 - Filter Change Date Sensor (2026-01-04)
+
+### Added
+- New sensor: **Filter Last Changed** - displays when air filter was last changed (YYYY-MM-DD format)
+- Sensor includes `next_change_date` attribute showing when next filter change is due
+- Reads from FILTER_DAY, FILTER_MONTH, FILTER_YEAR registers (86-88/1086-1088)
+- Also polls FILTERNEXT_DAY, FILTERNEXT_MONTH, FILTERNEXT_YEAR registers (89-91/1089-1091)
+
+### Technical
+- Added filter date registers to const.py (REG_FILTER_DAY, REG_FILTER_MONTH, etc.)
+- Created ParmairFilterChangeDateSensor class
+- Sensor categorized as EntityCategory.DIAGNOSTIC
+- Validates date values before display
+
 ## 0.6.1 - Switch Display Fix (2026-01-04)
 
 ### Fixed

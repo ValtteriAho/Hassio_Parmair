@@ -76,6 +76,9 @@ async def async_setup_entry(
         ParmairHumiditySensor(coordinator, entry, "humidity", "Humidity"),
         ParmairHumidity24hAvgSensor(coordinator, entry, "humidity_24h_avg", "Humidity 24h Average"),
         ParmairCO2Sensor(coordinator, entry, "co2", "CO2"),
+        
+        # Filter change date sensor
+        ParmairFilterChangeDateSensor(coordinator, entry),
     ]
     
     async_add_entities(entities)
@@ -482,3 +485,58 @@ class ParmairBinarySensor(ParmairRegisterEntity, SensorEntity):
         if raw_value is None:
             return None
         return self._state_map.get(raw_value, f"Unknown ({raw_value})")
+
+
+class ParmairFilterChangeDateSensor(CoordinatorEntity[ParmairCoordinator], SensorEntity):
+    """Sensor showing when air filter was last changed."""
+
+    _attr_has_entity_name = True
+    _attr_icon = "mdi:air-filter"
+    _attr_entity_category = EntityCategory.DIAGNOSTIC
+
+    def __init__(
+        self,
+        coordinator: ParmairCoordinator,
+        entry: ConfigEntry,
+    ) -> None:
+        """Initialize the sensor."""
+        super().__init__(coordinator)
+        self._attr_name = "Filter Last Changed"
+        self._attr_unique_id = f"{entry.entry_id}_filter_last_changed"
+        self._attr_device_info = coordinator.device_info
+
+    @property
+    def native_value(self) -> str | None:
+        """Return the filter last change date as YYYY-MM-DD."""
+        day = self.coordinator.data.get("filter_day")
+        month = self.coordinator.data.get("filter_month")
+        year = self.coordinator.data.get("filter_year")
+        
+        if day is None or month is None or year is None:
+            return None
+        
+        # Validate date values
+        try:
+            if not (1 <= day <= 31 and 1 <= month <= 12 and 2000 <= year <= 3000):
+                return None
+            return f"{year:04d}-{month:02d}-{day:02d}"
+        except (ValueError, TypeError):
+            return None
+
+    @property
+    def extra_state_attributes(self) -> dict[str, any]:
+        """Return additional attributes."""
+        next_day = self.coordinator.data.get("filter_next_day")
+        next_month = self.coordinator.data.get("filter_next_month")
+        next_year = self.coordinator.data.get("filter_next_year")
+        
+        attrs = {}
+        
+        if next_day is not None and next_month is not None and next_year is not None:
+            try:
+                if 1 <= next_day <= 31 and 1 <= next_month <= 12 and 2000 <= next_year <= 3000:
+                    attrs["next_change_date"] = f"{next_year:04d}-{next_month:02d}-{next_day:02d}"
+            except (ValueError, TypeError):
+                pass
+        
+        return attrs
