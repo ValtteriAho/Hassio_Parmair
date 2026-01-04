@@ -111,7 +111,7 @@ async def validate_connection(hass: HomeAssistant, data: dict[str, Any]) -> dict
                     )
             
             # Extract and scale software version
-            if hasattr(result, \"registers\"):
+            if hasattr(result, "registers"):
                 raw_sw = result.registers[0]
             elif isinstance(result, (list, tuple)):
                 raw_sw = result[0]
@@ -129,12 +129,12 @@ async def validate_connection(hass: HomeAssistant, data: dict[str, Any]) -> dict
                 detected_sw_version = SOFTWARE_VERSION_UNKNOWN
             
             _LOGGER.info(
-                \"Auto-detected software version: %.2f, family: %s\",
+                "Auto-detected software version: %.2f, family: %s",
                 sw_version,
                 detected_sw_version,
             )
         except Exception as ex:
-            _LOGGER.warning(\"Could not auto-detect software version: %s\", ex)
+            _LOGGER.warning("Could not auto-detect software version: %s", ex)
         
         # Try to read heater type
         try:
@@ -155,7 +155,7 @@ async def validate_connection(hass: HomeAssistant, data: dict[str, Any]) -> dict
                     )
             
             # Extract heater type value
-            if hasattr(result, \"registers\"):
+            if hasattr(result, "registers"):
                 heater_type = result.registers[0]
             elif isinstance(result, (list, tuple)):
                 heater_type = result[0]
@@ -165,18 +165,18 @@ async def validate_connection(hass: HomeAssistant, data: dict[str, Any]) -> dict
             detected_heater_type = int(heater_type)
             
             heater_names = {
-                HEATER_TYPE_NONE: \"None\",
-                HEATER_TYPE_WATER: \"Water\",
-                HEATER_TYPE_ELECTRIC: \"Electric\",
+                HEATER_TYPE_NONE: "None",
+                HEATER_TYPE_WATER: "Water",
+                HEATER_TYPE_ELECTRIC: "Electric",
             }
             
             _LOGGER.info(
-                \"Auto-detected heater type: %s (%s)\",
+                "Auto-detected heater type: %s (%s)",
                 detected_heater_type,
-                heater_names.get(detected_heater_type, \"Unknown\"),
+                heater_names.get(detected_heater_type, "Unknown"),
             )
         except Exception as ex:
-            _LOGGER.warning(\"Could not auto-detect heater type: %s\", ex)
+            _LOGGER.warning("Could not auto-detect heater type: %s", ex)
         
         return detected_sw_version, detected_heater_type
     

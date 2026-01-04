@@ -1,3 +1,9 @@
+## 0.7.1 - Fix Config Flow Import Error (2026-01-04)
+
+### Fixed
+- Fixed syntax error in config_flow.py (escaped quotes in string literals)
+- Resolves "Error importing platform config_flow" during setup
+
 ## 0.7.0 - Software Version Detection & Register Versioning (2026-01-04)
 
 ### Added
