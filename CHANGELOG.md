@@ -1,3 +1,8 @@
+## 0.3.2 - Bugfix Release (2026-01-04)
+
+### Fixed
+- Fixed trailing comma in manifest.json causing HACS installation failure
+
 ## 0.3.1 - 24-Hour Humidity Average Sensor (2026-01-04)
 
 ### Added
