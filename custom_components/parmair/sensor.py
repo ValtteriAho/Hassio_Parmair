@@ -16,6 +16,7 @@ from homeassistant.const import (
     UnitOfTime,
 )
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers.entity import EntityCategory
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
@@ -341,7 +342,7 @@ class ParmairSoftwareVersionSensor(ParmairRegisterEntity, SensorEntity):
 
     _attr_has_entity_name = True
     _attr_icon = "mdi:information-outline"
-    _attr_entity_category = "diagnostic"
+    _attr_entity_category = EntityCategory.DIAGNOSTIC
 
     def __init__(
         self,
@@ -365,7 +366,7 @@ class ParmairFirmwareFamilySensor(CoordinatorEntity[ParmairCoordinator], SensorE
     _attr_has_entity_name = True
     _attr_name = "Firmware Family"
     _attr_icon = "mdi:chip"
-    _attr_entity_category = "diagnostic"
+    _attr_entity_category = EntityCategory.DIAGNOSTIC
 
     def __init__(
         self,

@@ -1,3 +1,9 @@
+## 0.4.1 - Diagnostic Entity Fix (2026-01-04)
+
+### Fixed
+- Fixed diagnostic entities (Software Version, Firmware Family) not appearing properly
+- Added proper EntityCategory import for diagnostic entities
+
 ## 0.4.0 - Boost and Overpressure Controls (2026-01-04)
 
 ### Added
