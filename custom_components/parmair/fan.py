@@ -65,12 +65,7 @@ class ParmairFan(CoordinatorEntity[ParmairCoordinator], FanEntity):
         """Initialize the fan entity."""
         super().__init__(coordinator)
         self._attr_unique_id = f"{entry.entry_id}_fan"
-        self._attr_device_info = {
-            "identifiers": {(DOMAIN, entry.entry_id)},
-            "name": entry.data.get("name", DEFAULT_NAME),
-            "manufacturer": "Parmair",
-            "model": coordinator.model,
-        }
+        self._attr_device_info = coordinator.device_info
 
     @property
     def is_on(self) -> bool:
@@ -169,7 +164,6 @@ class ParmairFan(CoordinatorEntity[ParmairCoordinator], FanEntity):
         """Expose high-level metadata for diagnostics."""
 
         return {
-            "parmair_model": self.coordinator.model,
             "parmair_power_register": self.coordinator.get_register_definition(REG_POWER).label,
             "parmair_control_register": self.coordinator.get_register_definition(REG_CONTROL_STATE).label,
         }

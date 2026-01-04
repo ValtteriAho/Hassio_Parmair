@@ -1,3 +1,15 @@
+## 0.6.7 - Coordinator Attribute Fix (2026-01-04)
+
+### Fixed
+- Fixed AttributeError in sensor and fan entities trying to access removed coordinator.model
+- Removed leftover references to coordinator.model from v0.6.0 refactoring
+- Entities now use coordinator.device_info consistently
+
+### Technical
+- Removed parmair_model from sensor extra_state_attributes
+- Removed parmair_model from fan extra_state_attributes
+- Fan entity now uses coordinator.device_info instead of building device_info manually
+
 ## 0.6.6 - Manifest JSON Fix (2026-01-04)
 
 ### Fixed

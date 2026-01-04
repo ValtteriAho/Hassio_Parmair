@@ -107,7 +107,6 @@ class ParmairRegisterEntity(CoordinatorEntity[ParmairCoordinator]):
         """Expose register metadata for diagnostics."""
 
         return {
-            "parmair_model": self.coordinator.model,
             "parmair_register": self._register.label,
             "parmair_register_id": self._register.register_id,
             "parmair_register_address": self._register.address,
