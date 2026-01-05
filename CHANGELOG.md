@@ -1,3 +1,14 @@
+## 0.8.0 - Device Info Label Clarification (2026-01-05)
+
+### Changed
+- Device info displays software version (label shown as "Software" or "Firmware" depending on Home Assistant version)
+- Clarified that sw_version field contains software version from device
+
+### Note
+- The integration provides software version data via standard Home Assistant `sw_version` field
+- Home Assistant UI controls the display label (may show as "Firmware" or "Software")
+- The value (e.g., "1.83") correctly represents the device's software version
+
 ## 0.7.7.3 - Syntax Fix (2026-01-05)
 
 ### Fixed
