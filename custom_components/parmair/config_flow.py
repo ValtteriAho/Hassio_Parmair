@@ -203,36 +203,36 @@ async def validate_connection(hass: HomeAssistant, data: dict[str, Any]) -> dict
                                 result = client.read_holding_registers(
                                     heater_reg.address, 1
                                 )
-            
-            # Check if read was successful
-            if result and not (hasattr(result, "isError") and result.isError()):
-                # Extract heater type value
-                if hasattr(result, "registers"):
-                    heater_type = result.registers[0]
-                elif isinstance(result, (list, tuple)):
-                    heater_type = result[0]
+                
+                # Check if read was successful
+                if result and not (hasattr(result, "isError") and result.isError()):
+                    # Extract heater type value
+                    if hasattr(result, "registers"):
+                        heater_type = result.registers[0]
+                    elif isinstance(result, (list, tuple)):
+                        heater_type = result[0]
+                    else:
+                        heater_type = result
+                    
+                    detected_heater_type = int(heater_type)
+                    
+                    heater_names = {
+                        HEATER_TYPE_NONE: "None",
+                        HEATER_TYPE_WATER: "Water",
+                        HEATER_TYPE_ELECTRIC: "Electric",
+                    }
+                    
+                    _LOGGER.info(
+                        "Auto-detected heater type: %s (%s) (attempt %d/3)",
+                        detected_heater_type,
+                        heater_names.get(detected_heater_type, "Unknown"),
+                        attempt + 1,
+                    )
+                    break  # Success, exit retry loop
                 else:
-                    heater_type = result
-                
-                detected_heater_type = int(heater_type)
-                
-                heater_names = {
-                    HEATER_TYPE_NONE: "None",
-                    HEATER_TYPE_WATER: "Water",
-                    HEATER_TYPE_ELECTRIC: "Electric",
-                }
-                
-                _LOGGER.info(
-                    "Auto-detected heater type: %s (%s) (attempt %d/3)",
-                    detected_heater_type,
-                    heater_names.get(detected_heater_type, "Unknown"),
-                    attempt + 1,
-                )
-                break  # Success, exit retry loop
-            else:
-                _LOGGER.debug("Attempt %d/3: Failed to read heater type - invalid response", attempt + 1)
-        except Exception as ex:
-            _LOGGER.debug("Attempt %d/3: Could not auto-detect heater type: %s", attempt + 1, ex)
+                    _LOGGER.debug("Attempt %d/3: Failed to read heater type - invalid response", attempt + 1)
+            except Exception as ex:
+                _LOGGER.debug("Attempt %d/3: Could not auto-detect heater type: %s", attempt + 1, ex)
         
         # Use defaults if detection failed after all retries
         if detected_sw_version == SOFTWARE_VERSION_UNKNOWN:

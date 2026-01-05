@@ -1,3 +1,11 @@
+## 0.7.7.3 - Syntax Fix (2026-01-05)
+
+### Fixed
+- **Fixed syntax error in config_flow.py**
+- Corrected indentation in heater type detection retry logic
+- Result checking code was incorrectly placed outside try block
+- Import error resolved
+
 ## 0.7.7.2 - Documentation Cleanup (2026-01-05)
 
 ### Changed
