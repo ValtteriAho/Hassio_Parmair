@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import logging
+import time
 from typing import Any
 
 import voluptuous as vol
@@ -86,6 +87,9 @@ async def validate_connection(hass: HomeAssistant, data: dict[str, Any]) -> dict
         client.close()
         raise CannotConnect
     
+    # Small delay after connection to allow device to stabilize
+    await hass.async_add_executor_job(time.sleep, 0.1)
+    
     # Auto-detect software version and heater type
     def _detect_device_info():
         """Detect software version and heater type from device."""
@@ -123,29 +127,33 @@ async def validate_connection(hass: HomeAssistant, data: dict[str, Any]) -> dict
                                 sw_reg.address, 1
                             )
             
-            # Extract and scale software version
-            if hasattr(result, "registers"):
-                raw_sw = result.registers[0]
-            elif isinstance(result, (list, tuple)):
-                raw_sw = result[0]
+            # Check if read was successful
+            if result and not (hasattr(result, "isError") and result.isError()):
+                # Extract and scale software version
+                if hasattr(result, "registers"):
+                    raw_sw = result.registers[0]
+                elif isinstance(result, (list, tuple)):
+                    raw_sw = result[0]
+                else:
+                    raw_sw = result
+                
+                sw_version = raw_sw * sw_reg.scale
+                
+                # Determine version family
+                if sw_version >= 2.0:
+                    detected_sw_version = SOFTWARE_VERSION_2
+                elif sw_version >= 1.0:
+                    detected_sw_version = SOFTWARE_VERSION_1
+                else:
+                    detected_sw_version = SOFTWARE_VERSION_UNKNOWN
+                
+                _LOGGER.info(
+                    "Auto-detected software version: %.2f, family: %s",
+                    sw_version,
+                    detected_sw_version,
+                )
             else:
-                raw_sw = result
-            
-            sw_version = raw_sw * sw_reg.scale
-            
-            # Determine version family
-            if sw_version >= 2.0:
-                detected_sw_version = SOFTWARE_VERSION_2
-            elif sw_version >= 1.0:
-                detected_sw_version = SOFTWARE_VERSION_1
-            else:
-                detected_sw_version = SOFTWARE_VERSION_UNKNOWN
-            
-            _LOGGER.info(
-                "Auto-detected software version: %.2f, family: %s",
-                sw_version,
-                detected_sw_version,
-            )
+                _LOGGER.warning("Failed to read software version register - invalid response")
         except Exception as ex:
             _LOGGER.warning("Could not auto-detect software version: %s", ex)
         
@@ -180,27 +188,31 @@ async def validate_connection(hass: HomeAssistant, data: dict[str, Any]) -> dict
                                 heater_reg.address, 1
                             )
             
-            # Extract heater type value
-            if hasattr(result, "registers"):
-                heater_type = result.registers[0]
-            elif isinstance(result, (list, tuple)):
-                heater_type = result[0]
+            # Check if read was successful
+            if result and not (hasattr(result, "isError") and result.isError()):
+                # Extract heater type value
+                if hasattr(result, "registers"):
+                    heater_type = result.registers[0]
+                elif isinstance(result, (list, tuple)):
+                    heater_type = result[0]
+                else:
+                    heater_type = result
+                
+                detected_heater_type = int(heater_type)
+                
+                heater_names = {
+                    HEATER_TYPE_NONE: "None",
+                    HEATER_TYPE_WATER: "Water",
+                    HEATER_TYPE_ELECTRIC: "Electric",
+                }
+                
+                _LOGGER.info(
+                    "Auto-detected heater type: %s (%s)",
+                    detected_heater_type,
+                    heater_names.get(detected_heater_type, "Unknown"),
+                )
             else:
-                heater_type = result
-            
-            detected_heater_type = int(heater_type)
-            
-            heater_names = {
-                HEATER_TYPE_NONE: "None",
-                HEATER_TYPE_WATER: "Water",
-                HEATER_TYPE_ELECTRIC: "Electric",
-            }
-            
-            _LOGGER.info(
-                "Auto-detected heater type: %s (%s)",
-                detected_heater_type,
-                heater_names.get(detected_heater_type, "Unknown"),
-            )
+                _LOGGER.warning("Failed to read heater type register - invalid response")
         except Exception as ex:
             _LOGGER.warning("Could not auto-detect heater type: %s", ex)
         

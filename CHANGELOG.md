@@ -1,3 +1,23 @@
+## 0.7.4.3 - Fix Auto-Detection During Configuration (2026-01-05)
+
+### Fixed
+- **Auto-detection now validates Modbus responses** - Checks `result.isError()` before extracting values
+- **Added connection stabilization delay** - 100ms delay after connection before reading registers
+- **Better error logging** - Clearer warnings when detection fails
+- **Software version detection working** - Now properly detects v1.x vs v2.x during initial setup
+- **Heater type detection working** - Now properly detects None/Water/Electric during setup
+
+### Technical
+- Added `time.sleep(0.1)` after Modbus connection
+- Added validation: `if result and not result.isError()` before extracting register values
+- Improved error handling in `_detect_device_info()`
+- Detection failures now properly logged with specific error messages
+
+### Why Detection Failed Before
+1. No validation of Modbus read success - code tried to extract values from failed reads
+2. No delay after connection - device needed time to stabilize
+3. Invalid responses were silently processed, returning garbage values
+
 ## 0.7.4.2 - Fix Device Info Display (2026-01-04)
 
 ### Fixed
