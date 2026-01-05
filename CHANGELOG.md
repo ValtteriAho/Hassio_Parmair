@@ -1,3 +1,26 @@
+## 0.7.7 - Improved Auto-Detection with Retry Logic (2026-01-05)
+
+### Changed
+- **Auto-detection now retries up to 3 times** with increasing delays (150ms, 350ms, 550ms)
+- **Removed manual configuration step** - No longer prompts user to select software version or heater type
+- **Uses smart defaults if detection fails** - Defaults to v1.x and no heater if all retries fail
+- Detection is more reliable with longer delays between attempts
+
+### Technical
+- Added retry loop for software version detection (3 attempts with delays)
+- Added retry loop for heater type detection (3 attempts with delays)
+- Initial delay increased from 100ms to 150ms for device stabilization
+- Retry delays: attempt 2 = 200ms, attempt 3 = 400ms
+- Logs show which attempt succeeded or if defaults were used
+- Removed async_step_manual_config method entirely
+- Detection failures now use defaults: SOFTWARE_VERSION_1, HEATER_TYPE_NONE
+
+### User Experience
+- Configuration flow is now fully automatic
+- No manual selection prompts
+- Slightly longer wait during setup (up to ~1 second if retries needed)
+- Integration will always succeed with detected or sensible default values
+
 ## 0.7.6 - Use Real Speed Sensor (2026-01-05)
 
 ### Changed

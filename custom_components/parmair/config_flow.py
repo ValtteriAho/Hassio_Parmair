@@ -87,106 +87,122 @@ async def validate_connection(hass: HomeAssistant, data: dict[str, Any]) -> dict
         client.close()
         raise CannotConnect
     
-    # Small delay after connection to allow device to stabilize
-    await hass.async_add_executor_job(time.sleep, 0.1)
-    
-    # Auto-detect software version and heater type
+    # Auto-detect software version and heater type with retry logic
     def _detect_device_info():
-        """Detect software version and heater type from device."""
+        """Detect software version and heater type from device with retries."""
         detected_sw_version = SOFTWARE_VERSION_UNKNOWN
         detected_heater_type = HEATER_TYPE_UNKNOWN
         
-        # Try to read software version
-        try:
-            sw_reg = get_register_definition(REG_SOFTWARE_VERSION)
-            try:
-                # Try modern pymodbus with keyword arguments
-                result = client.read_holding_registers(
-                    address=sw_reg.address, count=1, slave=data[CONF_SLAVE_ID]
-                )
-            except TypeError:
-                try:
-                    # Try with 'unit' instead of 'slave'
-                    result = client.read_holding_registers(
-                        address=sw_reg.address, count=1, unit=data[CONF_SLAVE_ID]
-                    )
-                except TypeError:
-                    # Try older versions with positional + keyword
-                    try:
-                        result = client.read_holding_registers(
-                            sw_reg.address, 1, unit=data[CONF_SLAVE_ID]
-                        )
-                    except TypeError:
-                        try:
-                            result = client.read_holding_registers(
-                                sw_reg.address, 1, slave=data[CONF_SLAVE_ID]
-                            )
-                        except TypeError:
-                            _set_legacy_unit(client, data[CONF_SLAVE_ID])
-                            result = client.read_holding_registers(
-                                sw_reg.address, 1
-                            )
-            
-            # Check if read was successful
-            if result and not (hasattr(result, "isError") and result.isError()):
-                # Extract and scale software version
-                if hasattr(result, "registers"):
-                    raw_sw = result.registers[0]
-                elif isinstance(result, (list, tuple)):
-                    raw_sw = result[0]
-                else:
-                    raw_sw = result
-                
-                sw_version = raw_sw * sw_reg.scale
-                
-                # Determine version family
-                if sw_version >= 2.0:
-                    detected_sw_version = SOFTWARE_VERSION_2
-                elif sw_version >= 1.0:
-                    detected_sw_version = SOFTWARE_VERSION_1
-                else:
-                    detected_sw_version = SOFTWARE_VERSION_UNKNOWN
-                
-                _LOGGER.info(
-                    "Auto-detected software version: %.2f, family: %s",
-                    sw_version,
-                    detected_sw_version,
-                )
+        # Try detection multiple times with increasing delays
+        for attempt in range(3):
+            if attempt > 0:
+                # Wait longer between retries
+                delay = 0.2 * attempt  # 0.2s, 0.4s
+                _LOGGER.info("Retrying detection (attempt %d/3) after %.1fs delay", attempt + 1, delay)
+                time.sleep(delay)
             else:
-                _LOGGER.warning("Failed to read software version register - invalid response")
-        except Exception as ex:
-            _LOGGER.warning("Could not auto-detect software version: %s", ex)
-        
-        # Try to read heater type
-        try:
-            heater_reg = get_register_definition(REG_HEATER_TYPE)
+                # Initial delay after connection
+                time.sleep(0.15)
+            
+            # Try to read software version
             try:
-                # Try modern pymodbus with keyword arguments
-                result = client.read_holding_registers(
-                    address=heater_reg.address, count=1, slave=data[CONF_SLAVE_ID]
-                )
-            except TypeError:
+                sw_reg = get_register_definition(REG_SOFTWARE_VERSION)
                 try:
-                    # Try with 'unit' instead of 'slave'
+                    # Try modern pymodbus with keyword arguments
                     result = client.read_holding_registers(
-                        address=heater_reg.address, count=1, unit=data[CONF_SLAVE_ID]
+                        address=sw_reg.address, count=1, slave=data[CONF_SLAVE_ID]
                     )
                 except TypeError:
-                    # Try older versions with positional + keyword
                     try:
+                        # Try with 'unit' instead of 'slave'
                         result = client.read_holding_registers(
-                            heater_reg.address, 1, unit=data[CONF_SLAVE_ID]
+                            address=sw_reg.address, count=1, unit=data[CONF_SLAVE_ID]
                         )
                     except TypeError:
+                        # Try older versions with positional + keyword
                         try:
                             result = client.read_holding_registers(
-                                heater_reg.address, 1, slave=data[CONF_SLAVE_ID]
+                                sw_reg.address, 1, unit=data[CONF_SLAVE_ID]
                             )
                         except TypeError:
-                            _set_legacy_unit(client, data[CONF_SLAVE_ID])
+                            try:
+                                result = client.read_holding_registers(
+                                    sw_reg.address, 1, slave=data[CONF_SLAVE_ID]
+                                )
+                            except TypeError:
+                                _set_legacy_unit(client, data[CONF_SLAVE_ID])
+                                result = client.read_holding_registers(
+                                    sw_reg.address, 1
+                                )
+                
+                # Check if read was successful
+                if result and not (hasattr(result, "isError") and result.isError()):
+                    # Extract and scale software version
+                    if hasattr(result, "registers"):
+                        raw_sw = result.registers[0]
+                    elif isinstance(result, (list, tuple)):
+                        raw_sw = result[0]
+                    else:
+                        raw_sw = result
+                    
+                    sw_version = raw_sw * sw_reg.scale
+                    
+                    # Determine version family
+                    if sw_version >= 2.0:
+                        detected_sw_version = SOFTWARE_VERSION_2
+                    elif sw_version >= 1.0:
+                        detected_sw_version = SOFTWARE_VERSION_1
+                    else:
+                        detected_sw_version = SOFTWARE_VERSION_UNKNOWN
+                    
+                    if detected_sw_version != SOFTWARE_VERSION_UNKNOWN:
+                        _LOGGER.info(
+                            "Auto-detected software version: %.2f, family: %s (attempt %d/3)",
+                            sw_version,
+                            detected_sw_version,
+                            attempt + 1,
+                        )
+                        break  # Success, exit retry loop
+                else:
+                    _LOGGER.debug("Attempt %d/3: Failed to read software version - invalid response", attempt + 1)
+            except Exception as ex:
+                _LOGGER.debug("Attempt %d/3: Could not auto-detect software version: %s", attempt + 1, ex)
+        
+        # Try to read heater type with same retry logic
+        for attempt in range(3):
+            if attempt > 0:
+                delay = 0.1 * attempt
+                time.sleep(delay)
+            
+            try:
+                heater_reg = get_register_definition(REG_HEATER_TYPE)
+                try:
+                    # Try modern pymodbus with keyword arguments
+                    result = client.read_holding_registers(
+                        address=heater_reg.address, count=1, slave=data[CONF_SLAVE_ID]
+                    )
+                except TypeError:
+                    try:
+                        # Try with 'unit' instead of 'slave'
+                        result = client.read_holding_registers(
+                            address=heater_reg.address, count=1, unit=data[CONF_SLAVE_ID]
+                        )
+                    except TypeError:
+                        # Try older versions with positional + keyword
+                        try:
                             result = client.read_holding_registers(
-                                heater_reg.address, 1
+                                heater_reg.address, 1, unit=data[CONF_SLAVE_ID]
                             )
+                        except TypeError:
+                            try:
+                                result = client.read_holding_registers(
+                                    heater_reg.address, 1, slave=data[CONF_SLAVE_ID]
+                                )
+                            except TypeError:
+                                _set_legacy_unit(client, data[CONF_SLAVE_ID])
+                                result = client.read_holding_registers(
+                                    heater_reg.address, 1
+                                )
             
             # Check if read was successful
             if result and not (hasattr(result, "isError") and result.isError()):
@@ -207,14 +223,29 @@ async def validate_connection(hass: HomeAssistant, data: dict[str, Any]) -> dict
                 }
                 
                 _LOGGER.info(
-                    "Auto-detected heater type: %s (%s)",
+                    "Auto-detected heater type: %s (%s) (attempt %d/3)",
                     detected_heater_type,
                     heater_names.get(detected_heater_type, "Unknown"),
+                    attempt + 1,
                 )
+                break  # Success, exit retry loop
             else:
-                _LOGGER.warning("Failed to read heater type register - invalid response")
+                _LOGGER.debug("Attempt %d/3: Failed to read heater type - invalid response", attempt + 1)
         except Exception as ex:
-            _LOGGER.warning("Could not auto-detect heater type: %s", ex)
+            _LOGGER.debug("Attempt %d/3: Could not auto-detect heater type: %s", attempt + 1, ex)
+        
+        # Use defaults if detection failed after all retries
+        if detected_sw_version == SOFTWARE_VERSION_UNKNOWN:
+            detected_sw_version = SOFTWARE_VERSION_1
+            _LOGGER.warning(
+                "Auto-detection failed after 3 attempts, defaulting to software version 1.x"
+            )
+        
+        if detected_heater_type == HEATER_TYPE_UNKNOWN:
+            detected_heater_type = HEATER_TYPE_NONE
+            _LOGGER.warning(
+                "Heater type detection failed after 3 attempts, defaulting to None (no heater)"
+            )
         
         return detected_sw_version, detected_heater_type
     
@@ -306,12 +337,7 @@ class ParmairConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 user_input[CONF_SOFTWARE_VERSION] = info[CONF_SOFTWARE_VERSION]
                 user_input[CONF_HEATER_TYPE] = info[CONF_HEATER_TYPE]
                 
-                # If detection failed, ask user to select manually
-                if (info[CONF_SOFTWARE_VERSION] == SOFTWARE_VERSION_UNKNOWN or 
-                    info[CONF_HEATER_TYPE] == HEATER_TYPE_UNKNOWN):
-                    self._user_input = user_input
-                    return await self.async_step_manual_config()
-                
+                # Create entry with detected or default values
                 return self.async_create_entry(title=info["title"], data=user_input)
             except CannotConnect:
                 errors["base"] = "cannot_connect"
@@ -328,46 +354,4 @@ class ParmairConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             },
         )
 
-    async def async_step_manual_config(
-        self, user_input: dict[str, Any] | None = None
-    ) -> FlowResult:
-        """Handle manual configuration if auto-detection fails."""
-        if user_input is not None:
-            # Merge manual selections with stored connection data
-            self._user_input[CONF_SOFTWARE_VERSION] = user_input[CONF_SOFTWARE_VERSION]
-            self._user_input[CONF_HEATER_TYPE] = user_input[CONF_HEATER_TYPE]
-            
-            return self.async_create_entry(
-                title=self._user_input[CONF_NAME], 
-                data=self._user_input
-            )
-        
-        # Create schema with current values as defaults
-        manual_schema = vol.Schema(
-            {
-                vol.Required(
-                    CONF_SOFTWARE_VERSION,
-                    default=self._user_input.get(CONF_SOFTWARE_VERSION, SOFTWARE_VERSION_1)
-                ): vol.In({
-                    SOFTWARE_VERSION_1: "Version 1.x",
-                    SOFTWARE_VERSION_2: "Version 2.x",
-                }),
-                vol.Required(
-                    CONF_HEATER_TYPE,
-                    default=self._user_input.get(CONF_HEATER_TYPE, HEATER_TYPE_NONE)
-                ): vol.In({
-                    HEATER_TYPE_NONE: "None",
-                    HEATER_TYPE_WATER: "Water heater",
-                    HEATER_TYPE_ELECTRIC: "Electric heater",
-                }),
-            }
-        )
-        
-        return self.async_show_form(
-            step_id="manual_config",
-            data_schema=manual_schema,
-            description_placeholders={
-                "detected_sw": self._user_input.get(CONF_SOFTWARE_VERSION, "Unknown"),
-                "detected_heater": str(self._user_input.get(CONF_HEATER_TYPE, "Unknown")),
-            },
-        )
+    # Manual configuration step removed - now uses auto-detection with defaults
