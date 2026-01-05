@@ -1,3 +1,21 @@
+## 0.7.7.1 - Make Current Speed Sensor Numeric (2026-01-05)
+
+### Changed
+- **Current Speed sensor now shows numeric values** (0-5) instead of text
+- Removed ENUM device class - now plain numeric sensor
+- Added description in sensor attributes: "0=Stop, 1=Speed 1, 2=Speed 2, 3=Speed 3, 4=Speed 4, 5=Speed 5"
+- Added fan icon (mdi:fan)
+
+### Technical
+- Removed STATE_MAP from ParmairSpeedControlSensor
+- Changed native_value return type from str to int
+- Removed _attr_device_class and _attr_options
+- Added extra_state_attributes with speed description
+
+### Display
+**Before:** Shows "Stop", "Speed 1", "Speed 2", etc.
+**After:** Shows 0, 1, 2, 3, 4, 5 (numeric values)
+
 ## 0.7.7 - Improved Auto-Detection with Retry Logic (2026-01-05)
 
 ### Changed

@@ -398,20 +398,10 @@ class ParmairControlStateSensor(ParmairRegisterEntity, SensorEntity):
 
 
 class ParmairSpeedControlSensor(ParmairRegisterEntity, SensorEntity):
-    """Representation of actual running speed with mapped values."""
+    """Representation of actual running speed as numeric value."""
 
     _attr_has_entity_name = True
-    _attr_device_class = SensorDeviceClass.ENUM
-    _attr_options = ["Stop", "Speed 1", "Speed 2", "Speed 3", "Speed 4", "Speed 5"]
-
-    STATE_MAP = {
-        0: "Stop",
-        1: "Speed 1",
-        2: "Speed 2",
-        3: "Speed 3",
-        4: "Speed 4",
-        5: "Speed 5"
-    }
+    _attr_icon = "mdi:fan"
 
     def __init__(
         self,
@@ -424,12 +414,19 @@ class ParmairSpeedControlSensor(ParmairRegisterEntity, SensorEntity):
         super().__init__(coordinator, entry, data_key, name)
 
     @property
-    def native_value(self) -> str | None:
-        """Return the sensor value."""
+    def native_value(self) -> int | None:
+        """Return the numeric speed value (0-5)."""
         raw_value = self.coordinator.data.get(self._data_key)
         if raw_value is None:
             return None
-        return self.STATE_MAP.get(raw_value, f"Unknown ({raw_value})")
+        return int(raw_value)
+    
+    @property
+    def extra_state_attributes(self) -> dict[str, str]:
+        """Return additional attributes."""
+        return {
+            "description": "0=Stop, 1=Speed 1, 2=Speed 2, 3=Speed 3, 4=Speed 4, 5=Speed 5"
+        }
 
 
 class ParmairPowerStateSensor(ParmairRegisterEntity, SensorEntity):
