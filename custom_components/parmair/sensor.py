@@ -42,6 +42,7 @@ async def async_setup_entry(
     entities = [
         # System information
         ParmairSoftwareVersionSensor(coordinator, entry, "software_version", "Software Version"),
+        ParmairHeaterTypeSensor(coordinator, entry, "heater_type", "Heater Type"),
         
         # Temperature sensors
         ParmairTemperatureSensor(coordinator, entry, "fresh_air_temp", "Fresh Air Temperature"),
@@ -444,6 +445,39 @@ class ParmairPowerStateSensor(ParmairRegisterEntity, SensorEntity):
         1: "Shutting Down",
         2: "Starting",
         3: "Running"
+    }
+
+    def __init__(
+        self,
+        coordinator: ParmairCoordinator,
+        entry: ConfigEntry,
+        data_key: str,
+        name: str,
+    ) -> None:
+        """Initialize the sensor."""
+        super().__init__(coordinator, entry, data_key, name)
+
+    @property
+    def native_value(self) -> str | None:
+        """Return the sensor value."""
+        raw_value = self.coordinator.data.get(self._data_key)
+        if raw_value is None:
+            return None
+        return self.STATE_MAP.get(raw_value, f"Unknown ({raw_value})")
+
+
+class ParmairHeaterTypeSensor(ParmairRegisterEntity, SensorEntity):
+    """Representation of heater type with mapped values."""
+
+    _attr_has_entity_name = True
+    _attr_device_class = SensorDeviceClass.ENUM
+    _attr_options = ["Water", "Electric", "None"]
+    _attr_entity_category = EntityCategory.DIAGNOSTIC
+
+    STATE_MAP = {
+        0: "Water",
+        1: "Electric",
+        2: "None"
     }
 
     def __init__(

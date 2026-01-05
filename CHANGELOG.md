@@ -1,3 +1,22 @@
+## 0.7.5 - Add Heater Type Sensor and Fix Values (2026-01-05)
+
+### Added
+- **Heater Type sensor** - Shows current heater configuration (Water/Electric/None)
+- Heater type displayed as diagnostic sensor in device info
+
+### Fixed
+- **Corrected heater type values** - Fixed mapping to match hardware documentation:
+  - 0 = Water heater (was: None)
+  - 1 = Electric heater (was: Water)
+  - 2 = None/No heater (was: Electric)
+- Added REG_HEATER_TYPE to polling registers for real-time updates
+
+### Technical
+- Added ParmairHeaterTypeSensor class with ENUM device class
+- Updated HEATER_TYPE constants to match HEAT_RADIATOR_TYPE register documentation
+- Heater type values now correctly reflect hardware configuration from register 1240
+- Sensor marked as EntityCategory.DIAGNOSTIC
+
 ## 0.7.4.3 - Fix Auto-Detection During Configuration (2026-01-05)
 
 ### Fixed

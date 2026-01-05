@@ -23,10 +23,13 @@ SOFTWARE_VERSION_1 = "1.x"
 SOFTWARE_VERSION_2 = "2.x"
 SOFTWARE_VERSION_UNKNOWN = "unknown"
 
-# Heater types (from HEAT_RADIATOR_TYPE register)
-HEATER_TYPE_NONE = 0
-HEATER_TYPE_WATER = 1
-HEATER_TYPE_ELECTRIC = 2
+# Heater types (from HEAT_RADIATOR_TYPE register 1240)
+# 0 = Water heater (Vesipatteri)
+# 1 = Electric heater (Sähköpatteri)  
+# 2 = No heater
+HEATER_TYPE_WATER = 0
+HEATER_TYPE_ELECTRIC = 1
+HEATER_TYPE_NONE = 2
 HEATER_TYPE_UNKNOWN = -1
 
 
@@ -298,6 +301,7 @@ REGISTERS = _build_registers_v1()
 POLLING_REGISTER_KEYS = (
     REG_SOFTWARE_VERSION,
     REG_HARDWARE_TYPE,
+    REG_HEATER_TYPE,
     REG_POWER,
     REG_CONTROL_STATE,
     REG_SPEED_CONTROL,
