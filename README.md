@@ -46,7 +46,7 @@ A custom Home Assistant integration for Parmair MAC ventilation systems via Modb
 
 This integration supports Parmair "My Air Control" systems:
 - **Firmware 1.x**: Fully supported (Modbus spec 1.87)
-- **Firmware 2.x**: Fully supported (Modbus spec 2.28) with +1000 address offset
+- **Firmware 2.x**: Fully supported (Modbus spec 2.28)
 
 ## Installation
 
@@ -117,7 +117,7 @@ The hardware model (MAC80/MAC100/MAC150) and firmware version (1.x/2.x) are auto
 Optional sensors (if hardware is present):
 - **Humidity**: Indoor humidity level
 - **CO2**: Indoor CO2 concentration
-- Entity attributes include the selected model plus register id, address, and scaling to aid troubleshooting
+- Entity attributes include diagnostic information to aid troubleshooting
 
 Diagnostic sensors:
 - **Software Version**: Multi24 firmware application version (used for firmware family detection)
@@ -129,7 +129,6 @@ All register mappings are documented in `MODBUS_REGISTERS.md`. The integration u
 - Holding registers (Function codes 03, 06, 16)
 - int16 data type
 - Temperature scaling factor of 10 (210 = 21.0°C)
-- Register addresses offset by -1 from documentation IDs
 
 ## Development
 
@@ -159,8 +158,7 @@ For issues, feature requests, or questions, please open an issue on GitHub.
 ### 0.9.0
 - **Full Firmware 2.xx Support**: Complete Modbus register mappings for firmware 2.28
 - **Automatic Version Detection**: Seamless switching between 1.xx and 2.xx register maps
-- **Address Offset Handling**: Firmware 2.xx uses Register ID + 1000 addressing scheme
-- **Control Compatibility**: Different control registers for 2.xx (UNIT_CONTROL_FO, USERSTATECONTROL_FO)
+- **Control Compatibility**: Enhanced control system for firmware 2.xx
 - **All Features Working**: Sensors, controls, switches, numbers, and buttons fully functional on both firmware versions
 
 ### 0.8.1
