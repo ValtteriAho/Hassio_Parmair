@@ -1,4 +1,4 @@
-# Parmair MAC - Home Assistant Integration v0.9.0
+# Parmair MAC - Home Assistant Integration v0.10.0
 
 ![Parmair MAC Logo](parmair_logo.jpg)
 
@@ -65,11 +65,11 @@ This integration supports Parmair "My Air Control" systems:
 11. Enter your device's connection details:
     - IP Address
     - Port (default: 502)
-    - Modbus Slave ID (default: 1)
+    - Modbus Slave ID (default: 0)
     - Polling Interval (default: 30 seconds)
     - Name (optional)
 
-Hardware model will be auto-detected from the device.
+Hardware model and firmware version will be auto-detected from the device. If auto-detection fails, you can manually select firmware version and heater type.
 
 ## Configuration
 
@@ -77,9 +77,9 @@ The integration is configured through the Home Assistant UI. You'll need:
 
 - **IP Address**: The IP address of your Parmair device
 - **Port**: The Modbus TCP port (typically 502)
-- **Slave ID**: The Modbus slave ID of your device (typically 1)
+- **Slave ID**: The Modbus slave ID of your device (typically 0)
 
-The hardware model (MAC80/MAC100/MAC150) and firmware version (1.x/2.x) are automatically detected by reading the VENT_MACHINE and MULTI_SW_VER registers.
+The hardware model (MAC80/MAC100/MAC150) and firmware version (1.x/2.x) are automatically detected. If detection fails during setup, you can manually select your firmware version and heater type.
 
 ## Entities Created
 
@@ -139,16 +139,19 @@ All register mappings are documented in `MODBUS_REGISTERS.md`. The integration u
 ## Development
 
 This integration follows Home Assistant's development guidelines and uses:
-- `pymodbus` (tested with 3.11.x bundled in Home Assistant 2025.12) for Modbus communication
-- `DataUpdateCoordinator` for efficient data fetching (30-second polling)
-- Config flow for user-friendly setup
-- Proper error handling and retry logic
+- `pymodbus>=3.11.2` for Modbus TCP communication
+- Modern pymodbus 3.x API (legacy compatibility code removed in v0.10.0)
+- `DataUpdateCoordinator` for efficient data fetching with configurable timing
+- Config flow with auto-detection and manual fallback
+- Proper error handling and connection management
 
 ## Troubleshooting
 
 ### Connection Issues
 - Verify the IP address is correct and the device is on the same network
-- Check that port 502 is not blocked by firewalls
+- Check that port 502 is not b(typically 0 for Parmair devices)
+- If experiencing "transaction_id mismatch" errors, the integration includes timing optimizations
+- Default slave ID changed from 1 to 0 in v0.9.0.5 to match Parmair device responses
 - Confirm the Modbus slave ID matches your device configuration
 
 ### Missing Sensors
@@ -158,15 +161,29 @@ This integration follows Home Assistant's development guidelines and uses:
 ## Support
 
 For issues, feature requests, or questions, please open an issue on GitHub.
+10.0 (2026-01-18)
+- **Code Cleanup**: Removed all legacy pymodbus compatibility code
+- **Simplified API**: Now uses only modern pymodbus 3.11.2+ API
+- **50% Less Complexity**: Cleaner, more maintainable codebase
+- **No Functional Changes**: Drop-in replacement for 0.9.11
 
-## Release Notes
+### 0.9.1 (Earlier)1 (2026-01-18)
+- **Pymodbus 3.x Fix**: Fixed API compatibility for pymodbus 3.11.2+
+- **Detection Working**: Register reads during setup now succeed
+- **Version Logging**: Added pymodbus version detection for diagnostics
 
-### 0.9.0
-- **Full Firmware 2.xx Support**: Complete Modbus register mappings for firmware 2.28
-- **Automatic Version Detection**: Seamless switching between 1.xx and 2.xx register maps
-- **Control Compatibility**: Enhanced control system for firmware 2.xx
-- **All Features Working**: Sensors, controls, switches, numbers, and buttons fully functional on both firmware versions
-
+### 0.9.0 (Earlier).9-0.9.0.10 (2026-01-18)
+- **Connection Warm-up**: Device "warm-up" phase before detection (reads power register 5 times)
+- **Manual Fallback**: If auto-detection fails, user can manually select firmware version and heater type
+- **Better UX**: No more forced defaults to 1.xx
+x (Earlier)
+### 0.9.0.5-0.9.0.8 (2026-01-17)
+- **Default Slave ID Changed**: Now defaults to 0 instead of 1 (matches Parmair devices)
+- **Detection Timing**: Improved delays for reliable firmware detection
+- **Documentation Cleanup**: Removed Modbus register addresses from public documentation
+- **Current Speed**: Speed sensor now shows numeric values (0-5) instead of text
+- **Auto-Detection**: Retry logic with up to 3 attempts for version/heater detection
+- **Smart Defaults**: Uses sensible defaults if detection fails
 ### 0.8.1
 - **Timer Fix**: Fixed boost and overpressure timer minimum value from 0 to -1
 - **Inactive Display**: Timers now correctly show -1 when inactive per Modbus specification
