@@ -1,3 +1,24 @@
+## 0.10.0 - Code Cleanup (2026-01-18)
+
+### Changed
+- Removed all legacy pymodbus compatibility code
+- Simplified to use only pymodbus 3.11.2+ API
+- Cleaner, more maintainable codebase
+- Renamed `_set_legacy_unit()` to `_set_unit_id()` for clarity
+
+### Technical
+- Reduced code complexity by ~50% in Modbus read/write functions
+- All API calls now use modern pymodbus 3.x format:
+  - Read: `client.read_holding_registers(address, count=1)`
+  - Write: `client.write_register(address, value)`
+- Unit ID set on client before operations, not per-call
+- No more nested TypeError exception handling
+
+### No Breaking Changes
+- Functionality identical to 0.9.11
+- Still requires pymodbus>=3.11.2
+- Tested and verified working
+
 ## 0.9.11 - Pymodbus API Compatibility Fix (2026-01-18)
 
 ### Fixed

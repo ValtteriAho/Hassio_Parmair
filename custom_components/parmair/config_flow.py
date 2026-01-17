@@ -17,15 +17,16 @@ import homeassistant.helpers.config_validation as cv
 from homeassistant.loader import async_get_integration
 
 
-def _set_legacy_unit(client: ModbusTcpClient, unit_id: int) -> None:
-    """Best-effort assignment for clients requiring attribute-based unit selection."""
-
-    for attr in ("unit_id", "slave_id", "unit", "slave"):
-        if hasattr(client, attr):
-            try:
-                setattr(client, attr, unit_id)
-            except Exception:  # pragma: no cover
-                continue
+def _set_unit_id(client: ModbusTcpClient, unit_id: int) -> None:
+    """Set unit ID on the Modbus client for pymodbus 3.x."""
+    # Pymodbus 3.x uses 'slave' attribute
+    if hasattr(client, 'slave'):
+        client.slave = unit_id
+    # Fallback to other common attributes
+    elif hasattr(client, 'unit_id'):
+        client.unit_id = unit_id
+    elif hasattr(client, 'slave_id'):
+        client.slave_id = unit_id
 
 
 from .const import (
@@ -122,41 +123,13 @@ async def validate_connection(hass: HomeAssistant, data: dict[str, Any]) -> dict
         ]
         
         def _read_register(address: int) -> int | None:
-            """Read a single register with pymodbus version compatibility."""
+            """Read a single register with pymodbus 3.x."""
             try:
-                # Set the slave/unit ID on the client first (for all pymodbus versions)
-                _set_legacy_unit(client, data[CONF_SLAVE_ID])
+                # Set the unit ID on the client
+                _set_unit_id(client, data[CONF_SLAVE_ID])
                 
-                try:
-                    # Try modern pymodbus 3.x - only address as positional
-                    result = client.read_holding_registers(address, count=1)
-                except TypeError:
-                    try:
-                        # Try with slave keyword argument
-                        result = client.read_holding_registers(
-                            address=address, count=1, slave=data[CONF_SLAVE_ID]
-                        )
-                    except TypeError:
-                        try:
-                            # Try with unit keyword argument
-                            result = client.read_holding_registers(
-                                address=address, count=1, unit=data[CONF_SLAVE_ID]
-                            )
-                        except TypeError:
-                            try:
-                                # Try positional with unit keyword
-                                result = client.read_holding_registers(
-                                    address, 1, unit=data[CONF_SLAVE_ID]
-                                )
-                            except TypeError:
-                                try:
-                                    # Try positional with slave keyword
-                                    result = client.read_holding_registers(
-                                        address, 1, slave=data[CONF_SLAVE_ID]
-                                    )
-                                except TypeError:
-                                    # Try just positional arguments (legacy)
-                                    result = client.read_holding_registers(address, 1)
+                # Read using pymodbus 3.x API
+                result = client.read_holding_registers(address, count=1)
                 
                 # Check if read was successful
                 if result and not (hasattr(result, "isError") and result.isError()):
@@ -336,35 +309,18 @@ async def validate_connection(hass: HomeAssistant, data: dict[str, Any]) -> dict
     
     # Try to read a register to verify communication
     def _read_test():
-        """Test reading from the device."""
+        """Test reading from the device with pymodbus 3.x."""
         try:
-            result = client.read_holding_registers(
-                power_register.address, 1, unit=data[CONF_SLAVE_ID]
-            )
-        except TypeError:
-            try:
-                # Older pymodbus versions expect the keyword 'slave'
-                result = client.read_holding_registers(
-                    power_register.address, 1, slave=data[CONF_SLAVE_ID]
-                )
-            except TypeError:
-                try:
-                    # Even older pymodbus versions expect 'device_id' keyword
-                    result = client.read_holding_registers(
-                        power_register.address, 1, device_id=data[CONF_SLAVE_ID]
-                    )
-                except TypeError:
-                    # Very old clients require positional arguments only or attribute assignment
-                    _set_legacy_unit(client, data[CONF_SLAVE_ID])
-                    try:
-                        result = client.read_holding_registers(
-                            power_register.address, 1
-                        )
-                    except TypeError:
-                        result = client.read_holding_registers(
-                            power_register.address
-                        )
-        return not result.isError() if hasattr(result, 'isError') else result is not None
+            # Set unit ID on client
+            _set_unit_id(client, data[CONF_SLAVE_ID])
+            
+            # Read using pymodbus 3.x API
+            result = client.read_holding_registers(power_register.address, count=1)
+            
+            return not result.isError() if hasattr(result, 'isError') else result is not None
+        except Exception as ex:
+            _LOGGER.debug("Test read failed: %s", ex)
+            return False
     
     try:
         success = await hass.async_add_executor_job(_read_test)

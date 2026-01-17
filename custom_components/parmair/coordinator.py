@@ -36,15 +36,16 @@ from .const import (
 _LOGGER = logging.getLogger(__name__)
 
 
-def _set_legacy_unit(client: ModbusTcpClient, unit_id: int) -> None:
-    """Best-effort assignment for clients requiring attribute-based unit selection."""
-
-    for attr in ("unit_id", "slave_id", "unit", "slave"):
-        if hasattr(client, attr):
-            try:
-                setattr(client, attr, unit_id)
-            except Exception:  # pragma: no cover
-                continue
+def _set_unit_id(client: ModbusTcpClient, unit_id: int) -> None:
+    """Set unit ID on the Modbus client for pymodbus 3.x."""
+    # Pymodbus 3.x uses 'slave' attribute
+    if hasattr(client, 'slave'):
+        client.slave = unit_id
+    # Fallback to other common attributes
+    elif hasattr(client, 'unit_id'):
+        client.unit_id = unit_id
+    elif hasattr(client, 'slave_id'):
+        client.slave_id = unit_id
 
 
 class ParmairCoordinator(DataUpdateCoordinator[dict[str, Any]]):
@@ -100,8 +101,8 @@ class ParmairCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             if not self._client.connect():
                 raise ModbusException("Failed to connect to Modbus device")
             
-            # Ensure slave_id is set on the client for legacy pymodbus
-            _set_legacy_unit(self._client, self.slave_id)
+            # Set slave/unit ID on the client
+            _set_unit_id(self._client, self.slave_id)
             
             # Longer delay after connect to allow device to stabilize and clear buffers
             time.sleep(0.3)
@@ -145,35 +146,26 @@ class ParmairCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                     pass
 
     def write_register(self, key: str, value: float | int) -> bool:
-        """Write a value to a Modbus register respecting scaling."""
-
+        """Write a value to a Modbus register respecting scaling with pymodbus 3.x."""
         definition = get_register_definition(key)
         try:
             with self._lock:
                 if not self._client.connected:
                     if not self._client.connect():
                         return False
+                
+                # Set unit ID on client
+                _set_unit_id(self._client, self.slave_id)
 
                 raw_value = self._to_raw(definition, value)
-                try:
-                    result = self._client.write_register(
-                        definition.address, raw_value, unit=self.slave_id
-                    )
-                except TypeError:
-                    try:
-                        result = self._client.write_register(
-                            definition.address, raw_value, slave=self.slave_id
-                        )
-                    except TypeError:
-                        try:
-                            result = self._client.write_register(
-                                definition.address, raw_value, device_id=self.slave_id
-                            )
-                        except TypeError:
-                            _set_legacy_unit(self._client, self.slave_id)
-                            result = self._client.write_register(
-                                definition.address, raw_value
-                            )
+                
+                # Write using pymodbus 3.x API
+                result = self._client.write_register(definition.address, raw_value)
+                
+                _LOGGER.debug(
+                    "Wrote %s to register %s (%d): raw=%d",
+                    value, definition.label, definition.address, raw_value
+                )
                 
                 # Small delay after write to allow device to process
                 time.sleep(0.2)
@@ -234,67 +226,43 @@ class ParmairCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         return get_register_definition(key, self._registers)
 
     def _read_register_value(self, definition: RegisterDefinition) -> Any | None:
-        """Read and scale a single register."""
-
+        """Read and scale a single register with pymodbus 3.x."""
         try:
-            # Try modern pymodbus with keyword arguments first
+            # Read using pymodbus 3.x API (unit ID already set on client)
             result = self._client.read_holding_registers(
-                address=definition.address, count=1, slave=self.slave_id
+                address=definition.address, count=1
             )
-        except TypeError:
-            try:
-                # Try with 'unit' instead of 'slave'
-                result = self._client.read_holding_registers(
-                    address=definition.address, count=1, unit=self.slave_id
+            
+            if not result or (hasattr(result, "isError") and result.isError()):
+                _LOGGER.warning(
+                    "Failed reading register %s (%s) at address %d",
+                    definition.register_id,
+                    definition.label,
+                    definition.address,
                 )
-            except TypeError:
-                # Try older versions with positional + keyword
-                try:
-                    result = self._client.read_holding_registers(
-                        definition.address, 1, unit=self.slave_id
-                    )
-                except TypeError:
-                    try:
-                        result = self._client.read_holding_registers(
-                            definition.address, 1, slave=self.slave_id
-                        )
-                    except TypeError:
-                        try:
-                            result = self._client.read_holding_registers(
-                                definition.address, 1, device_id=self.slave_id
-                            )
-                        except TypeError:
-                            _set_legacy_unit(self._client, self.slave_id)
-                            try:
-                                result = self._client.read_holding_registers(
-                                    definition.address, 1
-                                )
-                            except TypeError:
-                                result = self._client.read_holding_registers(
-                                    definition.address
-                                )
-        if not result or (hasattr(result, "isError") and result.isError()):
+                return None
+
+            if hasattr(result, "registers"):
+                raw = result.registers[0]
+            elif isinstance(result, (list, tuple)):
+                raw = result[0]
+            else:
+                raw = result
+
+            # Convert to signed int16 if value is > 32767 (handle negative temperatures)
+            if raw > 32767:
+                raw = raw - 65536
+
+            if definition.optional and raw < 0:
+                # Device reports -1 when module isn't installed
+                return None
+        except Exception as ex:
             _LOGGER.warning(
-                "Failed reading register %s (%s) at address %d",
+                "Exception reading register %s (%s): %s",
                 definition.register_id,
                 definition.label,
-                definition.address,
+                ex,
             )
-            return None
-
-        if hasattr(result, "registers"):
-            raw = result.registers[0]
-        elif isinstance(result, (list, tuple)):
-            raw = result[0]
-        else:
-            raw = result
-
-        # Convert to signed int16 if value is > 32767 (handle negative temperatures)
-        if raw > 32767:
-            raw = raw - 65536
-
-        if definition.optional and raw < 0:
-            # Device reports -1 when module isn't installed
             return None
 
         return self._from_raw(definition, raw)
