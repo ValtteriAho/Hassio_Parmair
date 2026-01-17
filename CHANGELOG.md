@@ -1,3 +1,24 @@
+## 0.9.0.8 - Detection Timing Fix (2026-01-18)
+
+### Fixed
+- **Auto-detection now works**: Fixed firmware version detection failing during setup
+  - Increased initial stabilization delay: 150ms → 1000ms (1 second)
+  - Added 200ms delay between register reads during detection
+  - Added 100ms delay before validation
+  - Previously all register reads returned "no data" during setup
+  - Normal polling worked fine, but detection phase was too fast
+
+### Impact
+- Firmware version detection (1.xx vs 2.xx) now works correctly
+- Heater type detection now succeeds
+- No more "defaulting to firmware 1.x" warnings
+- Device needs ~1 second after connection before it can respond to reads
+
+### Technical
+- Detection phase timing completely separated from polling timing
+- Setup requires longer delays than normal operation
+- All register reads during detection now succeed
+
 ## 0.9.0.7 - Emergency Syntax Fix (2026-01-17)
 
 ### Fixed

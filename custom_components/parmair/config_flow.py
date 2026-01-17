@@ -97,8 +97,8 @@ async def validate_connection(hass: HomeAssistant, data: dict[str, Any]) -> dict
         
         _LOGGER.info("Starting device auto-detection...")
         
-        # Initial delay after connection
-        time.sleep(0.15)
+        # Longer initial delay after connection for device to stabilize during setup
+        time.sleep(1.0)
         
         # Two-register consensus detection for robust firmware identification
         # Each firmware version has unique SOFTWARE_VERSION and VENT_MACHINE addresses
@@ -172,9 +172,11 @@ async def validate_connection(hass: HomeAssistant, data: dict[str, Any]) -> dict
                 firmware, sw_address, vm_address
             )
             
-            # Read both registers
+            # Read both registers with delay between reads
             raw_sw = _read_register(sw_address)
+            time.sleep(0.2)  # Delay between register reads during detection
             raw_vm = _read_register(vm_address)
+            time.sleep(0.1)  # Small delay before validation
             
             # Validate both registers
             sw_valid = False
