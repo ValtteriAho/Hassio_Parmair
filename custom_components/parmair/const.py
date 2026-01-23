@@ -87,8 +87,7 @@ REG_OVERPRESSURE_STATE = "overpressure_state"
 REG_OVERPRESSURE_TIMER = "overpressure_timer"
 REG_HUMIDITY = "humidity"
 REG_HUMIDITY_24H_AVG = "humidity_24h_avg"
-REG_CO2 = "co2"
-REG_CO2_EXHAUST = "co2_exhaust"  # v2.xx only
+REG_CO2_EXHAUST = "co2_exhaust"  # MAC 2 only (v2.xx) - combination sensor in exhaust duct
 REG_ALARM_COUNT = "alarm_count"
 REG_SUM_ALARM = "sum_alarm"
 REG_ALARMS_STATE = "alarms_state"
@@ -197,9 +196,6 @@ def _build_registers_v1() -> Dict[str, RegisterDefinition]:
         ),
         REG_HUMIDITY_24H_AVG: RegisterDefinition(
             REG_HUMIDITY_24H_AVG, 1192, "ME05_AVG_FM", scale=0.1, optional=True
-        ),
-        REG_CO2: RegisterDefinition(
-            REG_CO2, 1031, "QE20_M", optional=True
         ),
         REG_ALARM_COUNT: RegisterDefinition(
             REG_ALARM_COUNT, 1004, "ALARM_COUNT"
@@ -331,8 +327,7 @@ def _build_registers_v2() -> Dict[str, RegisterDefinition]:
         # Optional sensors
         REG_HUMIDITY: RegisterDefinition(REG_HUMIDITY, 1025, "ME05_M", optional=True),
         REG_HUMIDITY_24H_AVG: RegisterDefinition(REG_HUMIDITY_24H_AVG, 1192, "ME05_AVG_FM", scale=0.1, optional=True),
-        REG_CO2: RegisterDefinition(REG_CO2, 1030, "QE20_M", optional=True),
-        REG_CO2_EXHAUST: RegisterDefinition(REG_CO2_EXHAUST, 1026, "QE05_M", optional=True),  # v2.xx only
+        REG_CO2_EXHAUST: RegisterDefinition(REG_CO2_EXHAUST, 1026, "QE05_M", optional=True),  # MAC 2 only - combination sensor
         
         # Alarm registers
         REG_ALARM_COUNT: RegisterDefinition(REG_ALARM_COUNT, 1004, "ALARM_COUNT"),
@@ -419,8 +414,7 @@ POLLING_REGISTER_KEYS = (
     REG_OVERPRESSURE_TIMER,
     REG_HUMIDITY,
     REG_HUMIDITY_24H_AVG,
-    REG_CO2,
-    REG_CO2_EXHAUST,  # v2.xx only (will be unavailable in v1.xx)
+    REG_CO2_EXHAUST,  # MAC 2 only (will be unavailable in older devices)
     REG_ALARM_COUNT,
     REG_SUM_ALARM,
     REG_ALARMS_STATE,

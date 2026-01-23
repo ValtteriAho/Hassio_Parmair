@@ -1,3 +1,21 @@
+## 0.10.5 - CO2 Sensor Cleanup (2026-01-23)
+
+### Removed
+- **Removed external CO2 sensor (QE20_M)** - This is optional external hardware not included in any device as standard
+  - Register 1031 (v1.xx) and 1030 (v2.xx) no longer monitored
+  - Was showing as unavailable on all devices anyway
+
+### Changed
+- **Clarified exhaust CO2 sensor** - Only for MAC 2 devices (newest v2.xx)
+  - QE05_M at register 1026 - Combination sensor in exhaust duct
+  - Only available in newest MAC 2 devices with v2.xx firmware
+  - Older devices will not have this sensor (graceful unavailable state)
+
+### Technical
+- Removed REG_CO2 constant and related register definitions
+- Simplified CO2 monitoring to only MAC 2 exhaust sensor
+- Updated comments to reflect actual hardware availability
+
 ## 0.10.4 - Firmware v1.xx Compatibility Fix (2026-01-18)
 
 ### Fixed

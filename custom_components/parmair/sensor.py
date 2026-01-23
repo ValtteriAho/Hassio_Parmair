@@ -84,13 +84,14 @@ async def async_setup_entry(
         # Optional sensors (will show unavailable if hardware not present)
         ParmairHumiditySensor(coordinator, entry, "humidity", "Humidity"),
         ParmairHumidity24hAvgSensor(coordinator, entry, "humidity_24h_avg", "Humidity 24h Average"),
-        ParmairCO2Sensor(coordinator, entry, "co2", "CO2"),
         
         # Filter change date sensor
         ParmairFilterChangeDateSensor(coordinator, entry),
     ]
     
-    # Add exhaust CO2 sensor only for v2.xx firmware (register only exists in v2.xx)
+    # Add exhaust CO2 sensor only for MAC 2 devices (v2.xx firmware)
+    # QE05_M = Combination sensor in exhaust duct (CO2 + humidity)
+    # Only in newest MAC 2 devices
     try:
         coordinator.get_register_definition("co2_exhaust")
         entities.append(ParmairCO2Sensor(coordinator, entry, "co2_exhaust", "CO2 Exhaust Air"))
