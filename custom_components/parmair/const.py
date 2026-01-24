@@ -324,9 +324,9 @@ def _build_registers_v2() -> Dict[str, RegisterDefinition]:
         REG_OVERPRESSURE_STATE: RegisterDefinition(REG_OVERPRESSURE_STATE, 1181, "USERSTATECONTROL_FO"),
         REG_OVERPRESSURE_TIMER: RegisterDefinition(REG_OVERPRESSURE_TIMER, 1201, "OVERP_TIMER_FM", writable=True),
         
-        # Optional sensors
-        REG_HUMIDITY: RegisterDefinition(REG_HUMIDITY, 1025, "ME05_M", optional=True),
-        REG_HUMIDITY_24H_AVG: RegisterDefinition(REG_HUMIDITY_24H_AVG, 1192, "ME05_AVG_FM", scale=0.1, optional=True),
+        # Standard sensors (v2.xx)
+        REG_HUMIDITY: RegisterDefinition(REG_HUMIDITY, 1025, "ME05_M"),
+        REG_HUMIDITY_24H_AVG: RegisterDefinition(REG_HUMIDITY_24H_AVG, 1192, "ME05_AVG_FM", scale=0.1),
         REG_CO2_EXHAUST: RegisterDefinition(REG_CO2_EXHAUST, 1026, "QE05_M"),  # MAC 2 standard sensor (v2.xx)
         
         # Alarm registers

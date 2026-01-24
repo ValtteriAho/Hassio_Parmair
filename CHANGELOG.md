@@ -1,3 +1,14 @@
+## 0.10.9 - Humidity Sensor Fix (2026-01-24)
+
+### Fixed
+- **v2.xx humidity sensors now update continuously**
+  - Humidity and Humidity 24h Average sensors no longer stop updating after ~30 minutes
+  - Sensors previously required Home Assistant restart to resume updates
+  - Fixed by removing incorrect optional flag from standard sensors
+  - These sensors are standard equipment on v2.xx MAC 2 devices
+  - Issue occurred when device returned -1 during calibration cycles
+  - Now matches behavior of CO2 sensor (fixed in v0.10.7)
+
 ## 0.10.8 - Performance Optimization (2026-01-23)
 
 ### Optimized
