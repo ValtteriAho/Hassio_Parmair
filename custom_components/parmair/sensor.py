@@ -162,6 +162,7 @@ class ParmairHumiditySensor(ParmairRegisterEntity, SensorEntity):
     """Representation of a Parmair humidity sensor."""
 
     _attr_has_entity_name = True
+    _attr_device_class = SensorDeviceClass.HUMIDITY
     _attr_state_class = SensorStateClass.MEASUREMENT
     _attr_native_unit_of_measurement = PERCENTAGE
 
@@ -185,27 +186,12 @@ class ParmairHumiditySensor(ParmairRegisterEntity, SensorEntity):
             return None
         return value
 
-    @property
-    def device_class(self) -> str | None:
-        """Return device class only if sensor is installed."""
-        value = self.coordinator.data.get(self._data_key)
-        if value in (0, 65535, None):
-            return None
-        return SensorDeviceClass.HUMIDITY
-
-    @property
-    def state_class(self) -> str | None:
-        """Return state class only if sensor is installed."""
-        value = self.coordinator.data.get(self._data_key)
-        if value in (0, 65535, None):
-            return None
-        return SensorStateClass.MEASUREMENT
-
 
 class ParmairHumidity24hAvgSensor(ParmairRegisterEntity, SensorEntity):
     """Representation of a Parmair 24-hour humidity average sensor."""
 
     _attr_has_entity_name = True
+    _attr_device_class = SensorDeviceClass.HUMIDITY
     _attr_state_class = SensorStateClass.MEASUREMENT
     _attr_native_unit_of_measurement = PERCENTAGE
 
@@ -228,28 +214,12 @@ class ParmairHumidity24hAvgSensor(ParmairRegisterEntity, SensorEntity):
             return None
         return value
 
-    @property
-    def device_class(self) -> str | None:
-        """Return device class only if sensor has valid data."""
-        value = self.coordinator.data.get(self._data_key)
-        if value in (-1, None) or value < 0:
-            return None
-        return SensorDeviceClass.HUMIDITY
-
-    @property
-    def state_class(self) -> str | None:
-        """Return state class only if sensor has valid data."""
-        value = self.coordinator.data.get(self._data_key)
-        if value in (-1, None) or value < 0:
-            return None
-        return SensorStateClass.MEASUREMENT
-        return SensorDeviceClass.HUMIDITY
-
 
 class ParmairCO2Sensor(ParmairRegisterEntity, SensorEntity):
     """Representation of a Parmair CO2 sensor."""
 
     _attr_has_entity_name = True
+    _attr_device_class = SensorDeviceClass.CO2
     _attr_state_class = SensorStateClass.MEASUREMENT
     _attr_native_unit_of_measurement = CONCENTRATION_PARTS_PER_MILLION
 
@@ -272,22 +242,6 @@ class ParmairCO2Sensor(ParmairRegisterEntity, SensorEntity):
         if value in (0, 65535, None):
             return None
         return value
-
-    @property
-    def device_class(self) -> str | None:
-        """Return device class only if sensor is installed."""
-        value = self.coordinator.data.get(self._data_key)
-        if value in (0, 65535, None):
-            return None
-        return SensorDeviceClass.CO2
-
-    @property
-    def state_class(self) -> str | None:
-        """Return state class only if sensor is installed."""
-        value = self.coordinator.data.get(self._data_key)
-        if value in (0, 65535, None):
-            return None
-        return SensorStateClass.MEASUREMENT
 
 
 class ParmairStateSensor(ParmairRegisterEntity, SensorEntity):
