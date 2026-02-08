@@ -1,4 +1,4 @@
-# Parmair MAC for Home Assistant
+# Parmair MAC for Home Assistant (v0.11.3)
 
 ![Parmair MAC Logo](parmair_logo.jpg)
 
