@@ -1,8 +1,12 @@
-# Parmair MAC - Home Assistant Integration v0.10.12
+# Parmair MAC - Home Assistant Integration v0.11.2
 
 ![Parmair MAC Logo](parmair_logo.jpg)
 
 A custom Home Assistant integration for Parmair MAC ventilation systems via Modbus TCP communication.
+
+## Latest Updates (v0.11.2)
+
+**CRITICAL FIX**: Humidity and CO2 sensors now update continuously! This release removes all value filtering that was causing sensors to stop updating after ~30 minutes. Sensors now behave identically to temperature sensors - displaying all values including 0 and -1, with continuous updates every 30 seconds.
 
 ## Features
 
@@ -153,9 +157,9 @@ The hardware model (MAC80/MAC100/MAC150) and software version (1.x/2.x) are auto
 - **Alarms State** (`sensor.parmair_mac_alarms_state`): Detailed alarm information
 
 **Optional Sensors** (if hardware is present):
-- **Humidity** (`sensor.parmair_mac_humidity`): Indoor humidity level
-- **Humidity 24h Average** (`sensor.parmair_mac_humidity_24h_avg`): Daily average humidity
-- **CO2 Exhaust Air** (`sensor.parmair_mac_co2_exhaust_air`): Exhaust air CO2 concentration (software 2.x only, MAC 2 devices)
+- **Humidity** (`sensor.parmair_mac_humidity`): Indoor humidity level (displays all values including 0%, updates continuously)
+- **Humidity 24h Average** (`sensor.parmair_mac_humidity_24h_avg`): Daily average humidity (displays all values including negatives)
+- **CO2 Exhaust Air** (`sensor.parmair_mac_co2_exhaust_air`): Exhaust air CO2 concentration (software 2.x only, MAC 2 devices, displays all values including -1 during calibration)
 
 **Diagnostic Sensors:**
 - **Software Version** (`sensor.parmair_mac_software_version`): Multi24 controller software version
