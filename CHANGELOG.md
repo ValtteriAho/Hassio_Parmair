@@ -1,4 +1,56 @@
+## 0.11.2 - Remove Value Filtering (2026-02-08)
+
+### Fixed
+- **CRITICAL: Removed ALL value filtering from humidity and CO2 sensors**
+  - Sensors now return values directly without any filtering, matching temperature sensor behavior
+  - 0% humidity will display as 0% (not filtered to None)
+  - -1 during calibration will display as -1 (not filtered to None)
+  - Only actual failed reads (None from coordinator) will show unavailable
+  - Eliminates the root cause of sensors stopping updates
+
+### Technical Details
+- Modified ParmairHumiditySensor native_value: removed `if value in (0, 65535, None)` check
+- Modified ParmairCO2Sensor native_value: removed `if value in (0, 65535, None)` check
+- Modified ParmairHumidity24hAvgSensor native_value: removed `if value in (-1, None) or value < 0` check
+- All three sensors now use simple `return self.coordinator.data.get(self._data_key)`
+- Matches exact pattern used by working ParmairTemperatureSensor
+
+### Why This Fixes The Problem
+- v0.11.1 fixed device_class/state_class (static vs dynamic)
+- But sensors were still filtering 0 values → returning None → HA might think data unavailable
+- Temperature sensors never filter values, so they always work
+- Now humidity/CO2 sensors behave identically to temperature sensors
+
+### What Users Will See
+- Sensors will always show numeric values (including 0 and -1)
+- Only show "unavailable" when Modbus read actually fails
+- Continuous updates every 30 seconds without stopping
+
 ## 0.11.1 - Sensor Update Fix (2026-02-07)
+
+### Fixed
+- **CRITICAL: Humidity and CO2 sensors now update continuously**
+  - Fixed sensor entity classes using dynamic device_class and state_class properties
+  - These dynamic properties caused Home Assistant to think entities were being reconfigured
+  - HA would stop polling after ~30 minutes when sensor returned 0 values
+  - Now uses static device_class/state_class attributes matching working temperature sensors
+  - Sensors remain "available" in HA even with temporary bad readings
+  - Only native_value returns None for invalid sensor states (0, 65535)
+
+### Technical Details
+- Modified ParmairHumiditySensor, ParmairCO2Sensor, ParmairHumidity24hAvgSensor classes
+- Changed from dynamic `@property device_class` to static `_attr_device_class = SensorDeviceClass.HUMIDITY`
+- Changed from dynamic `@property state_class` to static `_attr_state_class = SensorStateClass.MEASUREMENT`
+- Removed @property methods that checked sensor values and returned None
+- Entity metadata now stays constant during runtime
+- Value filtering only happens in native_value property
+
+### Why Temperature Sensors Always Worked
+- Temperature sensors used static class attributes from the start
+- device_class never changed during runtime
+- HA treated entities as stable and continued polling every 30 seconds
+
+## 0.11.0 - LTO Heat Recovery Sensor (2026-01-27)
 
 ### Fixed
 - **CRITICAL: Humidity and CO2 sensors now update continuously**
