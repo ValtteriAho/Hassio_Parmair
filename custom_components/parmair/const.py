@@ -379,12 +379,13 @@ def get_registers_for_version(software_version: str) -> Dict[str, RegisterDefini
     """Get the appropriate register map based on software version.
     
     Args:
-        software_version: Software version string (e.g., "1.83", "2.10")
+        software_version: Software version string (e.g., "1.x", "2.x", "1.83", "2.28")
     
     Returns:
         Dictionary mapping register keys to RegisterDefinition objects
     """
-    if software_version.startswith("2."):
+    # Check for v2.xx firmware (handles both "2.x" constant and "2.28" style versions)
+    if software_version == SOFTWARE_VERSION_2 or software_version.startswith("2."):
         return _build_registers_v2()
     else:
         # Default to v1 for 1.xx or unknown versions

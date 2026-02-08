@@ -1,3 +1,29 @@
+## 0.11.3 - Fix Version Detection (2026-02-08)
+
+### Fixed
+- **CRITICAL: Fixed version detection logic causing v2.xx devices to use wrong register map**
+  - Version string comparison now handles both constant format ("2.x") and numeric format ("2.28")
+  - Previously `software_version.startswith("2.")` didn't match stored constant "2.x"
+  - This caused v2.xx devices to incorrectly use v1.xx register definitions
+  - v1.xx registers have `optional=True` flag causing value filtering
+  - Now checks both exact match (`SOFTWARE_VERSION_2`) and prefix match ("2.")
+  - v2.xx devices will now correctly get v2.xx registers without optional flag
+
+### Technical Details
+- Modified `get_registers_for_version()` in const.py line 387
+- Changed from: `if software_version.startswith("2.")`
+- Changed to: `if software_version == SOFTWARE_VERSION_2 or software_version.startswith("2.")`
+- This is the **actual root cause** why v0.11.1 and v0.11.2 didn't fix sensor updates
+
+### Why This Fixes The Problem
+- Config stores software version as constant "2.x" (not "2.28")
+- "2.x".startswith("2.") returns False because "2.x" ≠ "2."
+- So v2.xx devices fell through to v1.xx register map
+- v1.xx humidity/CO2 registers have optional=True
+- Coordinator filters negative values when optional=True
+- Wrong register map → wrong filtering → sensors stop updating
+- Now v2.xx devices get correct register map → no optional flag → no filtering
+
 ## 0.11.2 - Remove Value Filtering (2026-02-08)
 
 ### Fixed
