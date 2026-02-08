@@ -104,7 +104,11 @@ Once installed, you'll have control over:
 - **Heater Control** - Manage heating elements (see warning below)
 - **Filter Tracking** - Monitor when filters need replacement
 
-> ⚠️ **Important**: Disabling heaters via automation may void your warranty. Heaters protect against freezing - only disable if you understand the risks.
+> **⚠️ Heater Control Warning:**
+> 
+> Disabling the heating elements entirely carries inherent risks and may void warranty coverage. While heating elements are the primary energy-consuming components in the ventilation system, they are essential for freeze protection and optimal operation.
+> 
+> When using external automation systems (such as Home Assistant) to override the device's built-in control logic, the manufacturer cannot accept liability for component failures or malfunctions that occur during the warranty period. Any damage resulting from modified heater control settings may not be covered under warranty.
 
 ---
 
