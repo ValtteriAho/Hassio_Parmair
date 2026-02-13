@@ -1,0 +1,3 @@
+# Ignore Ruff lint/format commit so blame shows last real change
+# https://git-scm.com/docs/git-blame#Documentation/git-blame.txt---ignore-revs-fileltfilegt
+4fec4c0f8742c86593598e2cb23f71f83a531bb3
