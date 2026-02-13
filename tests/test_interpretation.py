@@ -46,9 +46,9 @@ class TestFixtureLoading:
     def test_fixture_has_metadata(self, fixture_metadata: dict[str, Any]) -> None:
         """Verify fixture has required metadata."""
         assert "register_map_version" in fixture_metadata, "Fixture must have register_map_version"
-        assert "detected_software_version" in fixture_metadata, (
-            "Fixture must have detected_software_version"
-        )
+        assert (
+            "detected_software_version" in fixture_metadata
+        ), "Fixture must have detected_software_version"
 
     def test_fixture_has_registers(self, fixture_registers: dict[str, Any]) -> None:
         """Verify fixture has register data."""
@@ -304,9 +304,9 @@ class TestScaling:
 
         # With 0.1 scaling, raw 174 should give 17.4
         expected = raw * 0.1
-        assert abs(scaled - expected) < 0.01, (
-            f"Scaling error: raw={raw}, scaled={scaled}, expected={expected}"
-        )
+        assert (
+            abs(scaled - expected) < 0.01
+        ), f"Scaling error: raw={raw}, scaled={scaled}, expected={expected}"
 
     def test_version_scaling(self, coordinator: MockCoordinator) -> None:
         """Version values should be scaled by 0.01."""
@@ -318,9 +318,9 @@ class TestScaling:
 
         # With 0.01 scaling, raw 225 should give 2.25
         expected = raw * 0.01
-        assert abs(scaled - expected) < 0.001, (
-            f"Scaling error: raw={raw}, scaled={scaled}, expected={expected}"
-        )
+        assert (
+            abs(scaled - expected) < 0.001
+        ), f"Scaling error: raw={raw}, scaled={scaled}, expected={expected}"
 
 
 class TestRegisterDefinitions:
@@ -356,12 +356,12 @@ class TestRegisterDefinitions:
             assert definition is not None
             assert definition.key == key
             assert definition.address > 0
-            assert definition.address == expected[key], (
-                f"{key} address should be {expected[key]}, got {definition.address}"
-            )
-            assert definition.label is not None and len(definition.label) > 0, (
-                f"{key} should have non-empty label"
-            )
+            assert (
+                definition.address == expected[key]
+            ), f"{key} address should be {expected[key]}, got {definition.address}"
+            assert (
+                definition.label is not None and len(definition.label) > 0
+            ), f"{key} should have non-empty label"
 
     def test_overpressure_timer_writable(self, coordinator: MockCoordinator) -> None:
         """Overpressure timer register should be writable (was overwritten by duplicate def)."""
@@ -378,9 +378,9 @@ class TestRegisterMap:
         """V2 register addresses must match device docs (catches wrong map in writes)."""
         regs = get_registers_for_version(SOFTWARE_VERSION_2)
         assert regs[REG_POWER].address == 1180, "V2 POWER should be UNIT_CONTROL_FO at 1180"
-        assert regs[REG_CONTROL_STATE].address == 1181, (
-            "V2 CONTROL_STATE should be USERSTATECONTROL at 1181"
-        )
+        assert (
+            regs[REG_CONTROL_STATE].address == 1181
+        ), "V2 CONTROL_STATE should be USERSTATECONTROL at 1181"
 
     def test_power_register_address_varies_by_version(self) -> None:
         """Power register address differs between v1 and v2 (config_flow must use correct one)."""
@@ -419,9 +419,9 @@ class TestV2Specific:
         expected_num = HARDWARE_TYPE_MAP_V2.get(hw_int, hw_int)
         expected_model = f"MAC {expected_num}"
         device_info = coordinator.device_info
-        assert device_info["model"] == expected_model, (
-            f"V2 hw_type {hw_int} should map to {expected_model}, got {device_info['model']}"
-        )
+        assert (
+            device_info["model"] == expected_model
+        ), f"V2 hw_type {hw_int} should map to {expected_model}, got {device_info['model']}"
 
     def test_v2_derived_states_binary(
         self, coordinator: MockCoordinator, is_v2_device: bool

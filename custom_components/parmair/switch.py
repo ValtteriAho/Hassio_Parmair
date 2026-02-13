@@ -25,6 +25,7 @@ from .const import (
     REG_SUMMER_MODE,
     REG_SUMMER_MODE_TEMP_LIMIT,
     REG_TIME_PROGRAM_ENABLE,
+    SOFTWARE_VERSION_1,
     SOFTWARE_VERSION_2,
 )
 from .coordinator import ParmairCoordinator

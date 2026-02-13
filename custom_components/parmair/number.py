@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import logging
-from typing import Any
 
 from homeassistant.components.number import NumberEntity, NumberMode
 from homeassistant.config_entries import ConfigEntry
@@ -14,14 +13,9 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import (
     DOMAIN,
-    REG_AWAY_SPEED,
-    REG_BOOST_SETTING,
     REG_BOOST_TIMER,
     REG_EXHAUST_TEMP_SETPOINT,
-    REG_FILTER_INTERVAL,
-    REG_HOME_SPEED,
     REG_OVERPRESSURE_TIMER,
-    REG_SPEED_CONTROL,
     REG_SUMMER_MODE_TEMP_LIMIT,
     REG_SUPPLY_TEMP_SETPOINT,
 )
@@ -39,10 +33,6 @@ async def async_setup_entry(
     coordinator: ParmairCoordinator = hass.data[DOMAIN][entry.entry_id]
 
     entities: list[NumberEntity] = [
-        ParmairManualSpeedNumber(coordinator, entry, REG_SPEED_CONTROL, "Manual Speed Control"),
-        ParmairSpeedPresetNumber(coordinator, entry, REG_HOME_SPEED, "Home Speed Preset"),
-        ParmairSpeedPresetNumber(coordinator, entry, REG_AWAY_SPEED, "Away Speed Preset"),
-        ParmairSpeedPresetNumber(coordinator, entry, REG_BOOST_SETTING, "Boost Speed Preset"),
         ParmairTemperatureSetpointNumber(
             coordinator, entry, REG_EXHAUST_TEMP_SETPOINT, "Exhaust Temperature Setpoint"
         ),
@@ -51,9 +41,6 @@ async def async_setup_entry(
         ),
         ParmairTemperatureSetpointNumber(
             coordinator, entry, REG_SUMMER_MODE_TEMP_LIMIT, "Summer Mode Temperature Limit"
-        ),
-        ParmairFilterIntervalNumber(
-            coordinator, entry, REG_FILTER_INTERVAL, "Filter Change Interval"
         ),
         ParmairTimerNumber(
             coordinator,
@@ -110,57 +97,6 @@ class ParmairNumberEntity(CoordinatorEntity[ParmairCoordinator], NumberEntity):
             raise
 
 
-class ParmairManualSpeedNumber(ParmairNumberEntity):
-    """Number entity for manual speed control (0-6: Auto, Stop, Speed 1-5)."""
-
-    _attr_mode = NumberMode.BOX
-    _attr_native_min_value = 0
-    _attr_native_max_value = 6
-    _attr_native_step = 1
-    _attr_icon = "mdi:fan-speed-1"
-
-    def __init__(
-        self,
-        coordinator: ParmairCoordinator,
-        entry: ConfigEntry,
-        data_key: str,
-        name: str,
-    ) -> None:
-        """Initialize manual speed control number."""
-        super().__init__(coordinator, entry, data_key, name)
-
-    @property
-    def extra_state_attributes(self) -> dict[str, str]:
-        """Return speed mapping information."""
-        return {
-            "speed_map": "0=Auto, 1=Stop, 2=Speed 1, 3=Speed 2, 4=Speed 3, 5=Speed 4, 6=Speed 5"
-        }
-
-
-class ParmairSpeedPresetNumber(ParmairNumberEntity):
-    """Number entity for fan speed presets (0-4)."""
-
-    _attr_mode = NumberMode.BOX
-    _attr_native_min_value = 0
-    _attr_native_max_value = 4
-    _attr_native_step = 1
-    _attr_icon = "mdi:fan"
-
-    def __init__(
-        self,
-        coordinator: ParmairCoordinator,
-        entry: ConfigEntry,
-        data_key: str,
-        name: str,
-    ) -> None:
-        """Initialize speed preset number."""
-        super().__init__(coordinator, entry, data_key, name)
-
-        # Adjust boost setting range (2-4 per documentation)
-        if data_key == REG_BOOST_SETTING:
-            self._attr_native_min_value = 2
-
-
 class ParmairTemperatureSetpointNumber(ParmairNumberEntity):
     """Number entity for temperature setpoints."""
 
@@ -192,37 +128,6 @@ class ParmairTemperatureSetpointNumber(ParmairNumberEntity):
             self._attr_native_min_value = 15.0
             self._attr_native_max_value = 30.0
             self._attr_native_step = 0.5
-
-
-class ParmairFilterIntervalNumber(ParmairNumberEntity):
-    """Number entity for filter change interval (months)."""
-
-    _attr_mode = NumberMode.BOX
-    _attr_native_min_value = 0
-    _attr_native_max_value = 2
-    _attr_native_step = 1
-    _attr_icon = "mdi:air-filter"
-    _attr_native_unit_of_measurement = "setting"
-
-    def __init__(
-        self,
-        coordinator: ParmairCoordinator,
-        entry: ConfigEntry,
-        data_key: str,
-        name: str,
-    ) -> None:
-        """Initialize filter interval number."""
-        super().__init__(coordinator, entry, data_key, name)
-
-    @property
-    def extra_state_attributes(self) -> dict[str, Any]:
-        """Return additional attributes."""
-        attrs = super().extra_state_attributes or {}
-        value = self.native_value
-        if value is not None:
-            interval_map = {0: "3 months", 1: "4 months", 2: "6 months"}
-            attrs["interval_description"] = interval_map.get(int(value), "Unknown")
-        return attrs
 
 
 class ParmairTimerNumber(ParmairNumberEntity):
