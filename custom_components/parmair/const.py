@@ -483,7 +483,7 @@ def get_register_definition(key: str, registers: Dict[str, RegisterDefinition] |
     return reg_map[key]
 
 
-# Operating modes for IV01_CONTROLSTATE
+# Operating modes for IV01_CONTROLSTATE (V1) / USERSTATECONTROL_FO (V2)
 MODE_STOP = 0
 MODE_AWAY = 1
 MODE_HOME = 2
@@ -495,6 +495,30 @@ MODE_BOOST_TIMER = 7
 MODE_OVERPRESSURE_TIMER = 8
 MODE_MANUAL = 9
 
+# Control state display mapping (differs by firmware version)
+# V1.x IV01_CONTROLSTATE_FO: Stop, Away, Home, Boost, Overpressure, timers, Manual
+# V2.x USERSTATECONTROL_FO: 0=Off, 1=Away, 2=Home, 3=Boost, 4=Sauna, 5=Fireplace
+CONTROL_STATE_MAP_V1: Dict[int, str] = {
+    MODE_STOP: "Stop",
+    MODE_AWAY: "Away",
+    MODE_HOME: "Home",
+    MODE_BOOST: "Boost",
+    MODE_OVERPRESSURE: "Overpressure",
+    5: "Away Timer",
+    6: "Home Timer",
+    7: "Boost Timer",
+    8: "Overpressure Timer",
+    MODE_MANUAL: "Manual",
+}
+CONTROL_STATE_MAP_V2: Dict[int, str] = {
+    0: "Off",
+    1: "Away",
+    2: "Home",
+    3: "Boost",
+    4: "Sauna",
+    5: "Fireplace",
+}
+
 # Speed control values for IV01_SPEED
 SPEED_AUTO = 0
 SPEED_STOP = 1
@@ -504,8 +528,29 @@ SPEED_3 = 4
 SPEED_4 = 5
 SPEED_5 = 6
 
-# POWER_BTN states
+# POWER_BTN states (V1: POWER_BTN_FI = Off/Shutting Down/Starting/Running)
 POWER_OFF = 0
 POWER_SHUTTING_DOWN = 1
 POWER_STARTING = 2
 POWER_RUNNING = 3
+
+# Power state display mapping (differs by firmware version)
+# V1.x POWER_BTN_FI: 0=Off, 1=Shutting Down, 2=Starting, 3=Running
+# V2.x UNIT_CONTROL_FO: 0=Off, 1=On
+POWER_STATE_MAP_V1: Dict[int, str] = {
+    POWER_OFF: "Off",
+    POWER_SHUTTING_DOWN: "Shutting Down",
+    POWER_STARTING: "Starting",
+    POWER_RUNNING: "Running",
+}
+POWER_STATE_MAP_V2: Dict[int, str] = {0: "Off", 1: "On"}
+
+# Filter state display mapping (differs by firmware version)
+# V1.x FILTER_STATE_FI: 0=Replace, 1=OK
+FILTER_STATE_MAP_V1: Dict[int, str] = {0: "Replace", 1: "OK"}
+# V2.x FILTER_STATE_FI: 0=Idle/OK, 1=Acknowledge Change, 2=Replace Reminder
+FILTER_STATE_MAP_V2: Dict[int, str] = {
+    0: "OK",
+    1: "Acknowledge Change",
+    2: "Replace Reminder",
+}

@@ -25,6 +25,7 @@ from .const import (
     POWER_RUNNING,
     REG_CONTROL_STATE,
     REG_POWER,
+    SOFTWARE_VERSION_2,
 )
 from .coordinator import ParmairCoordinator
 
@@ -72,7 +73,13 @@ class ParmairFan(CoordinatorEntity[ParmairCoordinator], FanEntity):
         """Return true if the fan is on."""
         power_state = self.coordinator.data.get("power", POWER_OFF)
         control_state = self.coordinator.data.get("control_state", MODE_STOP)
-        return power_state == POWER_RUNNING and control_state != MODE_STOP
+        # V1: power 3 = Running. V2: power 1 = On.
+        is_v2 = (
+            self.coordinator.software_version == SOFTWARE_VERSION_2
+            or str(self.coordinator.software_version).startswith("2.")
+        )
+        power_ok = (power_state == 1) if is_v2 else (power_state == POWER_RUNNING)
+        return power_ok and control_state != MODE_STOP
 
     @property
     def percentage(self) -> int | None:

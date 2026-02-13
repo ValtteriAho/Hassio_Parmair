@@ -23,6 +23,12 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from .const import (
     DOMAIN,
     DEFAULT_NAME,
+    CONTROL_STATE_MAP_V1,
+    CONTROL_STATE_MAP_V2,
+    FILTER_STATE_MAP_V1,
+    FILTER_STATE_MAP_V2,
+    POWER_STATE_MAP_V1,
+    POWER_STATE_MAP_V2,
     SOFTWARE_VERSION_2,
     HEATER_TYPE_WATER_V1,
     HEATER_TYPE_ELECTRIC_V1,
@@ -34,6 +40,49 @@ from .const import (
 from .coordinator import ParmairCoordinator
 
 _LOGGER = logging.getLogger(__name__)
+
+
+def _filter_state_map(coordinator: ParmairCoordinator) -> dict[int, str]:
+    """Return filter state mapping based on device firmware version.
+    Prefers device-reported software_version over config entry."""
+    sw = coordinator.data.get("software_version")
+    if sw is not None:
+        if sw >= 2.0 if isinstance(sw, (int, float)) else str(sw).startswith("2."):
+            return FILTER_STATE_MAP_V2
+        return FILTER_STATE_MAP_V1
+    # Fallback to config entry when device data not yet available
+    cfg = coordinator.software_version
+    if cfg == SOFTWARE_VERSION_2 or str(cfg).startswith("2."):
+        return FILTER_STATE_MAP_V2
+    return FILTER_STATE_MAP_V1
+
+
+def _power_state_map(coordinator: ParmairCoordinator) -> dict[int, str]:
+    """Return power state mapping based on device firmware version.
+    V1: Off, Shutting Down, Starting, Running. V2: Off, On."""
+    sw = coordinator.data.get("software_version")
+    if sw is not None:
+        if sw >= 2.0 if isinstance(sw, (int, float)) else str(sw).startswith("2."):
+            return POWER_STATE_MAP_V2
+        return POWER_STATE_MAP_V1
+    cfg = coordinator.software_version
+    if cfg == SOFTWARE_VERSION_2 or str(cfg).startswith("2."):
+        return POWER_STATE_MAP_V2
+    return POWER_STATE_MAP_V1
+
+
+def _control_state_map(coordinator: ParmairCoordinator) -> dict[int, str]:
+    """Return control state mapping based on device firmware version.
+    V1: Stop, Away, Home, Boost, Overpressure, timers, Manual. V2: Off, Away, Home, Boost, Sauna, Fireplace."""
+    sw = coordinator.data.get("software_version")
+    if sw is not None:
+        if sw >= 2.0 if isinstance(sw, (int, float)) else str(sw).startswith("2."):
+            return CONTROL_STATE_MAP_V2
+        return CONTROL_STATE_MAP_V1
+    cfg = coordinator.software_version
+    if cfg == SOFTWARE_VERSION_2 or str(cfg).startswith("2."):
+        return CONTROL_STATE_MAP_V2
+    return CONTROL_STATE_MAP_V1
 
 
 async def async_setup_entry(
@@ -74,7 +123,13 @@ async def async_setup_entry(
         
         # State sensors
         ParmairBinarySensor(coordinator, entry, "defrost_state", "Defrost State", {0: "Off", 1: "Active"}),
-        ParmairBinarySensor(coordinator, entry, "filter_state", "Filter Status", {0: "Replace", 1: "OK"}),
+        ParmairBinarySensor(
+            coordinator,
+            entry,
+            "filter_state",
+            "Filter Status",
+            _filter_state_map(coordinator),
+        ),
         
         # Performance sensors
         ParmairPercentageSensor(coordinator, entry, "heat_recovery_efficiency", "Heat Recovery Efficiency"),
@@ -323,24 +378,14 @@ class ParmairSoftwareVersionSensor(ParmairRegisterEntity, SensorEntity):
 
 
 class ParmairControlStateSensor(ParmairRegisterEntity, SensorEntity):
-    """Representation of control state with mapped values."""
+    """Representation of control state with mapped values.
+
+    V1.x (IV01_CONTROLSTATE_FO): Stop, Away, Home, Boost, Overpressure, timers, Manual.
+    V2.x (USERSTATECONTROL_FO): Off, Away, Home, Boost, Sauna, Fireplace.
+    """
 
     _attr_has_entity_name = True
     _attr_device_class = SensorDeviceClass.ENUM
-    _attr_options = ["Stop", "Away", "Home", "Boost", "Overpressure", "Away Timer", "Home Timer", "Boost Timer", "Overpressure Timer", "Manual"]
-
-    STATE_MAP = {
-        0: "Stop",
-        1: "Away",
-        2: "Home",
-        3: "Boost",
-        4: "Overpressure",
-        5: "Away Timer",
-        6: "Home Timer",
-        7: "Boost Timer",
-        8: "Overpressure Timer",
-        9: "Manual"
-    }
 
     def __init__(
         self,
@@ -351,14 +396,17 @@ class ParmairControlStateSensor(ParmairRegisterEntity, SensorEntity):
     ) -> None:
         """Initialize the sensor."""
         super().__init__(coordinator, entry, data_key, name)
+        state_map = _control_state_map(coordinator)
+        self._attr_options = list(state_map.values())
 
     @property
     def native_value(self) -> str | None:
-        """Return the sensor value."""
+        """Return the sensor value using correct mapping for firmware version."""
         raw_value = self.coordinator.data.get(self._data_key)
         if raw_value is None:
             return None
-        return self.STATE_MAP.get(raw_value, f"Unknown ({raw_value})")
+        state_map = _control_state_map(self.coordinator)
+        return state_map.get(int(raw_value), f"Unknown ({raw_value})")
 
 
 class ParmairSpeedControlSensor(ParmairRegisterEntity, SensorEntity):
@@ -394,18 +442,14 @@ class ParmairSpeedControlSensor(ParmairRegisterEntity, SensorEntity):
 
 
 class ParmairPowerStateSensor(ParmairRegisterEntity, SensorEntity):
-    """Representation of power state with mapped values."""
+    """Representation of power state with mapped values.
+
+    V1.x (POWER_BTN_FI): 0=Off, 1=Shutting Down, 2=Starting, 3=Running.
+    V2.x (UNIT_CONTROL_FO): 0=Off, 1=On.
+    """
 
     _attr_has_entity_name = True
     _attr_device_class = SensorDeviceClass.ENUM
-    _attr_options = ["Off", "Shutting Down", "Starting", "Running"]
-
-    STATE_MAP = {
-        0: "Off",
-        1: "Shutting Down",
-        2: "Starting",
-        3: "Running"
-    }
 
     def __init__(
         self,
@@ -416,14 +460,17 @@ class ParmairPowerStateSensor(ParmairRegisterEntity, SensorEntity):
     ) -> None:
         """Initialize the sensor."""
         super().__init__(coordinator, entry, data_key, name)
+        state_map = _power_state_map(coordinator)
+        self._attr_options = list(state_map.values())
 
     @property
     def native_value(self) -> str | None:
-        """Return the sensor value."""
+        """Return the sensor value using correct mapping for firmware version."""
         raw_value = self.coordinator.data.get(self._data_key)
         if raw_value is None:
             return None
-        return self.STATE_MAP.get(raw_value, f"Unknown ({raw_value})")
+        state_map = _power_state_map(self.coordinator)
+        return state_map.get(int(raw_value), f"Unknown ({raw_value})")
 
 
 class ParmairHeaterTypeSensor(ParmairRegisterEntity, SensorEntity):
