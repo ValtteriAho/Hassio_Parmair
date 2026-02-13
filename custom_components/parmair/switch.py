@@ -1,4 +1,5 @@
 """Switch platform for Parmair MAC integration."""
+
 from __future__ import annotations
 
 import logging
@@ -24,6 +25,8 @@ from .const import (
     REG_SUMMER_MODE,
     REG_SUMMER_MODE_TEMP_LIMIT,
     REG_TIME_PROGRAM_ENABLE,
+    SOFTWARE_VERSION_1,
+    SOFTWARE_VERSION_2,
 )
 from .coordinator import ParmairCoordinator
 
@@ -37,47 +40,57 @@ async def async_setup_entry(
 ) -> None:
     """Set up Parmair switch platform."""
     coordinator: ParmairCoordinator = hass.data[DOMAIN][entry.entry_id]
+    is_v1 = coordinator.software_version == SOFTWARE_VERSION_1 or str(
+        coordinator.software_version
+    ).startswith("1.")
 
-    entities: list[SwitchEntity] = [
-        ParmairSwitch(
-            coordinator,
-            entry,
-            REG_SUMMER_MODE,
-            "Summer Mode",
-            "mdi:weather-sunny",
-            "Enables heat recovery summer operation mode",
-        ),
-        ParmairSwitch(
-            coordinator,
-            entry,
-            REG_TIME_PROGRAM_ENABLE,
-            "Time Program",
-            "mdi:clock-outline",
-            "Enables weekly time program control",
-        ),
-        ParmairSwitch(
-            coordinator,
-            entry,
-            REG_HEATER_ENABLE,
-            "Post Heater",
-            "mdi:radiator",
-            "Enables post-heating element",
-        ),
-        ParmairBoostSwitch(
-            coordinator,
-            entry,
-            "Boost Mode",
-            "mdi:fan-plus",
-            "Activates boost ventilation mode",
-        ),
-        ParmairOverpressureSwitch(
-            coordinator,
-            entry,
-            "Overpressure Mode",
-            "mdi:gauge",
-            "Activates overpressure mode",
-        ),
-    ]
+    entities: list[SwitchEntity] = []
+    # Summer Mode: V1 uses switch (0/1), V2 uses Select (Off/On/Auto)
+    if is_v1:
+        entities.append(
+            ParmairSwitch(
+                coordinator,
+                entry,
+                REG_SUMMER_MODE,
+                "Summer Mode",
+                "mdi:weather-sunny",
+                "Enables heat recovery summer operation mode",
+            )
+        )
+    entities.extend(
+        [
+            ParmairSwitch(
+                coordinator,
+                entry,
+                REG_TIME_PROGRAM_ENABLE,
+                "Time Program",
+                "mdi:clock-outline",
+                "Enables weekly time program control",
+            ),
+            ParmairSwitch(
+                coordinator,
+                entry,
+                REG_HEATER_ENABLE,
+                "Post Heater",
+                "mdi:radiator",
+                "Enables post-heating element",
+            ),
+            ParmairBoostSwitch(
+                coordinator,
+                entry,
+                "Boost Mode",
+                "mdi:fan-plus",
+                "Activates boost ventilation mode",
+            ),
+            ParmairOverpressureSwitch(
+                coordinator,
+                entry,
+                "Overpressure Mode",
+                "mdi:gauge",
+                "Activates overpressure mode",
+            ),
+        ]
+    )
 
     async_add_entities(entities)
 
@@ -110,7 +123,16 @@ class ParmairSwitch(CoordinatorEntity[ParmairCoordinator], SwitchEntity):
     def is_on(self) -> bool | None:
         """Return true if switch is on."""
         value = self.coordinator.data.get(self._data_key)
-        return value == 1 if value is not None else None
+        if value is None:
+            return None
+        # V2 summer mode (AUTO_SUMMER_COOL_S): 0=off, 1=on, 2=auto
+        if self._data_key == REG_SUMMER_MODE:
+            is_v2 = self.coordinator.software_version == SOFTWARE_VERSION_2 or str(
+                self.coordinator.software_version
+            ).startswith("2.")
+            if is_v2:
+                return value in (1, 2)
+        return value == 1
 
     @property
     def extra_state_attributes(self) -> dict[str, Any] | None:
@@ -175,22 +197,32 @@ class ParmairBoostSwitch(CoordinatorEntity[ParmairCoordinator], SwitchEntity):
     def extra_state_attributes(self) -> dict[str, Any]:
         """Return boost mode predefined settings and current timer."""
         # Boost time setting: 0=30min, 1=60min, 2=90min, 3=120min, 4=180min
-        boost_time_map = {0: "30 minutes", 1: "60 minutes", 2: "90 minutes", 3: "120 minutes", 4: "180 minutes"}
+        boost_time_map = {
+            0: "30 minutes",
+            1: "60 minutes",
+            2: "90 minutes",
+            3: "120 minutes",
+            4: "180 minutes",
+        }
         # Boost speed setting: 2-4 maps to speed 3-5
         boost_speed_map = {2: "Speed 3", 3: "Speed 4", 4: "Speed 5"}
-        
+
         boost_time_value = self.coordinator.data.get(REG_BOOST_TIME_SETTING)
         boost_speed_value = self.coordinator.data.get(REG_BOOST_SETTING)
         boost_timer_remaining = self.coordinator.data.get(REG_BOOST_TIMER)
-        
+
         attrs = {}
         if boost_time_value is not None:
-            attrs["preset_duration"] = boost_time_map.get(boost_time_value, f"Unknown ({boost_time_value})")
+            attrs["preset_duration"] = boost_time_map.get(
+                boost_time_value, f"Unknown ({boost_time_value})"
+            )
         if boost_speed_value is not None:
-            attrs["preset_speed"] = boost_speed_map.get(boost_speed_value, f"Unknown ({boost_speed_value})")
+            attrs["preset_speed"] = boost_speed_map.get(
+                boost_speed_value, f"Unknown ({boost_speed_value})"
+            )
         if boost_timer_remaining is not None and boost_timer_remaining > 0:
             attrs["remaining_time"] = f"{boost_timer_remaining} minutes"
-        
+
         return attrs
 
     async def async_turn_on(self, **kwargs: Any) -> None:
@@ -246,17 +278,25 @@ class ParmairOverpressureSwitch(CoordinatorEntity[ParmairCoordinator], SwitchEnt
     def extra_state_attributes(self) -> dict[str, Any]:
         """Return overpressure mode predefined settings and current timer."""
         # Overpressure time setting: 0=15min, 1=30min, 2=45min, 3=60min, 4=120min
-        overp_time_map = {0: "15 minutes", 1: "30 minutes", 2: "45 minutes", 3: "60 minutes", 4: "120 minutes"}
-        
+        overp_time_map = {
+            0: "15 minutes",
+            1: "30 minutes",
+            2: "45 minutes",
+            3: "60 minutes",
+            4: "120 minutes",
+        }
+
         overp_time_value = self.coordinator.data.get(REG_OVERPRESSURE_TIME_SETTING)
         overp_timer_remaining = self.coordinator.data.get(REG_OVERPRESSURE_TIMER)
-        
+
         attrs = {}
         if overp_time_value is not None:
-            attrs["preset_duration"] = overp_time_map.get(overp_time_value, f"Unknown ({overp_time_value})")
+            attrs["preset_duration"] = overp_time_map.get(
+                overp_time_value, f"Unknown ({overp_time_value})"
+            )
         if overp_timer_remaining is not None and overp_timer_remaining > 0:
             attrs["remaining_time"] = f"{overp_timer_remaining} minutes"
-        
+
         return attrs
 
     async def async_turn_on(self, **kwargs: Any) -> None:

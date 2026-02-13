@@ -1,0 +1,411 @@
+{
+  "metadata": {
+    "timestamp": "2026-02-09T23:20:19.035476",
+    "host": "192.168.3.222",
+    "port": 502,
+    "slave_id": 0,
+    "register_map_version": "2.x",
+    "detected_software_version": 2.25,
+    "detected_hardware_type": 112,
+    "registers_read": 45,
+    "registers_failed": 0
+  },
+  "registers": {
+    "power": {
+      "address": 1180,
+      "label": "UNIT_CONTROL_FO",
+      "raw": 1,
+      "scaled": 1,
+      "scale": 1.0,
+      "optional": false,
+      "writable": true
+    },
+    "control_state": {
+      "address": 1181,
+      "label": "USERSTATECONTROL_FO",
+      "raw": 2,
+      "scaled": 2,
+      "scale": 1.0,
+      "optional": false,
+      "writable": true
+    },
+    "actual_speed": {
+      "address": 1187,
+      "label": "IV01_SPEED_FO",
+      "raw": 3,
+      "scaled": 3,
+      "scale": 1.0,
+      "optional": false,
+      "writable": false
+    },
+    "speed_control": {
+      "address": 1187,
+      "label": "IV01_SPEED_FO",
+      "raw": 3,
+      "scaled": 3,
+      "scale": 1.0,
+      "optional": false,
+      "writable": true
+    },
+    "fresh_air_temp": {
+      "address": 1020,
+      "label": "TE01_M",
+      "raw": -37,
+      "scaled": -3.7,
+      "scale": 0.1,
+      "optional": false,
+      "writable": false
+    },
+    "supply_after_recovery_temp": {
+      "address": 1021,
+      "label": "TE05_M",
+      "raw": 136,
+      "scaled": 13.600000000000001,
+      "scale": 0.1,
+      "optional": false,
+      "writable": false
+    },
+    "supply_temp": {
+      "address": 1022,
+      "label": "TE10_M",
+      "raw": 183,
+      "scaled": 18.3,
+      "scale": 0.1,
+      "optional": false,
+      "writable": false
+    },
+    "exhaust_temp": {
+      "address": 1024,
+      "label": "TE30_M",
+      "raw": 195,
+      "scaled": 19.5,
+      "scale": 0.1,
+      "optional": false,
+      "writable": false
+    },
+    "waste_temp": {
+      "address": 1023,
+      "label": "TE31_M",
+      "raw": 42,
+      "scaled": 4.2,
+      "scale": 0.1,
+      "optional": false,
+      "writable": false
+    },
+    "exhaust_temp_setpoint": {
+      "address": 1073,
+      "label": "TE30_S",
+      "raw": 210,
+      "scaled": 21.0,
+      "scale": 0.1,
+      "optional": false,
+      "writable": true
+    },
+    "supply_temp_setpoint": {
+      "address": 1061,
+      "label": "TE10_MIN_HOME_S",
+      "raw": 170,
+      "scaled": 17.0,
+      "scale": 0.1,
+      "optional": false,
+      "writable": true
+    },
+    "home_speed": {
+      "address": 1060,
+      "label": "HOME_SPEED_S",
+      "raw": 3,
+      "scaled": 3,
+      "scale": 1.0,
+      "optional": false,
+      "writable": true
+    },
+    "away_speed": {
+      "address": 1063,
+      "label": "AWAY_SPEED_S",
+      "raw": 1,
+      "scaled": 1,
+      "scale": 1.0,
+      "optional": false,
+      "writable": true
+    },
+    "home_state": {
+      "address": 1181,
+      "label": "USERSTATECONTROL_FO",
+      "raw": 2,
+      "scaled": 2,
+      "scale": 1.0,
+      "optional": false,
+      "writable": false
+    },
+    "boost_state": {
+      "address": 1181,
+      "label": "USERSTATECONTROL_FO",
+      "raw": 2,
+      "scaled": 2,
+      "scale": 1.0,
+      "optional": false,
+      "writable": false
+    },
+    "boost_timer": {
+      "address": 1200,
+      "label": "BOOST_TIMER_FM",
+      "raw": -1,
+      "scaled": -1,
+      "scale": 1.0,
+      "optional": false,
+      "writable": true
+    },
+    "overpressure_state": {
+      "address": 1181,
+      "label": "USERSTATECONTROL_FO",
+      "raw": 2,
+      "scaled": 2,
+      "scale": 1.0,
+      "optional": false,
+      "writable": false
+    },
+    "overpressure_timer": {
+      "address": 1201,
+      "label": "OVERP_TIMER_FM",
+      "raw": -1,
+      "scaled": -1,
+      "scale": 1.0,
+      "optional": false,
+      "writable": false
+    },
+    "humidity": {
+      "address": 1025,
+      "label": "ME05_M",
+      "raw": 24,
+      "scaled": 24,
+      "scale": 1.0,
+      "optional": false,
+      "writable": false
+    },
+    "humidity_24h_avg": {
+      "address": 1192,
+      "label": "ME05_AVG_FM",
+      "raw": 256,
+      "scaled": 25.6,
+      "scale": 0.1,
+      "optional": false,
+      "writable": false
+    },
+    "co2_exhaust": {
+      "address": 1026,
+      "label": "QE05_M",
+      "raw": 605,
+      "scaled": 605,
+      "scale": 1.0,
+      "optional": false,
+      "writable": false
+    },
+    "lto_heat_recovery_control": {
+      "address": 1046,
+      "label": "FG50_Y",
+      "raw": 1000,
+      "scaled": 100.0,
+      "scale": 0.1,
+      "optional": false,
+      "writable": false
+    },
+    "alarm_count": {
+      "address": 1004,
+      "label": "ALARM_COUNT",
+      "raw": 0,
+      "scaled": 0,
+      "scale": 1.0,
+      "optional": false,
+      "writable": false
+    },
+    "sum_alarm": {
+      "address": 1005,
+      "label": "SUM_ALARM",
+      "raw": 0,
+      "scaled": 0,
+      "scale": 1.0,
+      "optional": false,
+      "writable": false
+    },
+    "alarms_state": {
+      "address": 1204,
+      "label": "ALARMS_STATE_FI",
+      "raw": 0,
+      "scaled": 0,
+      "scale": 1.0,
+      "optional": false,
+      "writable": false
+    },
+    "heat_recovery_efficiency": {
+      "address": 1183,
+      "label": "FG50_EA_M",
+      "raw": 659,
+      "scaled": 65.9,
+      "scale": 0.1,
+      "optional": false,
+      "writable": false
+    },
+    "defrost_state": {
+      "address": 1182,
+      "label": "DFRST_FI",
+      "raw": 0,
+      "scaled": 0,
+      "scale": 1.0,
+      "optional": false,
+      "writable": false
+    },
+    "supply_fan_speed": {
+      "address": 1040,
+      "label": "TF10_Y",
+      "raw": 500,
+      "scaled": 50.0,
+      "scale": 0.1,
+      "optional": false,
+      "writable": false
+    },
+    "exhaust_fan_speed": {
+      "address": 1042,
+      "label": "PF30_Y",
+      "raw": 640,
+      "scaled": 64.0,
+      "scale": 0.1,
+      "optional": false,
+      "writable": false
+    },
+    "filter_state": {
+      "address": 1184,
+      "label": "FILTER_STATE_FI",
+      "raw": 0,
+      "scaled": 0,
+      "scale": 1.0,
+      "optional": false,
+      "writable": false
+    },
+    "filter_day": {
+      "address": 1193,
+      "label": "FILTER_DAY",
+      "raw": 25,
+      "scaled": 25,
+      "scale": 1.0,
+      "optional": false,
+      "writable": true
+    },
+    "filter_month": {
+      "address": 1194,
+      "label": "FILTER_MONTH",
+      "raw": 12,
+      "scaled": 12,
+      "scale": 1.0,
+      "optional": false,
+      "writable": true
+    },
+    "filter_year": {
+      "address": 1195,
+      "label": "FILTER_YEAR",
+      "raw": 2025,
+      "scaled": 2025,
+      "scale": 1.0,
+      "optional": false,
+      "writable": true
+    },
+    "filter_next_day": {
+      "address": 1196,
+      "label": "FILTERNEXT_DAY",
+      "raw": 25,
+      "scaled": 25,
+      "scale": 1.0,
+      "optional": false,
+      "writable": true
+    },
+    "filter_next_month": {
+      "address": 1197,
+      "label": "FILTERNEXT_MONTH",
+      "raw": 4,
+      "scaled": 4,
+      "scale": 1.0,
+      "optional": false,
+      "writable": true
+    },
+    "filter_next_year": {
+      "address": 1198,
+      "label": "FILTERNEXT_YEAR",
+      "raw": 2026,
+      "scaled": 2026,
+      "scale": 1.0,
+      "optional": false,
+      "writable": true
+    },
+    "summer_mode": {
+      "address": 1071,
+      "label": "AUTO_SUMMER_COOL_S",
+      "raw": 2,
+      "scaled": 2,
+      "scale": 1.0,
+      "optional": false,
+      "writable": true
+    },
+    "time_program_enable": {
+      "address": 1070,
+      "label": "TP_ENABLE_S",
+      "raw": 1,
+      "scaled": 1,
+      "scale": 1.0,
+      "optional": false,
+      "writable": true
+    },
+    "heater_enable": {
+      "address": 1074,
+      "label": "AUTO_HEATER_ENABLE_S",
+      "raw": 1,
+      "scaled": 1,
+      "scale": 1.0,
+      "optional": false,
+      "writable": true
+    },
+    "boost_time_setting": {
+      "address": 1066,
+      "label": "BOOST_TIME_S",
+      "raw": 2,
+      "scaled": 2,
+      "scale": 1.0,
+      "optional": false,
+      "writable": true
+    },
+    "overpressure_time_setting": {
+      "address": 1069,
+      "label": "OVERP_TIME_S",
+      "raw": 5,
+      "scaled": 5,
+      "scale": 1.0,
+      "optional": false,
+      "writable": true
+    },
+    "summer_mode_temp_limit": {
+      "address": 1073,
+      "label": "TE30_S",
+      "raw": 210,
+      "scaled": 21.0,
+      "scale": 0.1,
+      "optional": false,
+      "writable": true
+    },
+    "boost_setting": {
+      "address": 1065,
+      "label": "BOOST_SETTING_S",
+      "raw": 4,
+      "scaled": 4,
+      "scale": 1.0,
+      "optional": false,
+      "writable": true
+    },
+    "filter_interval": {
+      "address": 1090,
+      "label": "FILTER_INTERVAL_S",
+      "raw": 1,
+      "scaled": 1,
+      "scale": 1.0,
+      "optional": false,
+      "writable": true
+    }
+  }
+}

@@ -1,4 +1,5 @@
 """Fan platform for Parmair ventilation integration."""
+
 from __future__ import annotations
 
 import logging
@@ -15,7 +16,6 @@ from homeassistant.util.percentage import (
 )
 
 from .const import (
-    DEFAULT_NAME,
     DOMAIN,
     MODE_AWAY,
     MODE_BOOST,
@@ -25,6 +25,7 @@ from .const import (
     POWER_RUNNING,
     REG_CONTROL_STATE,
     REG_POWER,
+    SOFTWARE_VERSION_2,
 )
 from .coordinator import ParmairCoordinator
 
@@ -45,7 +46,7 @@ async def async_setup_entry(
 ) -> None:
     """Set up Parmair fan platform."""
     coordinator: ParmairCoordinator = hass.data[DOMAIN][entry.entry_id]
-    
+
     async_add_entities([ParmairFan(coordinator, entry)])
 
 
@@ -54,10 +55,7 @@ class ParmairFan(CoordinatorEntity[ParmairCoordinator], FanEntity):
 
     _attr_has_entity_name = True
     _attr_name = None
-    _attr_supported_features = (
-        FanEntityFeature.SET_SPEED
-        | FanEntityFeature.PRESET_MODE
-    )
+    _attr_supported_features = FanEntityFeature.SET_SPEED | FanEntityFeature.PRESET_MODE
     _attr_preset_modes = [PRESET_MODE_AWAY, PRESET_MODE_HOME, PRESET_MODE_BOOST]
     _attr_speed_count = 3
 
@@ -72,16 +70,21 @@ class ParmairFan(CoordinatorEntity[ParmairCoordinator], FanEntity):
         """Return true if the fan is on."""
         power_state = self.coordinator.data.get("power", POWER_OFF)
         control_state = self.coordinator.data.get("control_state", MODE_STOP)
-        return power_state == POWER_RUNNING and control_state != MODE_STOP
+        # V1: power 3 = Running. V2: power 1 = On.
+        is_v2 = self.coordinator.software_version == SOFTWARE_VERSION_2 or str(
+            self.coordinator.software_version
+        ).startswith("2.")
+        power_ok = (power_state == 1) if is_v2 else (power_state == POWER_RUNNING)
+        return power_ok and control_state != MODE_STOP
 
     @property
     def percentage(self) -> int | None:
         """Return the current speed percentage."""
         if not self.is_on:
             return 0
-        
+
         control_state = self.coordinator.data.get("control_state", MODE_STOP)
-        
+
         # Map control state to percentage
         if control_state == MODE_AWAY:
             return ordered_list_item_to_percentage(ORDERED_NAMED_FAN_SPEEDS, PRESET_MODE_AWAY)
@@ -89,7 +92,7 @@ class ParmairFan(CoordinatorEntity[ParmairCoordinator], FanEntity):
             return ordered_list_item_to_percentage(ORDERED_NAMED_FAN_SPEEDS, PRESET_MODE_HOME)
         elif control_state == MODE_BOOST:
             return ordered_list_item_to_percentage(ORDERED_NAMED_FAN_SPEEDS, PRESET_MODE_BOOST)
-        
+
         return None
 
     @property
@@ -97,16 +100,16 @@ class ParmairFan(CoordinatorEntity[ParmairCoordinator], FanEntity):
         """Return the current preset mode."""
         if not self.is_on:
             return None
-        
+
         control_state = self.coordinator.data.get("control_state", MODE_STOP)
-        
+
         if control_state == MODE_AWAY:
             return PRESET_MODE_AWAY
         elif control_state == MODE_HOME:
             return PRESET_MODE_HOME
         elif control_state == MODE_BOOST:
             return PRESET_MODE_BOOST
-        
+
         return None
 
     async def async_turn_on(
@@ -120,7 +123,7 @@ class ParmairFan(CoordinatorEntity[ParmairCoordinator], FanEntity):
         if self.coordinator.data.get("power") != POWER_RUNNING:
             await self.coordinator.async_write_register(REG_POWER, POWER_RUNNING)
             await self.coordinator.async_request_refresh()
-        
+
         # Then set mode
         if preset_mode:
             await self.async_set_preset_mode(preset_mode)
@@ -141,7 +144,7 @@ class ParmairFan(CoordinatorEntity[ParmairCoordinator], FanEntity):
         if percentage == 0:
             await self.async_turn_off()
             return
-        
+
         # Map percentage to preset mode
         named_speed = percentage_to_ordered_list_item(ORDERED_NAMED_FAN_SPEEDS, percentage)
         await self.async_set_preset_mode(named_speed)
@@ -153,7 +156,7 @@ class ParmairFan(CoordinatorEntity[ParmairCoordinator], FanEntity):
             PRESET_MODE_HOME: MODE_HOME,
             PRESET_MODE_BOOST: MODE_BOOST,
         }
-        
+
         if preset_mode in mode_map:
             mode_value = mode_map[preset_mode]
             if await self.coordinator.async_write_register(REG_CONTROL_STATE, mode_value):
@@ -165,5 +168,7 @@ class ParmairFan(CoordinatorEntity[ParmairCoordinator], FanEntity):
 
         return {
             "parmair_power_register": self.coordinator.get_register_definition(REG_POWER).label,
-            "parmair_control_register": self.coordinator.get_register_definition(REG_CONTROL_STATE).label,
+            "parmair_control_register": self.coordinator.get_register_definition(
+                REG_CONTROL_STATE
+            ).label,
         }

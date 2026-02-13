@@ -1,4 +1,5 @@
 """Button platform for Parmair MAC integration."""
+
 from __future__ import annotations
 
 import logging
