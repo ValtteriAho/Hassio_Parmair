@@ -468,6 +468,15 @@ class InterpretationTester:
             raw = self.coord.get_raw_value(key)
             self._add_result("Speed", name, raw, format_percentage(value))
 
+        # Pre-/post-heaters (percentage)
+        for key, name in [
+            ("pre_heater_output", "Pre-heater Output"),
+            ("post_heater_output", "Post-heater Output"),
+        ]:
+            value = self.coord.data.get(key)
+            raw = self.coord.get_raw_value(key)
+            self._add_result("Performance", name, raw, format_percentage(value))
+
         # Heat recovery efficiency
         efficiency = self.coord.data.get("heat_recovery_efficiency")
         raw = self.coord.get_raw_value("heat_recovery_efficiency")

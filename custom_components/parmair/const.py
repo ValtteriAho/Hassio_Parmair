@@ -120,6 +120,8 @@ REG_FILTER_INTERVAL = "filter_interval"
 
 # Additional sensor register keys
 REG_HEAT_RECOVERY_EFFICIENCY = "heat_recovery_efficiency"
+REG_PRE_HEATER_OUTPUT = "pre_heater_output"
+REG_POST_HEATER_OUTPUT = "post_heater_output"
 REG_OVERPRESSURE_TIMER = "overpressure_timer"
 REG_DEFROST_STATE = "defrost_state"
 REG_SUPPLY_FAN_SPEED = "supply_fan_speed"
@@ -262,6 +264,12 @@ def _build_registers_v1() -> Dict[str, RegisterDefinition]:
         REG_EXHAUST_FAN_SPEED: RegisterDefinition(
             REG_EXHAUST_FAN_SPEED, 1042, "PF30_Y", scale=0.1
         ),
+        REG_PRE_HEATER_OUTPUT: RegisterDefinition(
+            REG_PRE_HEATER_OUTPUT, 1048, "EC05_Y", scale=0.1
+        ),
+        REG_POST_HEATER_OUTPUT: RegisterDefinition(
+            REG_POST_HEATER_OUTPUT, 1044, "TV45_Y", scale=0.1
+        ),
         REG_FILTER_STATE: RegisterDefinition(
             REG_FILTER_STATE, 1205, "FILTER_STATE_FI"
         ),
@@ -368,6 +376,8 @@ def _build_registers_v2() -> Dict[str, RegisterDefinition]:
         REG_DEFROST_STATE: RegisterDefinition(REG_DEFROST_STATE, 1182, "DFRST_FI"),
         REG_SUPPLY_FAN_SPEED: RegisterDefinition(REG_SUPPLY_FAN_SPEED, 1040, "TF10_Y", scale=0.1),
         REG_EXHAUST_FAN_SPEED: RegisterDefinition(REG_EXHAUST_FAN_SPEED, 1042, "PF30_Y", scale=0.1),
+        REG_PRE_HEATER_OUTPUT: RegisterDefinition(REG_PRE_HEATER_OUTPUT, 1048, "EC05_Y", scale=0.1),
+        REG_POST_HEATER_OUTPUT: RegisterDefinition(REG_POST_HEATER_OUTPUT, 1044, "TV45_Y", scale=0.1),
         REG_FILTER_STATE: RegisterDefinition(REG_FILTER_STATE, 1184, "FILTER_STATE_FI"),
         REG_FILTER_DAY: RegisterDefinition(REG_FILTER_DAY, 1193, "FILTER_DAY", writable=True),
         REG_FILTER_MONTH: RegisterDefinition(REG_FILTER_MONTH, 1194, "FILTER_MONTH", writable=True),
@@ -437,6 +447,8 @@ POLLING_REGISTER_KEYS = (
     REG_DEFROST_STATE,
     REG_SUPPLY_FAN_SPEED,
     REG_EXHAUST_FAN_SPEED,
+    REG_PRE_HEATER_OUTPUT,
+    REG_POST_HEATER_OUTPUT,
     REG_FILTER_STATE,
     REG_FILTER_DAY,
     REG_FILTER_MONTH,
