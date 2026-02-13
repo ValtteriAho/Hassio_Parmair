@@ -24,9 +24,9 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
-    "pytest>=8.0.0",
-    "pytest-cov>=4.0.0",
-    "ruff>=0.4.0",
+    "pytest>=9.0.0",
+    "pytest-cov>=7.0.0",
+    "ruff==0.15.1",  # match .pre-commit-config.yaml rev so local format matches hook
     "mypy>=1.10.0",
     "homeassistant-stubs>=2025.5.0",
     "pre-commit>=3.0.0",
