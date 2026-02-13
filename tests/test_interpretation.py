@@ -18,7 +18,16 @@ PROJECT_ROOT = Path(__file__).parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 sys.path.insert(0, str(PROJECT_ROOT / "tools"))
 
-from tools.mock_coordinator import MockCoordinator
+import re
+
+from tools.mock_coordinator import (
+    MockCoordinator,
+    HARDWARE_TYPE_MAP_V2,
+    REG_POWER,
+    REG_CONTROL_STATE,
+    SOFTWARE_VERSION_2,
+    get_registers_for_version,
+)
 
 
 class TestFixtureLoading:
@@ -32,7 +41,8 @@ class TestFixtureLoading:
 
     def test_fixture_has_metadata(self, fixture_metadata: dict[str, Any]) -> None:
         """Verify fixture has required metadata."""
-        assert "register_map_version" in fixture_metadata or "detected_software_version" in fixture_metadata
+        assert "register_map_version" in fixture_metadata, "Fixture must have register_map_version"
+        assert "detected_software_version" in fixture_metadata, "Fixture must have detected_software_version"
         
     def test_fixture_has_registers(self, fixture_registers: dict[str, Any]) -> None:
         """Verify fixture has register data."""
@@ -57,13 +67,15 @@ class TestSystemInfo:
         assert 50 <= hw_type <= 500, f"Hardware type {hw_type} out of expected range"
 
     def test_device_info_valid(self, coordinator: MockCoordinator) -> None:
-        """Device info should have required fields."""
+        """Device info should have required fields and valid model format."""
         device_info = coordinator.device_info
         assert "name" in device_info
         assert "manufacturer" in device_info
         assert device_info["manufacturer"] == "Parmair"
         assert "model" in device_info
-        assert "MAC" in device_info["model"]
+        model = device_info["model"]
+        assert model.startswith("MAC "), f"Model should start with 'MAC ', got {model}"
+        assert re.match(r"^MAC \d+$", model), f"Model should match 'MAC <number>', got {model}"
 
 
 class TestTemperatures:
@@ -290,24 +302,71 @@ class TestScaling:
 
 
 class TestRegisterDefinitions:
-    """Test register definition retrieval."""
+    """Test register definition retrieval and correctness."""
+
+    # Expected addresses (key -> address) for v1 and v2 - catches wrong register map
+    V2_EXPECTED_ADDRESSES = {
+        "software_version": 1015,
+        "power": 1180,
+        "control_state": 1181,
+        "fresh_air_temp": 1020,
+    }
+    V1_EXPECTED_ADDRESSES = {
+        "software_version": 1018,
+        "power": 1208,
+        "control_state": 1185,
+        "fresh_air_temp": 1020,
+    }
 
     def test_get_register_definition(self, coordinator: MockCoordinator) -> None:
-        """Register definitions should be retrievable."""
-        for key in ("software_version", "power", "fresh_air_temp"):
+        """Register definitions should be retrievable with correct addresses and labels."""
+        expected = (
+            self.V2_EXPECTED_ADDRESSES
+            if coordinator.software_version == SOFTWARE_VERSION_2
+            or str(coordinator.software_version).startswith("2.")
+            else self.V1_EXPECTED_ADDRESSES
+        )
+        for key in ("software_version", "power", "control_state", "fresh_air_temp"):
             if key not in coordinator.data:
                 continue
-            
+
             definition = coordinator.get_register_definition(key)
             assert definition is not None
             assert definition.key == key
             assert definition.address > 0
+            assert definition.address == expected[key], (
+                f"{key} address should be {expected[key]}, got {definition.address}"
+            )
+            assert definition.label is not None and len(definition.label) > 0, (
+                f"{key} should have non-empty label"
+            )
 
-    def test_register_definition_has_label(self, coordinator: MockCoordinator) -> None:
-        """Register definitions should have Modbus labels."""
-        definition = coordinator.get_register_definition("software_version")
-        assert definition.label is not None
-        assert len(definition.label) > 0
+    def test_overpressure_timer_writable(self, coordinator: MockCoordinator) -> None:
+        """Overpressure timer register should be writable (was overwritten by duplicate def)."""
+        if "overpressure_timer" not in coordinator.data:
+            pytest.skip("Overpressure timer not in fixture")
+        definition = coordinator.get_register_definition("overpressure_timer")
+        assert definition.writable, "overpressure_timer should be writable"
+
+
+class TestRegisterMap:
+    """Tests for register map correctness (would catch write_register wrong map bug)."""
+
+    def test_v2_register_addresses_match_documentation(self) -> None:
+        """V2 register addresses must match device docs (catches wrong map in writes)."""
+        regs = get_registers_for_version(SOFTWARE_VERSION_2)
+        assert regs[REG_POWER].address == 1180, (
+            "V2 POWER should be UNIT_CONTROL_FO at 1180"
+        )
+        assert regs[REG_CONTROL_STATE].address == 1181, (
+            "V2 CONTROL_STATE should be USERSTATECONTROL at 1181"
+        )
+
+    def test_power_register_address_varies_by_version(self) -> None:
+        """Power register address differs between v1 and v2 (config_flow must use correct one)."""
+        v1_addr = get_registers_for_version("1.x")[REG_POWER].address
+        v2_addr = get_registers_for_version(SOFTWARE_VERSION_2)[REG_POWER].address
+        assert v1_addr != v2_addr, "V1 and V2 power addresses must differ"
 
 
 class TestV2Specific:
@@ -330,7 +389,7 @@ class TestV2Specific:
     def test_hardware_type_mapping_v2(
         self, coordinator: MockCoordinator, is_v2_device: bool
     ) -> None:
-        """V2 hardware type codes should map correctly."""
+        """V2 hardware type codes should map to correct model (e.g. 112 -> MAC 120)."""
         if not is_v2_device:
             pytest.skip("Not a V2 device")
         
@@ -338,6 +397,25 @@ class TestV2Specific:
         if hw_type is None:
             pytest.skip("Hardware type not present")
         
+        hw_int = int(hw_type)
+        expected_num = HARDWARE_TYPE_MAP_V2.get(hw_int, hw_int)
+        expected_model = f"MAC {expected_num}"
         device_info = coordinator.device_info
-        assert "MAC" in device_info["model"]
+        assert device_info["model"] == expected_model, (
+            f"V2 hw_type {hw_int} should map to {expected_model}, got {device_info['model']}"
+        )
+
+    def test_v2_derived_states_binary(
+        self, coordinator: MockCoordinator, is_v2_device: bool
+    ) -> None:
+        """V2 home_state, boost_state, overpressure_state must be 0 or 1 (derived from USERSTATECONTROL)."""
+        if not is_v2_device:
+            pytest.skip("Not a V2 device")
+        for key in ("home_state", "boost_state", "overpressure_state"):
+            value = coordinator.data.get(key)
+            if value is None:
+                continue
+            assert value in (0, 1), (
+                f"{key} must be 0 or 1 for binary sensor, got {value}"
+            )
 

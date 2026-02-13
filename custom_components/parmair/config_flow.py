@@ -50,6 +50,7 @@ from .const import (
     SOFTWARE_VERSION_2,
     SOFTWARE_VERSION_UNKNOWN,
     get_register_definition,
+    get_registers_for_version,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -300,9 +301,10 @@ async def validate_connection(hass: HomeAssistant, data: dict[str, Any]) -> dict
         return None  # Signal to caller that manual selection is needed
     
     detected_sw_version, detected_heater_type = detection_result
-    
-    # Verify communication by reading power register
-    power_register = get_register_definition(REG_POWER)
+
+    # Verify communication by reading power register (use version-specific address)
+    registers = get_registers_for_version(detected_sw_version)
+    power_register = get_register_definition(REG_POWER, registers)
     
     # Try to read a register to verify communication
     def _read_test():

@@ -33,6 +33,9 @@ _spec.loader.exec_module(_const)
 
 SOFTWARE_VERSION_1 = _const.SOFTWARE_VERSION_1
 SOFTWARE_VERSION_2 = _const.SOFTWARE_VERSION_2
+HARDWARE_TYPE_MAP_V2 = _const.HARDWARE_TYPE_MAP_V2
+REG_POWER = _const.REG_POWER
+REG_CONTROL_STATE = _const.REG_CONTROL_STATE
 RegisterDefinition = _const.RegisterDefinition
 get_register_definition = _const.get_register_definition
 get_registers_for_version = _const.get_registers_for_version
@@ -105,7 +108,13 @@ class MockCoordinator:
 
         model = "MAC"
         if hw_type is not None:
-            model = f"MAC {int(hw_type)}"
+            hw_int = int(hw_type)
+            is_v2 = (
+                self._software_version == SOFTWARE_VERSION_2
+                or str(self._software_version).startswith("2.")
+            )
+            model_num = HARDWARE_TYPE_MAP_V2.get(hw_int, hw_int) if is_v2 else hw_int
+            model = f"MAC {model_num}"
 
         device_info = {
             "identifiers": {("parmair", "mock_device")},
@@ -172,6 +181,19 @@ class MockCoordinator:
                 # For registers without scaling, use raw value
                 data[key] = reg_data["raw"]
 
+        # v2.x: derive home_state, boost_state, overpressure_state from control_state
+        # (USERSTATECONTROL_FO: 0=Off, 1=Away, 2=Home, 3=Boost, 4=Sauna, 5=Fireplace)
+        is_v2 = (
+            software_version == SOFTWARE_VERSION_2
+            or str(software_version).startswith("2.")
+        )
+        if is_v2:
+            user_state = data.get("control_state")
+            if user_state is not None:
+                data["home_state"] = 1 if user_state == 2 else 0
+                data["boost_state"] = 1 if user_state == 3 else 0
+                data["overpressure_state"] = 1 if user_state in (4, 5) else 0
+
         return cls(
             data=data,
             metadata=metadata,
@@ -223,6 +245,19 @@ class MockCoordinator:
             "source": "from_dict",
             "register_map_version": software_version,
         }
+
+        # v2.x: derive home_state, boost_state, overpressure_state from control_state
+        is_v2 = (
+            software_version == SOFTWARE_VERSION_2
+            or str(software_version).startswith("2.")
+        )
+        if is_v2:
+            data = dict(data)  # Copy to avoid mutating user input
+            user_state = data.get("control_state")
+            if user_state is not None:
+                data["home_state"] = 1 if user_state == 2 else 0
+                data["boost_state"] = 1 if user_state == 3 else 0
+                data["overpressure_state"] = 1 if user_state in (4, 5) else 0
 
         return cls(
             data=data,

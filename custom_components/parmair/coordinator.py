@@ -23,10 +23,12 @@ from .const import (
     DEFAULT_NAME,
     DEFAULT_SCAN_INTERVAL,
     DOMAIN,
+    HARDWARE_TYPE_MAP_V2,
     HEATER_TYPE_UNKNOWN,
     POLLING_REGISTER_KEYS,
     REGISTERS,
     SOFTWARE_VERSION_1,
+    SOFTWARE_VERSION_2,
     SOFTWARE_VERSION_UNKNOWN,
     STATIC_REGISTER_KEYS,
     RegisterDefinition,
@@ -145,13 +147,20 @@ class ParmairCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             failed_registers = []
 
             try:
-                # Read dynamic registers on every poll
+                # Group definitions by address to avoid duplicate reads (e.g. v2 USERSTATECONTROL)
+                address_to_definitions: dict[int, list[RegisterDefinition]] = {}
                 for definition in self._poll_registers:
-                    value = self._read_register_value(definition)
+                    address_to_definitions.setdefault(definition.address, []).append(definition)
+
+                # Read each unique address once, distribute value to all keys using it
+                for address, definitions in address_to_definitions.items():
+                    # Use first definition for scaling (shared addresses have same scale)
+                    value = self._read_register_value(definitions[0])
                     if value is None:
-                        failed_registers.append(f"{definition.label}({definition.register_id})")
+                        failed_registers.append(f"{definitions[0].label}({definitions[0].register_id})")
                         continue
-                    data[definition.key] = value
+                    for definition in definitions:
+                        data[definition.key] = value
                     # Longer delay between reads to prevent transaction ID conflicts
                     time.sleep(0.3)
                 
@@ -164,6 +173,20 @@ class ParmairCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                 
                 # Merge static data with dynamic data
                 data.update(self._static_data)
+
+                # v2.x: home_state, boost_state, overpressure_state share register 1181 (USERSTATECONTROL_FO)
+                # 0=Off, 1=Away, 2=Home, 3=Boost, 4=Sauna, 5=Fireplace
+                # Derive binary values for sensors that expect 0/1
+                is_v2 = (
+                    self.software_version == SOFTWARE_VERSION_2
+                    or str(self.software_version).startswith("2.")
+                )
+                if is_v2:
+                    user_state = data.get("control_state")
+                    if user_state is not None:
+                        data["home_state"] = 1 if user_state == 2 else 0  # 2=Home
+                        data["boost_state"] = 1 if user_state == 3 else 0  # 3=Boost
+                        data["overpressure_state"] = 1 if user_state in (4, 5) else 0  # 4=Sauna, 5=Fireplace
                 
                 _LOGGER.debug(
                     "Read data from Parmair %s: %d values (%d static, %d dynamic)",
@@ -186,7 +209,7 @@ class ParmairCoordinator(DataUpdateCoordinator[dict[str, Any]]):
 
     def write_register(self, key: str, value: float | int) -> bool:
         """Write a value to a Modbus register respecting scaling with pymodbus 3.x."""
-        definition = get_register_definition(key)
+        definition = get_register_definition(key, self._registers)
         try:
             with self._lock:
                 if not self._client.connected:
@@ -239,10 +262,16 @@ class ParmairCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         sw_version = self.data.get("software_version")
         hw_type = self.data.get("hardware_type")
         
-        # Determine MAC model from hardware type (80, 100, or 150)
+        # Determine MAC model from hardware type
         model = "MAC"
         if hw_type is not None:
-            model = f"MAC {int(hw_type)}"
+            hw_int = int(hw_type)
+            is_v2 = (
+                self.software_version == SOFTWARE_VERSION_2
+                or str(self.software_version).startswith("2.")
+            )
+            model_num = HARDWARE_TYPE_MAP_V2.get(hw_int, hw_int) if is_v2 else hw_int
+            model = f"MAC {model_num}"
         
         device_info = {
             "identifiers": {(DOMAIN, self.entry.entry_id)},

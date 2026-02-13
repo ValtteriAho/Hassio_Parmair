@@ -495,7 +495,8 @@ class ParmairBinarySensor(ParmairRegisterEntity, SensorEntity):
         super().__init__(coordinator, entry, data_key, name)
         self._state_map = state_map
         self._attr_device_class = SensorDeviceClass.ENUM
-        self._attr_options = list(state_map.values())
+        # Include "Unknown" so Home Assistant accepts unmapped values (e.g. v2 USERSTATECONTROL 2-5)
+        self._attr_options = list(state_map.values()) + ["Unknown"]
 
     @property
     def native_value(self) -> str | None:
@@ -503,7 +504,17 @@ class ParmairBinarySensor(ParmairRegisterEntity, SensorEntity):
         raw_value = self.coordinator.data.get(self._data_key)
         if raw_value is None:
             return None
-        return self._state_map.get(raw_value, f"Unknown ({raw_value})")
+        mapped = self._state_map.get(raw_value)
+        return mapped if mapped is not None else "Unknown"
+
+    @property
+    def extra_state_attributes(self) -> dict[str, object]:
+        """Expose register metadata and raw value for diagnostics."""
+        attrs = super().extra_state_attributes
+        raw_value = self.coordinator.data.get(self._data_key)
+        if raw_value is not None and raw_value not in self._state_map:
+            attrs["raw_value"] = raw_value
+        return attrs
 
 
 class ParmairFilterChangeDateSensor(CoordinatorEntity[ParmairCoordinator], SensorEntity):

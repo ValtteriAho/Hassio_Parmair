@@ -23,6 +23,11 @@ SOFTWARE_VERSION_1 = "1.x"
 SOFTWARE_VERSION_2 = "2.x"
 SOFTWARE_VERSION_UNKNOWN = "unknown"
 
+# V2 VENT_MACHINE codes -> display model number (v2 uses different encoding than v1)
+HARDWARE_TYPE_MAP_V2: dict[int, int] = {
+    112: 120,  # MAC 120
+}
+
 # Heater types - NOTE: Values are REVERSED between firmware versions!
 # Firmware 1.xx (register 1240): 0=Water, 1=Electric, 2=None
 # Firmware 2.xx (register 1127): 0=Electric, 1=Water, 2=None
@@ -248,9 +253,6 @@ def _build_registers_v1() -> Dict[str, RegisterDefinition]:
         REG_HEAT_RECOVERY_EFFICIENCY: RegisterDefinition(
             REG_HEAT_RECOVERY_EFFICIENCY, 1190, "FG50_EA_M", scale=0.1
         ),
-        REG_OVERPRESSURE_TIMER: RegisterDefinition(
-            REG_OVERPRESSURE_TIMER, 1204, "OVERP_TIMER_FM"
-        ),
         REG_DEFROST_STATE: RegisterDefinition(
             REG_DEFROST_STATE, 1183, "DFRST_FI"
         ),
@@ -313,6 +315,7 @@ def _build_registers_v2() -> Dict[str, RegisterDefinition]:
         REG_WASTE_TEMP: RegisterDefinition(REG_WASTE_TEMP, 1023, "TE31_M", scale=0.1),
         
         # Temperature setpoints (×0.1°C scaling)
+        # TE30_S: shared with REG_SUMMER_MODE_TEMP_LIMIT (target room temp / summer mode limit)
         REG_EXHAUST_TEMP_SETPOINT: RegisterDefinition(REG_EXHAUST_TEMP_SETPOINT, 1073, "TE30_S", scale=0.1, writable=True),
         REG_SUPPLY_TEMP_SETPOINT: RegisterDefinition(REG_SUPPLY_TEMP_SETPOINT, 1061, "TE10_MIN_HOME_S", scale=0.1, writable=True),
         
@@ -354,6 +357,7 @@ def _build_registers_v2() -> Dict[str, RegisterDefinition]:
         # Predefined settings registers
         REG_BOOST_TIME_SETTING: RegisterDefinition(REG_BOOST_TIME_SETTING, 1066, "BOOST_TIME_S", writable=True),
         REG_OVERPRESSURE_TIME_SETTING: RegisterDefinition(REG_OVERPRESSURE_TIME_SETTING, 1069, "OVERP_TIME_S", writable=True),
+        # TE30_S: same physical register as REG_EXHAUST_TEMP_SETPOINT (target room temp in summer)
         REG_SUMMER_MODE_TEMP_LIMIT: RegisterDefinition(REG_SUMMER_MODE_TEMP_LIMIT, 1073, "TE30_S", scale=0.1, writable=True),
         
         # Additional number registers
@@ -361,7 +365,6 @@ def _build_registers_v2() -> Dict[str, RegisterDefinition]:
         
         # Additional sensor registers
         REG_HEAT_RECOVERY_EFFICIENCY: RegisterDefinition(REG_HEAT_RECOVERY_EFFICIENCY, 1183, "FG50_EA_M", scale=0.1),
-        REG_OVERPRESSURE_TIMER: RegisterDefinition(REG_OVERPRESSURE_TIMER, 1201, "OVERP_TIMER_FM"),
         REG_DEFROST_STATE: RegisterDefinition(REG_DEFROST_STATE, 1182, "DFRST_FI"),
         REG_SUPPLY_FAN_SPEED: RegisterDefinition(REG_SUPPLY_FAN_SPEED, 1040, "TF10_Y", scale=0.1),
         REG_EXHAUST_FAN_SPEED: RegisterDefinition(REG_EXHAUST_FAN_SPEED, 1042, "PF30_Y", scale=0.1),
