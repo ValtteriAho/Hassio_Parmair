@@ -1,3 +1,37 @@
+## 0.12.0 - Major Refactor and V2 Improvements (2026-02-16)
+
+### Added
+- **Batch Modbus reads** - Groups consecutive registers into single reads for better performance
+- **PyModbus compatibility layer** - Better support across pymodbus versions
+- **Options flow** - Reconfigure integration settings without deleting and re-adding
+- **Pre-heater and post-heater sensors** - EC05_Y and TV45_Y outputs now visible
+- **Testing infrastructure** - Full test suite with fixtures and CI workflow
+- **Development tools** - Register dump, discovery, and interpretation utilities
+- **V2 register documentation** - Complete register map for firmware 2.00+
+
+### Changed
+- **BREAKING: Number entities replaced with Select entities** - Speed settings now use dropdowns
+- **Improved V2 register handling** - Better hardware type detection and shared address deduplication
+- **Code formatting** - Applied Ruff formatting across entire codebase
+- **Config flow improvements** - Better version detection and error handling
+
+### Fixed
+- V2 register address conflicts resolved
+- Filter state display mapping for V2 devices
+- Hardware type detection for MAC 120/150 models
+
+### Migration Notes
+- **Backup created at v0.11.4-safe tag** - Can revert with: `git reset --hard v0.11.4-safe`
+- Users with automations using number entities need to update to select entities
+- Delete and re-add integration to use new options flow for reconfiguration
+
+### Technical Details
+- Merged PR #1 from oskari:main
+- 5,335 additions / 688 deletions across 33 files
+- New pymodbus_compat.py abstraction layer
+- Batch reading groups registers into spans up to 125 registers
+- Options flow allows runtime configuration changes
+
 ## 0.11.4 - Improve Polling Stability (2026-02-10)
 
 ### Changed
