@@ -1,0 +1,178 @@
+# Parmair MAC manual card examples
+#
+# Use these in Home Assistant: Add card -> Manual
+# Each block below is a complete single card configuration.
+
+# 1) Quick Controls card
+# --------------------------------------------------
+type: entities
+title: Parmair Quick Controls
+show_header_toggle: false
+entities:
+  - entity: fan.parmair_mac
+  - entity: select.parmair_mac_manual_speed_control
+  - entity: select.parmair_mac_home_speed_preset
+  - entity: select.parmair_mac_away_speed_preset
+  - entity: select.parmair_mac_boost_speed_preset
+  - entity: switch.parmair_mac_boost_mode
+
+# 2) Temperatures card
+# --------------------------------------------------
+# type: entities
+# title: Parmair Temperatures
+# show_header_toggle: false
+# entities:
+#   - entity: sensor.parmair_mac_fresh_air_temperature
+#   - entity: sensor.parmair_mac_supply_air_temperature_after_recovery
+#   - entity: sensor.parmair_mac_supply_air_temperature
+#   - entity: sensor.parmair_mac_exhaust_air_temperature
+#   - entity: sensor.parmair_mac_waste_air_temperature
+#   - entity: number.parmair_mac_supply_temperature_setpoint
+#   - entity: number.parmair_mac_exhaust_temperature_setpoint
+
+# 3) Air Quality card
+# --------------------------------------------------
+# type: entities
+# title: Parmair Air Quality
+# show_header_toggle: false
+# entities:
+#   - entity: sensor.parmair_mac_humidity
+#   - entity: sensor.parmair_mac_humidity_24h_average
+#   - entity: sensor.parmair_mac_co2_exhaust_air
+#   - entity: sensor.parmair_mac_filter_status
+#   - entity: sensor.parmair_mac_alarm_count
+#   - entity: sensor.parmair_mac_summary_alarm
+
+# 4) Screenshot-style overview (single Manual card)
+# --------------------------------------------------
+# Paste this full block into Add card -> Manual.
+---
+type: vertical-stack
+cards:
+  - type: markdown
+    content: |
+      ## Parmair MAC
+
+  - type: gauge
+    entity: sensor.parmair_mac_current_speed
+    name: Current Speed
+    min: 0
+    max: 6
+    severity:
+      green: 1
+      yellow: 3
+      red: 5
+
+  - type: grid
+    columns: 3
+    square: false
+    cards:
+      - type: gauge
+        entity: sensor.parmair_mac_exhaust_fan_speed
+        name: Exhaust Fan
+        min: 0
+        max: 100
+        severity:
+          green: 25
+          yellow: 60
+          red: 85
+      - type: gauge
+        entity: sensor.parmair_mac_supply_fan_speed
+        name: Supply Fan
+        min: 0
+        max: 100
+        severity:
+          green: 25
+          yellow: 60
+          red: 85
+      - type: gauge
+        entity: sensor.parmair_mac_post_heater_output
+        name: Post-heater
+        min: 0
+        max: 100
+        severity:
+          green: 5
+          yellow: 35
+          red: 70
+
+  - type: grid
+    columns: 3
+    square: false
+    cards:
+      - type: gauge
+        entity: sensor.parmair_mac_lto_heat_recovery_control
+        name: LTO Control
+        min: 0
+        max: 100
+        severity:
+          green: 25
+          yellow: 60
+          red: 85
+      - type: sensor
+        entity: sensor.parmair_mac_humidity_24h_average
+        name: Humidity 24h Avg
+        graph: line
+        detail: 2
+      - type: sensor
+        entity: sensor.parmair_mac_lto_heat_recovery_control
+        name: LTO
+        graph: line
+        detail: 2
+
+  - type: grid
+    columns: 3
+    square: false
+    cards:
+      - type: sensor
+        entity: sensor.parmair_mac_supply_air_temperature
+        name: Supply Air
+        graph: line
+        detail: 2
+      - type: sensor
+        entity: sensor.parmair_mac_exhaust_air_temperature
+        name: Exhaust Air
+        graph: line
+        detail: 2
+      - type: sensor
+        entity: sensor.parmair_mac_supply_air_temperature_after_recovery
+        name: After Recovery
+        graph: line
+        detail: 2
+
+  - type: grid
+    columns: 3
+    square: false
+    cards:
+      - type: sensor
+        entity: sensor.parmair_mac_waste_air_temperature
+        name: Waste Air
+        graph: line
+        detail: 2
+      - type: sensor
+        entity: sensor.parmair_mac_fresh_air_temperature
+        name: Fresh Air
+        graph: line
+        detail: 2
+      - type: gauge
+        entity: sensor.parmair_mac_heat_recovery_efficiency
+        name: Recovery Efficiency
+        min: 0
+        max: 100
+        severity:
+          green: 45
+          yellow: 30
+          red: 15
+
+  - type: grid
+    columns: 3
+    square: false
+    cards:
+      - type: tile
+        entity: switch.parmair_mac_overpressure_mode
+        name: Fireplace Mode
+      - type: tile
+        entity: switch.parmair_mac_boost_mode
+        name: Boost Mode
+      - type: tile
+        entity: switch.parmair_mac_post_heater
+        name: Post Heater

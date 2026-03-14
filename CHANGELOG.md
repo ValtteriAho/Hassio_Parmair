@@ -1,3 +1,12 @@
+## 0.12.2 - Dashboard and Docs Improvements (2026-03-14)
+
+### Added
+- Manual card examples for Lovelace, including a screenshot-style overview layout
+
+### Changed
+- README support matrix clarified: v2.x broadly supported, v1.x supported with Parmair IoT package + Modbus TCP
+- Dashboard documentation now distinguishes full dashboard YAML vs Add card -> Manual usage
+
 ## 0.12.1 - Bugfix (2026-03-14)
 
 ### Fixed

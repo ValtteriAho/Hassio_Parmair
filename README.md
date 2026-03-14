@@ -1,4 +1,4 @@
-# Parmair MAC for Home Assistant (v0.12.1)
+# Parmair MAC for Home Assistant (v0.12.2)
 
 ![Parmair MAC Logo](parmair_logo.jpg)
 
@@ -116,7 +116,8 @@ Once installed, you'll have control over:
 
 Use the ready-made Lovelace view template in [docs/dashboard_example.yaml](docs/dashboard_example.yaml).
 
-- Copy cards to your dashboard raw YAML editor
+- [docs/dashboard_example.yaml](docs/dashboard_example.yaml) is for the dashboard raw YAML editor (full view config with `title:` and `views:`)
+- For Add card -> Manual, use a single-card config from [docs/dashboard_manual_card_examples.yaml](docs/dashboard_manual_card_examples.yaml)
 - Replace entity IDs with your own (entity IDs can vary by device name)
 
 ## Example Automations
@@ -175,12 +176,12 @@ automation:
 
 ## Supported Devices
 
-- **MAC 80** - Apartment ventilation systems
-- **MAC 100** - Small house ventilation
-- **MAC 150** - Larger house ventilation
-- **MAC 2** - Newest models with enhanced sensors (software 2.x)
+This integration supports Parmair MAC units by firmware generation:
 
-Both old (software 1.x) and new (software 2.x) devices are supported. The integration automatically detects your version.
+- **Software v2.x**: Supported across MAC product variants.
+- **Software v1.x**: Supported when the Parmair IoT package is installed and Modbus TCP is available.
+
+The integration automatically detects your software version and uses the correct register map.
 
 ---
 
