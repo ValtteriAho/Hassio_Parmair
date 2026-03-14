@@ -1,3 +1,8 @@
+## 0.12.3 - Dashboard Card Fix (2026-03-14)
+
+### Fixed
+- Manual dashboard card example: replaced duplicate LTO trend card with current humidity card
+
 ## 0.12.2 - Dashboard and Docs Improvements (2026-03-14)
 
 ### Added

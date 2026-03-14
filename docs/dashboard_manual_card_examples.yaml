@@ -114,8 +114,8 @@ cards:
         graph: line
         detail: 2
       - type: sensor
-        entity: sensor.parmair_mac_lto_heat_recovery_control
-        name: LTO
+        entity: sensor.parmair_mac_humidity
+        name: Humidity
         graph: line
         detail: 2
 
