@@ -1,0 +1,123 @@
+# Parmair MAC automation examples
+#
+# Copy these into automations.yaml or create in UI and adapt entity IDs.
+# Entity IDs below are examples and may differ in your system.
+
+automation:
+  - alias: "Parmair: Boost when CO2 is high"
+    id: parmair_boost_when_co2_high
+    mode: single
+    trigger:
+      - platform: numeric_state
+        entity_id: sensor.parmair_mac_co2_exhaust_air
+        above: 900
+        for: "00:05:00"
+    condition: []
+    action:
+      - service: fan.set_preset_mode
+        target:
+          entity_id: fan.parmair_mac
+        data:
+          preset_mode: boost
+
+  - alias: "Parmair: Return to Home mode when CO2 normal"
+    id: parmair_home_when_co2_normal
+    mode: single
+    trigger:
+      - platform: numeric_state
+        entity_id: sensor.parmair_mac_co2_exhaust_air
+        below: 750
+        for: "00:10:00"
+    condition: []
+    action:
+      - service: fan.set_preset_mode
+        target:
+          entity_id: fan.parmair_mac
+        data:
+          preset_mode: home
+
+  - alias: "Parmair: Boost when bathroom humidity rises"
+    id: parmair_boost_on_humidity_rise
+    mode: restart
+    trigger:
+      - platform: numeric_state
+        entity_id: sensor.bathroom_humidity
+        above: 65
+        for: "00:03:00"
+    condition:
+      - condition: state
+        entity_id: fan.parmair_mac
+        state: "on"
+    action:
+      - service: fan.set_preset_mode
+        target:
+          entity_id: fan.parmair_mac
+        data:
+          preset_mode: boost
+      - delay: "00:20:00"
+      - service: fan.set_preset_mode
+        target:
+          entity_id: fan.parmair_mac
+        data:
+          preset_mode: home
+
+  - alias: "Parmair: Away mode when nobody is home"
+    id: parmair_away_when_empty
+    mode: single
+    trigger:
+      - platform: state
+        entity_id: group.all_persons
+        to: "not_home"
+        for: "00:30:00"
+    condition: []
+    action:
+      - service: fan.set_preset_mode
+        target:
+          entity_id: fan.parmair_mac
+        data:
+          preset_mode: away
+
+  - alias: "Parmair: Home mode when someone arrives"
+    id: parmair_home_when_arrival
+    mode: single
+    trigger:
+      - platform: state
+        entity_id: group.all_persons
+        to: "home"
+    condition: []
+    action:
+      - service: fan.set_preset_mode
+        target:
+          entity_id: fan.parmair_mac
+        data:
+          preset_mode: home
+
+  - alias: "Parmair: Notify when filter needs replacement"
+    id: parmair_filter_replace_notification
+    mode: single
+    trigger:
+      - platform: state
+        entity_id: sensor.parmair_mac_filter_status
+        to: "Replace"
+    condition: []
+    action:
+      - service: notify.mobile_app_phone
+        data:
+          title: "Parmair"
+          message: "Filter status is Replace. Change filter and press Filter Replaced button."
+
+  - alias: "Parmair: Notify when alarms appear"
+    id: parmair_alarm_notification
+    mode: single
+    trigger:
+      - platform: numeric_state
+        entity_id: sensor.parmair_mac_alarm_count
+        above: 0
+    condition: []
+    action:
+      - service: notify.mobile_app_phone
+        data:
+          title: "Parmair Alarm"
+          message: >-
+            Alarm count is {{ states('sensor.parmair_mac_alarm_count') }}.
+            Summary alarm: {{ states('sensor.parmair_mac_summary_alarm') }}.

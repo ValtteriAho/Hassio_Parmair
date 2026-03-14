@@ -1,0 +1,121 @@
+# Parmair MAC Dashboard Example (Lovelace YAML)
+#
+# How to use:
+# 1. Open Dashboard -> Edit dashboard -> Raw configuration editor
+# 2. Paste sections from this file, or use as reference
+# 3. Replace entity IDs to match your installation
+#
+# Tip: In Home Assistant, open an entity and copy its exact entity_id.
+
+title: Parmair
+views:
+  - title: Ventilation
+    path: parmair
+    icon: mdi:fan
+    cards:
+      - type: vertical-stack
+        cards:
+          - type: tile
+            entity: fan.parmair_mac
+            name: Ventilation Mode
+            features_position: bottom
+            vertical: false
+            tap_action:
+              action: more-info
+
+          - type: grid
+            columns: 2
+            square: false
+            cards:
+              - type: tile
+                entity: sensor.parmair_mac_power_state
+                name: Power
+              - type: tile
+                entity: sensor.parmair_mac_control_state
+                name: State
+              - type: tile
+                entity: sensor.parmair_mac_current_speed
+                name: Current Speed
+              - type: tile
+                entity: sensor.parmair_mac_heat_recovery_efficiency
+                name: Recovery
+
+      - type: entities
+        title: Quick Controls
+        show_header_toggle: false
+        entities:
+          - entity: select.parmair_mac_manual_speed_control
+            name: Manual Speed
+          - entity: select.parmair_mac_home_speed_preset
+            name: Home Speed
+          - entity: select.parmair_mac_away_speed_preset
+            name: Away Speed
+          - entity: select.parmair_mac_boost_speed_preset
+            name: Boost Speed
+          - entity: select.parmair_mac_boost_duration
+            name: Boost Duration
+          - entity: select.parmair_mac_overpressure_duration
+            name: Overpressure Duration
+          - entity: switch.parmair_mac_time_program
+            name: Time Program
+          - entity: switch.parmair_mac_boost_mode
+            name: Boost Mode
+
+      - type: entities
+        title: Temperatures
+        show_header_toggle: false
+        entities:
+          - entity: sensor.parmair_mac_fresh_air_temperature
+            name: Fresh Air
+          - entity: sensor.parmair_mac_supply_air_temperature_after_recovery
+            name: Supply After Recovery
+          - entity: sensor.parmair_mac_supply_air_temperature
+            name: Supply Air
+          - entity: sensor.parmair_mac_exhaust_air_temperature
+            name: Exhaust Air
+          - entity: sensor.parmair_mac_waste_air_temperature
+            name: Waste Air
+          - entity: number.parmair_mac_supply_temperature_setpoint
+            name: Supply Setpoint
+          - entity: number.parmair_mac_exhaust_temperature_setpoint
+            name: Exhaust Setpoint
+
+      - type: entities
+        title: Air Quality and Status
+        show_header_toggle: false
+        entities:
+          - entity: sensor.parmair_mac_humidity
+            name: Humidity
+          - entity: sensor.parmair_mac_humidity_24h_average
+            name: Humidity 24h Avg
+          - entity: sensor.parmair_mac_co2_exhaust_air
+            name: CO2 Exhaust
+          - entity: sensor.parmair_mac_filter_status
+            name: Filter Status
+          - entity: sensor.parmair_mac_alarm_count
+            name: Alarm Count
+          - entity: sensor.parmair_mac_summary_alarm
+            name: Summary Alarm
+
+      - type: history-graph
+        title: 24h Trends
+        hours_to_show: 24
+        refresh_interval: 60
+        entities:
+          - entity: sensor.parmair_mac_supply_air_temperature
+            name: Supply
+          - entity: sensor.parmair_mac_exhaust_air_temperature
+            name: Exhaust
+          - entity: sensor.parmair_mac_humidity
+            name: Humidity
+          - entity: sensor.parmair_mac_co2_exhaust_air
+            name: CO2
+
+      - type: entities
+        title: Maintenance
+        show_header_toggle: false
+        entities:
+          - entity: button.parmair_mac_acknowledge_alarms
+            name: Acknowledge Alarms
+          - entity: button.parmair_mac_filter_replaced
+            name: Filter Replaced

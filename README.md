@@ -1,4 +1,4 @@
-# Parmair MAC for Home Assistant (v0.12.0)
+# Parmair MAC for Home Assistant (v0.12.1)
 
 ![Parmair MAC Logo](parmair_logo.jpg)
 
@@ -112,7 +112,16 @@ Once installed, you'll have control over:
 
 ---
 
+## Dashboard Example
+
+Use the ready-made Lovelace view template in [docs/dashboard_example.yaml](docs/dashboard_example.yaml).
+
+- Copy cards to your dashboard raw YAML editor
+- Replace entity IDs with your own (entity IDs can vary by device name)
+
 ## Example Automations
+
+More complete examples are available in [docs/automation_examples.yaml](docs/automation_examples.yaml).
 
 ### Boost When Cooking
 ```yaml
@@ -242,7 +251,7 @@ If auto-detection fails, you can manually select these during setup.
 
 See [CHANGELOG.md](CHANGELOG.md) for complete version history.
 
-**Latest:** v0.11.2 - Fixed humidity and CO2 sensors to update continuously (they were stopping after 30 minutes)
+**Latest:** v0.12.1 - Bugfix release for config flow stability
 
 ---
 
