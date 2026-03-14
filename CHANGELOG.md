@@ -1,3 +1,8 @@
+## 0.12.1 - Bugfix (2026-03-14)
+
+### Fixed
+- Config flow 500 error on HA settings page caused by unresolved `{model}` and `{firmware}` placeholders in `strings.json`
+
 ## 0.12.0 - Major Refactor and V2 Improvements (2026-02-16)
 
 ### Added

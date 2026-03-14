@@ -3,7 +3,7 @@
     "step": {
       "user": {
         "title": "Connect to Parmair MAC",
-        "description": "Enter the connection details for your Parmair MAC ventilation system. Hardware model and software version will be auto-detected. Current version: {version}. Detected: {model} (Software: {firmware}).",
+        "description": "Enter the connection details for your Parmair MAC ventilation system. Hardware model and software version will be auto-detected. Current version: {version}.",
         "data": {
           "host": "IP Address",
           "port": "Port",
