@@ -32,7 +32,7 @@ _spec.loader.exec_module(_const)
 
 SOFTWARE_VERSION_1 = _const.SOFTWARE_VERSION_1
 SOFTWARE_VERSION_2 = _const.SOFTWARE_VERSION_2
-HARDWARE_TYPE_MAP_V2 = _const.HARDWARE_TYPE_MAP_V2
+HARDWARE_TYPE_MAP = _const.HARDWARE_TYPE_MAP
 REG_POWER = _const.REG_POWER
 REG_CONTROL_STATE = _const.REG_CONTROL_STATE
 RegisterDefinition = _const.RegisterDefinition
@@ -108,10 +108,7 @@ class MockCoordinator:
         model = "MAC"
         if hw_type is not None:
             hw_int = int(hw_type)
-            is_v2 = self._software_version == SOFTWARE_VERSION_2 or str(
-                self._software_version
-            ).startswith("2.")
-            model_num = HARDWARE_TYPE_MAP_V2.get(hw_int, hw_int) if is_v2 else hw_int
+            model_num = HARDWARE_TYPE_MAP.get(hw_int, hw_int)
             model = f"MAC {model_num}"
 
         device_info = {

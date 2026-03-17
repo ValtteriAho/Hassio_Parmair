@@ -37,7 +37,7 @@ _const = importlib.util.module_from_spec(_spec)
 sys.modules["parmair_const"] = _const  # Register module to fix dataclass issues
 _spec.loader.exec_module(_const)
 
-HARDWARE_TYPE_MAP_V2 = _const.HARDWARE_TYPE_MAP_V2
+HARDWARE_TYPE_MAP = _const.HARDWARE_TYPE_MAP
 HEATER_TYPE_ELECTRIC = _const.HEATER_TYPE_ELECTRIC
 HEATER_TYPE_NONE = _const.HEATER_TYPE_NONE
 HEATER_TYPE_WATER = _const.HEATER_TYPE_WATER
@@ -273,15 +273,11 @@ class InterpretationTester:
         raw = self.coord.get_raw_value("hardware_type")
         if hw_type is not None:
             hw_type_int = int(hw_type)
-            # For V2, use mapping if available, otherwise use raw value
-            if self.coord.software_version == SOFTWARE_VERSION_2:
-                model_num = HARDWARE_TYPE_MAP_V2.get(hw_type_int, hw_type_int)
-                if model_num != hw_type_int:
-                    self._add_result(
-                        "System", "Hardware Type", raw, f"MAC {model_num} (type code {hw_type_int})"
-                    )
-                else:
-                    self._add_result("System", "Hardware Type", raw, f"MAC {hw_type_int}")
+            model_num = HARDWARE_TYPE_MAP.get(hw_type_int, hw_type_int)
+            if model_num != hw_type_int:
+                self._add_result(
+                    "System", "Hardware Type", raw, f"MAC {model_num} (type code {hw_type_int})"
+                )
             else:
                 self._add_result("System", "Hardware Type", raw, f"MAC {hw_type_int}")
         else:
@@ -702,13 +698,9 @@ def test_file(filepath: Path, verbose: bool = False) -> bool:
         print(f"Software: {coord.metadata['detected_software_version']}")
     if coord.metadata.get("detected_hardware_type"):
         hw_type = coord.metadata["detected_hardware_type"]
-        # For V2, use mapping if available, otherwise use raw value
-        if coord.software_version == SOFTWARE_VERSION_2:
-            model_num = HARDWARE_TYPE_MAP_V2.get(hw_type, hw_type)
-            if model_num != hw_type:
-                print(f"Detected hardware type: MAC {model_num} (type code {hw_type})")
-            else:
-                print(f"Detected hardware type: MAC {hw_type}")
+        model_num = HARDWARE_TYPE_MAP.get(hw_type, hw_type)
+        if model_num != hw_type:
+            print(f"Detected hardware type: MAC {model_num} (type code {hw_type})")
         else:
             print(f"Detected hardware type: MAC {hw_type}")
     print(f"Register map: {coord.software_version}")

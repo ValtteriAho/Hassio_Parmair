@@ -22,9 +22,21 @@ SOFTWARE_VERSION_1 = "1.x"
 SOFTWARE_VERSION_2 = "2.x"
 SOFTWARE_VERSION_UNKNOWN = "unknown"
 
-# V2 VENT_MACHINE codes -> display model number (v2 uses different encoding than v1)
-HARDWARE_TYPE_MAP_V2: dict[int, int] = {
-    112: 120,  # MAC 120
+# VENT_MACHINE register codes -> display model suffix (same encoding for v1 reg 1244 and v2 reg 1125)
+HARDWARE_TYPE_MAP: dict[int, int | str] = {
+    107: 70,            # MAC 70
+    108: 80,            # MAC 80
+    109: 105,           # MAC 105
+    110: 100,           # MAC 100
+    111: "105 SLIM",    # MAC 105 SLIM
+    112: 120,           # MAC 120
+    115: 150,           # MAC 150
+    117: 170,           # MAC 170
+    122: 220,           # MAC 220
+    125: 250,           # MAC 250
+    212: "Rexo 120",    # MAC Rexo 120
+    215: "Rexo 150",    # MAC Rexo 150
+    300: "Lämpöiivari II",  # MAC Lämpöiivari II
 }
 
 # Heater types - NOTE: Values are REVERSED between firmware versions!

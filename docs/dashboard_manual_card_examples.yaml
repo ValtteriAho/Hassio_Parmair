@@ -176,3 +176,163 @@ cards:
       - type: tile
         entity: switch.parmair_mac_post_heater
         name: Post Heater
+
+# 5) IV inside picture overlay (single Manual card)
+# --------------------------------------------------
+# This variant uses an image uploaded to Home Assistant media source.
+---
+type: picture-elements
+image:
+  media_content_id: media-source://image_upload/830b3e660f2abef03131ea0d2e44f89a
+  media_content_type: image/png
+  metadata:
+    title: iv-inside.png
+    thumbnail: /api/image/serve/830b3e660f2abef03131ea0d2e44f89a/256x256
+    media_class: image
+    children_media_class: null
+    navigateIds:
+      - {}
+      - media_content_type: app
+        media_content_id: media-source://image_upload
+elements:
+  - type: state-label
+    entity: sensor.parmair_mac_heat_recovery_efficiency
+    prefix: "LTO "
+    style:
+      top: 4.5%
+      left: 50%
+      transform: translate(-50%, -50%)
+      color: "#223b68"
+      font-size: 15px
+      font-weight: 700
+      white-space: nowrap
+  - type: state-label
+    entity: sensor.parmair_mac_lto_heat_recovery_control
+    prefix: "HS "
+    style:
+      top: 16.5%
+      left: 50%
+      transform: translate(-50%, -50%)
+      color: "#223b68"
+      font-size: 15px
+      font-weight: 600
+      white-space: nowrap
+  - type: state-label
+    entity: sensor.parmair_mac_fresh_air_temperature
+    prefix: "ULKO "
+    style:
+      top: 18.5%
+      left: 7%
+      transform: translate(0, -50%)
+      color: "#223b68"
+      font-size: 15px
+      text-align: left
+      white-space: nowrap
+  - type: state-label
+    entity: sensor.parmair_mac_waste_air_temperature
+    prefix: "JÄTE "
+    style:
+      top: 77.5%
+      left: 7%
+      transform: translate(0, -50%)
+      color: "#223b68"
+      font-size: 15px
+      text-align: left
+      white-space: nowrap
+  - type: state-label
+    entity: sensor.parmair_mac_exhaust_air_temperature
+    prefix: "POISTO "
+    style:
+      top: 18.5%
+      left: 97%
+      transform: translate(-100%, -50%)
+      color: "#223b68"
+      font-size: 15px
+      text-align: right
+      white-space: nowrap
+  - type: state-label
+    entity: sensor.parmair_mac_supply_air_temperature
+    prefix: "TULO "
+    style:
+      top: 77%
+      left: 95%
+      transform: translate(-100%, -50%)
+      color: "#223b68"
+      font-size: 15px
+      text-align: right
+      white-space: nowrap
+  - type: state-label
+    entity: sensor.parmair_mac_supply_air_temperature_after_recovery
+    prefix: "LTO "
+    style:
+      top: 79%
+      left: 50%
+      transform: translate(-50%, -50%)
+      color: "#223b68"
+      font-size: 16px
+      font-weight: 700
+      white-space: nowrap
+  - type: state-label
+    entity: sensor.parmair_mac_supply_fan_speed
+    style:
+      top: 51%
+      left: 20.5%
+      transform: translate(-50%, -50%)
+      color: "#223b68"
+      font-size: 13px
+      font-weight: 700
+      white-space: nowrap
+  - type: state-label
+    entity: sensor.parmair_mac_exhaust_fan_speed
+    style:
+      top: 51%
+      left: 80%
+      transform: translate(-50%, -50%)
+      color: "#223b68"
+      font-size: 13px
+      font-weight: 700
+      white-space: nowrap
+  - type: state-label
+    entity: sensor.parmair_mac_humidity
+    prefix: "RH "
+    style:
+      top: 91%
+      left: 23%
+      transform: translate(-50%, -50%)
+      color: "#223b68"
+      font-size: 14px
+      white-space: nowrap
+  - type: state-label
+    entity: sensor.parmair_mac_co2_exhaust_air
+    prefix: "CO2 "
+    style:
+      top: 91%
+      left: 84%
+      transform: translate(-50%, -50%)
+      color: "#223b68"
+      font-size: 14px
+      white-space: nowrap
+  - type: state-label
+    style:
+      top: 25%
+      left: 40%
+      transform: translate(0, -50%)
+      color: "#223b68"
+      font-size: 15px
+      text-align: left
+      white-space: nowrap
+    entity: sensor.parmair_mac_current_speed
+    title: Speed
+    prefix: "NOPEUS "
+dark_mode_image:
+  media_content_id: media-source://image_upload/830b3e660f2abef03131ea0d2e44f89a
+  media_content_type: image/png
+  metadata:
+    title: iv-inside.png
+    thumbnail: /api/image/serve/830b3e660f2abef03131ea0d2e44f89a/256x256
+    media_class: image
+    children_media_class: null
+    navigateIds:
+      - {}
+      - media_content_type: app
+        media_content_id: media-source://image_upload

@@ -1,3 +1,11 @@
+## 0.13.0 - Hardware Model Registry (2026-03-17)
+
+### Added
+- Full hardware model registry for both firmware v1.x (register 1244) and v2.x (register 1125): MAC 70, 80, 100, 105, 105 SLIM, 120, 150, 170, 220, 250, Rexo 120, Rexo 150, Lämpöiivari II
+
+### Changed
+- `HARDWARE_TYPE_MAP_V2` renamed to `HARDWARE_TYPE_MAP` — the same register encoding applies to v1.x and v2.x firmware; model lookup is now applied unconditionally
+
 ## 0.12.3 - Dashboard Card Fix (2026-03-14)
 
 ### Fixed

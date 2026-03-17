@@ -25,7 +25,7 @@ from custom_components.parmair.const import (  # noqa: E402
     SOFTWARE_VERSION_2,
 )
 from tools.mock_coordinator import (  # noqa: E402
-    HARDWARE_TYPE_MAP_V2,
+    HARDWARE_TYPE_MAP,
     REG_CONTROL_STATE,
     REG_POWER,
     MockCoordinator,
@@ -416,11 +416,11 @@ class TestV2Specific:
             pytest.skip("Hardware type not present")
 
         hw_int = int(hw_type)
-        expected_num = HARDWARE_TYPE_MAP_V2.get(hw_int, hw_int)
+        expected_num = HARDWARE_TYPE_MAP.get(hw_int, hw_int)
         expected_model = f"MAC {expected_num}"
         device_info = coordinator.device_info
         assert device_info["model"] == expected_model, (
-            f"V2 hw_type {hw_int} should map to {expected_model}, got {device_info['model']}"
+            f"hw_type {hw_int} should map to {expected_model}, got {device_info['model']}"
         )
 
     def test_v2_derived_states_binary(
