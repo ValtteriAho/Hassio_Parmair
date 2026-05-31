@@ -1,3 +1,10 @@
+## 0.14.1 - Fix fan turn-on for v2.x (2026-05-31)
+
+### Fixed
+- **v2.x fan entity `async_turn_on` wrote wrong power value** — `POWER_RUNNING` (v1 constant = 3) was used to both check and write `UNIT_CONTROL_FO`, which only accepts `0=Off` / `1=On`. The fan now correctly writes `1` for v2 and `3` for v1 when powering on. This bug caused the preset modes (Home/Away/Boost) to still be set correctly but with a spurious out-of-range write to the power register on every `turn_on` call on a v2 device.
+
+---
+
 ## 0.14.0 - V2 CO2 Automation & Auto-Feature Controls (2026-05-31)
 
 ### Added (firmware v2.x only)

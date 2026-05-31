@@ -119,9 +119,13 @@ class ParmairFan(CoordinatorEntity[ParmairCoordinator], FanEntity):
         **kwargs: Any,
     ) -> None:
         """Turn on the fan."""
-        # First ensure power is on
-        if self.coordinator.data.get("power") != POWER_RUNNING:
-            await self.coordinator.async_write_register(REG_POWER, POWER_RUNNING)
+        # V2: UNIT_CONTROL_FO uses 0=Off, 1=On.  V1: POWER_BTN_FI uses 3=Running.
+        is_v2 = self.coordinator.software_version == SOFTWARE_VERSION_2 or str(
+            self.coordinator.software_version
+        ).startswith("2.")
+        power_on_value = 1 if is_v2 else POWER_RUNNING
+        if self.coordinator.data.get("power") != power_on_value:
+            await self.coordinator.async_write_register(REG_POWER, power_on_value)
             await self.coordinator.async_request_refresh()
 
         # Then set mode
