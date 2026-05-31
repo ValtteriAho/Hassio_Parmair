@@ -84,12 +84,18 @@ REG_ACKNOWLEDGE_ALARMS = "acknowledge_alarms"
 REG_ACTUAL_SPEED = "actual_speed"
 REG_ALARM_COUNT = "alarm_count"
 REG_ALARMS_STATE = "alarms_state"
+REG_AUTO_CO2_BOOST = "auto_co2_boost"  # v2.xx only
+REG_AUTO_CO2_HOME_AWAY = "auto_co2_home_away"  # v2.xx only
+REG_AUTO_COLD_LOWSPEED = "auto_cold_lowspeed"  # v2.xx only
+REG_AUTO_HUMIDITY_BOOST = "auto_humidity_boost"  # v2.xx only
 REG_AWAY_SPEED = "away_speed"
 REG_BOOST_SETTING = "boost_setting"
 REG_BOOST_STATE = "boost_state"
 REG_BOOST_TIMER = "boost_timer"
 REG_BOOST_TIME_SETTING = "boost_time_setting"
+REG_CO2_BOOST_THRESHOLD = "co2_boost_threshold"  # v2.xx only
 REG_CO2_EXHAUST = "co2_exhaust"  # MAC 2 only (v2.xx) - combination sensor in exhaust duct
+REG_CO2_HOME_THRESHOLD = "co2_home_threshold"  # v2.xx only
 REG_CONTROL_STATE = "control_state"
 REG_DEFROST_STATE = "defrost_state"
 REG_EXHAUST_FAN_SPEED = "exhaust_fan_speed"
@@ -339,6 +345,26 @@ def _build_registers_v2() -> dict[str, RegisterDefinition]:
         REG_HEATER_TYPE: RegisterDefinition(
             REG_HEATER_TYPE, 1127, "HEAT_RADIATOR_TYPE", writable=True
         ),
+        # v2.xx automation switches
+        REG_AUTO_CO2_BOOST: RegisterDefinition(
+            REG_AUTO_CO2_BOOST, 1080, "AUTO_CO2_BOOST_S", writable=True
+        ),
+        REG_AUTO_HUMIDITY_BOOST: RegisterDefinition(
+            REG_AUTO_HUMIDITY_BOOST, 1077, "AUTO_HUMIDITY_BOOST_S", writable=True
+        ),
+        REG_AUTO_CO2_HOME_AWAY: RegisterDefinition(
+            REG_AUTO_CO2_HOME_AWAY, 1081, "AUTO_HOMEAWAY_S", writable=True
+        ),
+        REG_AUTO_COLD_LOWSPEED: RegisterDefinition(
+            REG_AUTO_COLD_LOWSPEED, 1075, "AUTO_COLD_LOWSPEED_S", writable=True
+        ),
+        # v2.xx CO2 threshold setpoints
+        REG_CO2_HOME_THRESHOLD: RegisterDefinition(
+            REG_CO2_HOME_THRESHOLD, 1082, "QE_HOME_S", writable=True
+        ),
+        REG_CO2_BOOST_THRESHOLD: RegisterDefinition(
+            REG_CO2_BOOST_THRESHOLD, 1083, "QE_BOOST_S", writable=True
+        ),
         # Predefined settings registers
         REG_BOOST_TIME_SETTING: RegisterDefinition(
             REG_BOOST_TIME_SETTING, 1066, "BOOST_TIME_S", writable=True
@@ -457,6 +483,13 @@ POLLING_REGISTER_KEYS = (
     REG_SUMMER_MODE_TEMP_LIMIT,
     REG_BOOST_SETTING,
     REG_FILTER_INTERVAL,
+    # v2.xx only - skipped by v1 coordinator via "if key in self._registers"
+    REG_AUTO_CO2_BOOST,
+    REG_AUTO_HUMIDITY_BOOST,
+    REG_AUTO_CO2_HOME_AWAY,
+    REG_AUTO_COLD_LOWSPEED,
+    REG_CO2_HOME_THRESHOLD,
+    REG_CO2_BOOST_THRESHOLD,
 )
 
 

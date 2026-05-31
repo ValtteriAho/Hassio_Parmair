@@ -6,7 +6,7 @@ import logging
 
 from homeassistant.components.number import NumberEntity, NumberMode
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import UnitOfTemperature
+from homeassistant.const import CONCENTRATION_PARTS_PER_MILLION, UnitOfTemperature
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
@@ -14,10 +14,13 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from .const import (
     DOMAIN,
     REG_BOOST_TIMER,
+    REG_CO2_BOOST_THRESHOLD,
+    REG_CO2_HOME_THRESHOLD,
     REG_EXHAUST_TEMP_SETPOINT,
     REG_OVERPRESSURE_TIMER,
     REG_SUMMER_MODE_TEMP_LIMIT,
     REG_SUPPLY_TEMP_SETPOINT,
+    SOFTWARE_VERSION_1,
 )
 from .coordinator import ParmairCoordinator
 
@@ -31,6 +34,11 @@ async def async_setup_entry(
 ) -> None:
     """Set up Parmair number platform."""
     coordinator: ParmairCoordinator = hass.data[DOMAIN][entry.entry_id]
+
+    is_v2 = not (
+        coordinator.software_version == SOFTWARE_VERSION_1
+        or str(coordinator.software_version).startswith("1.")
+    )
 
     entities: list[NumberEntity] = [
         ParmairTemperatureSetpointNumber(
@@ -59,6 +67,18 @@ async def async_setup_entry(
             "Set overpressure mode timer in minutes",
         ),
     ]
+
+    if is_v2:
+        entities.extend(
+            [
+                ParmairCO2ThresholdNumber(
+                    coordinator, entry, REG_CO2_HOME_THRESHOLD, "CO2 Home Threshold"
+                ),
+                ParmairCO2ThresholdNumber(
+                    coordinator, entry, REG_CO2_BOOST_THRESHOLD, "CO2 Boost Threshold"
+                ),
+            ]
+        )
 
     async_add_entities(entities)
 
@@ -151,3 +171,18 @@ class ParmairTimerNumber(ParmairNumberEntity):
         """Initialize timer number."""
         super().__init__(coordinator, entry, data_key, name)
         self._attr_icon = icon
+
+
+class ParmairCO2ThresholdNumber(ParmairNumberEntity):
+    """Number entity for v2.xx CO2 automation threshold setpoints (ppm).
+
+    QE_HOME_S  (1082) — CO2 level at which the unit switches to Home mode.
+    QE_BOOST_S (1083) — CO2 level at which the unit activates Boost mode.
+    """
+
+    _attr_mode = NumberMode.BOX
+    _attr_native_min_value = 100
+    _attr_native_max_value = 2000
+    _attr_native_step = 10
+    _attr_native_unit_of_measurement = CONCENTRATION_PARTS_PER_MILLION
+    _attr_icon = "mdi:molecule-co2"

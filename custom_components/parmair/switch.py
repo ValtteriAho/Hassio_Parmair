@@ -13,6 +13,10 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import (
     DOMAIN,
+    REG_AUTO_CO2_BOOST,
+    REG_AUTO_CO2_HOME_AWAY,
+    REG_AUTO_COLD_LOWSPEED,
+    REG_AUTO_HUMIDITY_BOOST,
     REG_BOOST_SETTING,
     REG_BOOST_STATE,
     REG_BOOST_TIME_SETTING,
@@ -91,6 +95,44 @@ async def async_setup_entry(
             ),
         ]
     )
+
+    if not is_v1:
+        entities.extend(
+            [
+                ParmairSwitch(
+                    coordinator,
+                    entry,
+                    REG_AUTO_CO2_BOOST,
+                    "Auto CO2 Boost",
+                    "mdi:molecule-co2",
+                    "Automatically activates boost mode when CO2 exceeds the boost threshold",
+                ),
+                ParmairSwitch(
+                    coordinator,
+                    entry,
+                    REG_AUTO_HUMIDITY_BOOST,
+                    "Auto Humidity Boost",
+                    "mdi:water-percent",
+                    "Automatically activates boost mode when humidity is high",
+                ),
+                ParmairSwitch(
+                    coordinator,
+                    entry,
+                    REG_AUTO_CO2_HOME_AWAY,
+                    "Auto CO2 Home/Away",
+                    "mdi:home-import-outline",
+                    "Automatically switches between Home and Away based on CO2 level",
+                ),
+                ParmairSwitch(
+                    coordinator,
+                    entry,
+                    REG_AUTO_COLD_LOWSPEED,
+                    "Auto Cold Speed Reduction",
+                    "mdi:snowflake",
+                    "Automatically reduces fan speed in very cold outdoor conditions",
+                ),
+            ]
+        )
 
     async_add_entities(entities)
 

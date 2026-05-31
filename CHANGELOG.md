@@ -1,3 +1,17 @@
+## 0.14.0 - V2 CO2 Automation & Auto-Feature Controls (2026-05-31)
+
+### Added (firmware v2.x only)
+- **CO2 Home Threshold** number entity — set the CO2 level (ppm) at which the unit automatically switches to Home mode (`QE_HOME_S`, register 1082, range 100–2000 ppm)
+- **CO2 Boost Threshold** number entity — set the CO2 level (ppm) at which the unit activates Boost mode (`QE_BOOST_S`, register 1083, range 100–2000 ppm)
+- **Auto CO2 Boost** switch — enable/disable automatic Boost activation when CO2 exceeds the boost threshold (`AUTO_CO2_BOOST_S`, register 1080)
+- **Auto Humidity Boost** switch — enable/disable automatic Boost activation when humidity is high (`AUTO_HUMIDITY_BOOST_S`, register 1077)
+- **Auto CO2 Home/Away** switch — enable/disable automatic Home/Away switching based on CO2 level (`AUTO_HOMEAWAY_S`, register 1081)
+- **Auto Cold Speed Reduction** switch — enable/disable automatic fan speed reduction in very cold outdoor conditions (`AUTO_COLD_LOWSPEED_S`, register 1075)
+
+> **Note:** All new entities are exclusive to firmware v2.x and will not appear on v1.x devices.
+
+---
+
 ## 0.13.0 - Hardware Model Registry (2026-03-17)
 
 ### Added
