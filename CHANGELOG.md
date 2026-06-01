@@ -1,3 +1,10 @@
+## 0.15.1 - Fix Operational Mode: humidity/CO2 boost hidden by Summer Cooling (2026-06-01)
+
+### Fixed
+- **Operational Mode showed "Summer Cooling" instead of "Humidity Boost" (or "CO2 Boost") when both were active** — when summer mode is active, the firmware may keep `USERSTATECONTROL_FO` at Home (2) instead of switching to Boost (3) when a humidity or CO2 boost triggers. The summer cooling check now evaluates automation boost conditions first and returns `humidity_boost` or `co2_boost` if their thresholds are exceeded, falling back to `summer` only when no automation boost is active.
+
+---
+
 ## 0.15.0 - Heat pump module (maalämpömoduuli) support (2026-06-01)
 
 ### Added (firmware v2.x only, requires module installed)

@@ -268,7 +268,7 @@ If auto-detection fails, you can manually select these during setup.
 
 See [CHANGELOG.md](CHANGELOG.md) for complete version history.
 
-**Latest:** v0.15.0 - Heat pump module (maalämpömoduuli) support
+**Latest:** v0.15.1 - Fix Operational Mode humidity/CO2 boost hidden by Summer Cooling
 
 ---
 

@@ -744,9 +744,28 @@ class ParmairOperationalStatusSensor(CoordinatorEntity[ParmairCoordinator], Sens
         if control_state == 5:
             return "fireplace"
 
-        # Summer cooling active: SUMMER_MODE_I == 2 (firmware detected summer conditions)
-        # AND AUTO_SUMMER_COOL_S != 0 (automation is not disabled by user)
+        # Summer cooling active: check automation boosts first — firmware may keep
+        # USERSTATECONTROL_FO at Home (2) even when humidity/CO2 boost is triggered
+        # during summer mode instead of switching to Boost (3).
         if data.get("summer_mode_state") == 2 and data.get("summer_mode", 0) != 0:
+            co2 = data.get("co2_exhaust")
+            co2_threshold = data.get("co2_boost_threshold")
+            if (
+                data.get("auto_co2_boost") == 1
+                and co2 is not None
+                and co2_threshold is not None
+                and co2 >= co2_threshold
+            ):
+                return "co2_boost"
+            humidity = data.get("humidity")
+            humidity_avg = data.get("humidity_24h_avg")
+            if (
+                data.get("auto_humidity_boost") == 1
+                and humidity is not None
+                and humidity_avg is not None
+                and humidity > humidity_avg + 5
+            ):
+                return "humidity_boost"
             return "summer"
 
         if control_state == 2:  # Home
