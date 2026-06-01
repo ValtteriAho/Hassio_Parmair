@@ -99,7 +99,12 @@ Once installed, you'll have control over:
 - **Alarms** - Active warnings and filter status
 
 ### Smart Features
+- **Operational Mode** - See exactly what the unit is doing and why (Home, Away, Boost, CO2 Boost, Humidity Boost, Summer Cooling, etc.) *(v2.x)*
 - **Summer Mode** - Automatically adjusts ventilation based on outdoor temperature
+- **CO2 Automations** - Auto Boost or Home/Away switching when CO2 exceeds thresholds *(v2.x)*
+- **Humidity Automation** - Auto Boost when humidity rises above 24h average *(v2.x)*
+- **Cold Speed Reduction** - Automatically reduce fan speed in very cold conditions *(v2.x)*
+- **Heat Pump Module** - Status and settings for the maalämpömoduuli add-on, when installed *(v2.x)*
 - **Time Programs** - Enable/disable scheduled operation
 - **Heater Control** - Manage heating elements (see warning below)
 - **Filter Tracking** - Monitor when filters need replacement
@@ -192,29 +197,40 @@ The integration automatically detects your software version and uses the correct
 
 ### Controls
 - Fan: Main power and mode control
-- Home Speed: Fan speed when in Home mode (0-4)
-- Away Speed: Fan speed when in Away mode (0-4)
-- Boost Speed: Fan speed level for Boost mode (2-4)
-- Boost Duration: How long Boost mode runs (30-180 min)
-- Overpressure Duration: How long Overpressure mode runs (15-120 min)
-- Exhaust Temperature: Target temperature for exhaust air (18-26°C)
-- Supply Temperature: Target temperature for supply air (15-25°C)
-- Summer Mode Temperature: Outdoor temp to trigger summer mode
-- Filter Interval: Days between filter changes (90/120/180)
+- Home Speed: Fan speed when in Home mode (v1: 0–4, v2: 1–5)
+- Away Speed: Fan speed when in Away mode (v1: 0–4, v2: 1–5)
+- Boost Speed: Fan speed level for Boost mode (v1: 2–4, v2: 3–5)
+- Boost Duration: How long Boost mode runs (30–180 min)
+- Overpressure Duration: How long Overpressure mode runs (15–120 min)
+- Exhaust Temperature: Target temperature for exhaust air (18–26 °C)
+- Supply Temperature: Target temperature for supply air (15–25 °C)
+- Summer Mode Temperature: Outdoor temp limit for summer mode
+- Filter Interval: Filter change interval (3 / 4 / 6 months)
+- CO2 Home Threshold: CO2 level (ppm) that triggers Home mode *(v2.x)*
+- CO2 Boost Threshold: CO2 level (ppm) that triggers Boost mode *(v2.x)*
+- Heat Pump Winter Limit: Outdoor temp below which heat pump activates in winter *(v2.x, if installed)*
+- Heat Pump Summer Limit: Outdoor temp above which heat pump activates in summer *(v2.x, if installed)*
 
 ### Switches
-- Summer Mode: Enable/disable summer operation
+- Summer Mode: Enable/disable summer cooling automation *(v2.x)*
 - Time Program: Enable/disable scheduled operation
 - Heater: Enable/disable heating elements
 - Boost Mode: Activate high-speed ventilation
-- Overpressure Mode: Supply-only ventilation (fireplace mode)
+- Overpressure Mode: Supply-only ventilation (fireplace/overpressure mode)
+- Auto CO2 Boost: Automatically boost when CO2 exceeds threshold *(v2.x)*
+- Auto Humidity Boost: Automatically boost when humidity is elevated *(v2.x)*
+- Auto CO2 Home/Away: Switch Home/Away mode based on CO2 level *(v2.x)*
+- Auto Cold Speed Reduction: Reduce speed in very cold outdoor conditions *(v2.x)*
 
 ### Buttons
 - Acknowledge Alarms: Clear active warnings
 - Filter Replaced: Reset filter change counter
 
 ### Sensors
-All temperature sensors, humidity, CO2, operating states, timers, alarms, and diagnostic information.
+- **Operational Mode**: Derived status showing effective mode and automation trigger (Off / Away / Home / Boost / CO2 Boost / Humidity Boost / Summer Cooling / Sauna / Fireplace) *(v2.x)*
+- **Heat Pump Output**: Whether the heat pump module is currently active *(v2.x, if installed)*
+- **Heat Pump Mode**: Automation mode for the heat pump module (Off / On / Auto) *(v2.x, if installed)*
+- All temperature sensors, humidity, CO2, fan speeds, operating states, timers, alarms, and diagnostic information
 
 </details>
 
@@ -252,7 +268,7 @@ If auto-detection fails, you can manually select these during setup.
 
 See [CHANGELOG.md](CHANGELOG.md) for complete version history.
 
-**Latest:** v0.12.1 - Bugfix release for config flow stability
+**Latest:** v0.15.0 - Heat pump module (maalämpömoduuli) support
 
 ---
 
