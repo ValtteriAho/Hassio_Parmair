@@ -1,3 +1,21 @@
+## 0.14.3 - Operational Mode sensor for v2.x (2026-06-01)
+
+### Added (firmware v2.x only)
+- **Operational Mode** sensor — shows the effective operating state of the unit, including *why* it is in a given mode. Possible states:
+  - **Off** — unit is powered off
+  - **Away** — Away mode (manual or time-program)
+  - **Home** — Home mode (manual or time-program)
+  - **CO2 Home** — Home mode triggered because CO2 ≥ home threshold and Auto CO2 Home/Away is enabled
+  - **Boost** — Boost mode (manual button press or time-program)
+  - **CO2 Boost** — Boost triggered because CO2 ≥ boost threshold and Auto CO2 Boost is enabled
+  - **Humidity Boost** — Boost triggered because current humidity is notably above the 24-hour average and Auto Humidity Boost is enabled
+  - **Sauna** — Sauna / bypass mode
+  - **Fireplace** — Fireplace mode
+  
+  Entity attributes include the current CO2 reading, CO2 thresholds, humidity, 24h humidity average, and which automation features are enabled — useful for dashboards and automations.
+
+---
+
 ## 0.14.2 - Fix speed preset off-by-one for v2.x (2026-06-01)
 
 ### Fixed

@@ -28,5 +28,23 @@
     "abort": {
       "already_configured": "This device is already configured."
     }
+  },
+  "entity": {
+    "sensor": {
+      "operational_mode": {
+        "name": "Operational Mode",
+        "state": {
+          "off": "Off",
+          "away": "Away",
+          "home": "Home",
+          "co2_home": "CO2 Home",
+          "boost": "Boost",
+          "co2_boost": "CO2 Boost",
+          "humidity_boost": "Humidity Boost",
+          "sauna": "Sauna",
+          "fireplace": "Fireplace"
+        }
+      }
+    }
   }
 }

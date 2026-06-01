@@ -167,6 +167,14 @@ async def async_setup_entry(
         # Register doesn't exist in v1.xx firmware - skip this sensor
         pass
 
+    # Operational Mode sensor: v2.xx only (requires auto-feature & CO2 threshold registers)
+    is_v2 = (
+        coordinator.software_version == SOFTWARE_VERSION_2
+        or str(coordinator.software_version).startswith("2.")
+    )
+    if is_v2:
+        entities.append(ParmairOperationalStatusSensor(coordinator, entry))
+
     async_add_entities(entities)
 
 
@@ -625,5 +633,160 @@ class ParmairFilterChangeDateSensor(CoordinatorEntity[ParmairCoordinator], Senso
                     attrs["next_change_date"] = f"{next_year:04d}-{next_month:02d}-{next_day:02d}"
             except (ValueError, TypeError):
                 pass
+
+        return attrs
+
+
+class ParmairOperationalStatusSensor(CoordinatorEntity[ParmairCoordinator], SensorEntity):
+    """Derived sensor showing the effective operational mode for v2.x firmware.
+
+    Combines USERSTATECONTROL_FO with auto-feature enable registers and live
+    sensor readings to indicate *why* the unit is in its current state:
+
+      off              — unit is off
+      away             — Away mode (manual / time-program)
+      home             — Home mode (manual / time-program)
+      co2_home         — Home mode triggered by CO2 automation
+      boost            — Boost mode (manual / button / time-program)
+      co2_boost        — Boost triggered by CO2 level exceeding threshold
+      humidity_boost   — Boost triggered by humidity exceeding 24h average
+      sauna            — Sauna / bypass mode
+      fireplace        — Fireplace mode
+
+    v2.x only — not added to the entity registry for v1.x devices.
+    """
+
+    _attr_has_entity_name = True
+    _attr_device_class = SensorDeviceClass.ENUM
+    _attr_icon = "mdi:fan-auto"
+    _attr_translation_key = "operational_mode"
+    _attr_options = [
+        "off",
+        "away",
+        "home",
+        "co2_home",
+        "boost",
+        "co2_boost",
+        "humidity_boost",
+        "sauna",
+        "fireplace",
+    ]
+
+    def __init__(
+        self,
+        coordinator: ParmairCoordinator,
+        entry: ConfigEntry,
+    ) -> None:
+        """Initialize the sensor."""
+        super().__init__(coordinator)
+        self._attr_name = "Operational Mode"
+        self._attr_unique_id = f"{entry.entry_id}_operational_mode"
+        self._attr_device_info = coordinator.device_info
+
+    @property
+    def native_value(self) -> str | None:
+        """Derive the effective operational mode from available register data."""
+        data = self.coordinator.data
+        if not data:
+            return None
+
+        power = data.get("power")
+        if power == 0:
+            return "off"
+
+        control_state = data.get("control_state")
+        if control_state is None:
+            return None
+        control_state = int(control_state)
+
+        if control_state == 3:  # Boost
+            # CO2-triggered boost: automation enabled + CO2 ≥ boost threshold
+            co2 = data.get("co2_exhaust")
+            co2_threshold = data.get("co2_boost_threshold")
+            if (
+                data.get("auto_co2_boost") == 1
+                and co2 is not None
+                and co2_threshold is not None
+                and co2 >= co2_threshold
+            ):
+                return "co2_boost"
+
+            # Humidity-triggered boost: automation enabled + humidity notably above 24h avg
+            # ME05_BOOSTSTART_S default is 10% above avg; we use 5% as a conservative detection
+            # threshold since we don't poll the actual setting register (1142).
+            humidity = data.get("humidity")
+            humidity_avg = data.get("humidity_24h_avg")
+            if (
+                data.get("auto_humidity_boost") == 1
+                and humidity is not None
+                and humidity_avg is not None
+                and humidity > humidity_avg + 5
+            ):
+                return "humidity_boost"
+
+            return "boost"
+
+        if control_state == 4:
+            return "sauna"
+
+        if control_state == 5:
+            return "fireplace"
+
+        if control_state == 2:  # Home
+            # CO2-driven Home: automation enabled + CO2 ≥ home threshold
+            co2 = data.get("co2_exhaust")
+            co2_home_threshold = data.get("co2_home_threshold")
+            if (
+                data.get("auto_co2_home_away") == 1
+                and co2 is not None
+                and co2_home_threshold is not None
+                and co2 >= co2_home_threshold
+            ):
+                return "co2_home"
+            return "home"
+
+        if control_state == 1:
+            return "away"
+
+        return None
+
+    @property
+    def extra_state_attributes(self) -> dict[str, object]:
+        """Expose active automation states and live sensor values for context."""
+        data = self.coordinator.data
+        if not data:
+            return {}
+
+        attrs: dict[str, object] = {}
+
+        # Automation enable states
+        for key, label in (
+            ("auto_co2_boost", "auto_co2_boost_enabled"),
+            ("auto_humidity_boost", "auto_humidity_boost_enabled"),
+            ("auto_co2_home_away", "auto_co2_home_away_enabled"),
+            ("auto_cold_lowspeed", "auto_cold_lowspeed_enabled"),
+        ):
+            val = data.get(key)
+            if val is not None:
+                attrs[label] = bool(val)
+
+        # CO2 readings and thresholds
+        co2 = data.get("co2_exhaust")
+        if co2 is not None:
+            attrs["co2_ppm"] = co2
+        co2_home_thr = data.get("co2_home_threshold")
+        if co2_home_thr is not None:
+            attrs["co2_home_threshold_ppm"] = co2_home_thr
+        co2_boost_thr = data.get("co2_boost_threshold")
+        if co2_boost_thr is not None:
+            attrs["co2_boost_threshold_ppm"] = co2_boost_thr
+
+        # Humidity readings
+        humidity = data.get("humidity")
+        if humidity is not None:
+            attrs["humidity_pct"] = humidity
+        humidity_avg = data.get("humidity_24h_avg")
+        if humidity_avg is not None:
+            attrs["humidity_24h_avg_pct"] = humidity_avg
 
         return attrs
