@@ -17,6 +17,8 @@ from .const import (
     REG_CO2_BOOST_THRESHOLD,
     REG_CO2_HOME_THRESHOLD,
     REG_EXHAUST_TEMP_SETPOINT,
+    REG_HP_RAD_SUMMER_LIMIT,
+    REG_HP_RAD_WINTER_LIMIT,
     REG_OVERPRESSURE_TIMER,
     REG_SUMMER_MODE_TEMP_LIMIT,
     REG_SUPPLY_TEMP_SETPOINT,
@@ -76,6 +78,19 @@ async def async_setup_entry(
                 ),
                 ParmairCO2ThresholdNumber(
                     coordinator, entry, REG_CO2_BOOST_THRESHOLD, "CO2 Boost Threshold"
+                ),
+            ]
+        )
+
+    # Heat pump module — only when module is installed
+    if coordinator.data.get("hp_rad_enable") == 1:
+        entities.extend(
+            [
+                ParmairHeatPumpTempLimitNumber(
+                    coordinator, entry, REG_HP_RAD_WINTER_LIMIT, "Heat Pump Winter Limit"
+                ),
+                ParmairHeatPumpTempLimitNumber(
+                    coordinator, entry, REG_HP_RAD_SUMMER_LIMIT, "Heat Pump Summer Limit"
                 ),
             ]
         )
@@ -186,3 +201,35 @@ class ParmairCO2ThresholdNumber(ParmairNumberEntity):
     _attr_native_step = 10
     _attr_native_unit_of_measurement = CONCENTRATION_PARTS_PER_MILLION
     _attr_icon = "mdi:molecule-co2"
+
+
+class ParmairHeatPumpTempLimitNumber(ParmairNumberEntity):
+    """Number entity for heat pump module temperature limits (°C).
+
+    HP_RAD_WINTER (1092) — outdoor temp below which the heat pump activates in winter.
+    HP_RAD_SUMMER (1093) — outdoor temp above which the heat pump activates in summer.
+    Only created when HEATPUMP_RADIATOR_ENABLE == 1.
+    """
+
+    _attr_mode = NumberMode.BOX
+    _attr_native_unit_of_measurement = UnitOfTemperature.CELSIUS
+    _attr_device_class = "temperature"
+    _attr_icon = "mdi:heat-pump"
+
+    def __init__(
+        self,
+        coordinator: ParmairCoordinator,
+        entry: ConfigEntry,
+        data_key: str,
+        name: str,
+    ) -> None:
+        """Initialize heat pump temperature limit number."""
+        super().__init__(coordinator, entry, data_key, name)
+        if data_key == REG_HP_RAD_WINTER_LIMIT:
+            self._attr_native_min_value = -30.0
+            self._attr_native_max_value = 15.0
+            self._attr_native_step = 0.5
+        else:  # REG_HP_RAD_SUMMER_LIMIT
+            self._attr_native_min_value = 0.0
+            self._attr_native_max_value = 40.0
+            self._attr_native_step = 0.5

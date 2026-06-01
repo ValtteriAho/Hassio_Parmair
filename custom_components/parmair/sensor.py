@@ -175,6 +175,18 @@ async def async_setup_entry(
     if is_v2:
         entities.append(ParmairOperationalStatusSensor(coordinator, entry))
 
+    # Heat pump module: only add entities when module is installed (hp_rad_enable == 1)
+    if coordinator.data.get("hp_rad_enable") == 1:
+        entities.append(
+            ParmairBinarySensor(
+                coordinator,
+                entry,
+                "hp_rad_output",
+                "Heat Pump Output",
+                {0: "Inactive", 1: "Active"},
+            )
+        )
+
     async_add_entities(entities)
 
 

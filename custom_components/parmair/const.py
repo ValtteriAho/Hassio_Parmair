@@ -117,6 +117,11 @@ REG_HEATER_ENABLE = "heater_enable"
 REG_HEATER_TYPE = "heater_type"
 REG_HOME_SPEED = "home_speed"
 REG_HOME_STATE = "home_state"
+REG_HP_RAD_ENABLE = "hp_rad_enable"          # v2.xx only — HEATPUMP_RADIATOR_ENABLE (0/1)
+REG_HP_RAD_MODE = "hp_rad_mode"              # v2.xx only — HP_RAD_MODE (0=Off, 1=On, 2=Auto)
+REG_HP_RAD_OUTPUT = "hp_rad_output"          # v2.xx only — HP_RAD_O, current output (0/1, RO)
+REG_HP_RAD_SUMMER_LIMIT = "hp_rad_summer_limit"  # v2.xx only — HP_RAD_SUMMER (°C)
+REG_HP_RAD_WINTER_LIMIT = "hp_rad_winter_limit"  # v2.xx only — HP_RAD_WINTER (°C)
 REG_HUMIDITY = "humidity"
 REG_HUMIDITY_24H_AVG = "humidity_24h_avg"
 REG_LTO_HEAT_RECOVERY_CONTROL = "lto_heat_recovery_control"
@@ -377,6 +382,22 @@ def _build_registers_v2() -> dict[str, RegisterDefinition]:
         REG_SUMMER_MODE_STATE: RegisterDefinition(
             REG_SUMMER_MODE_STATE, 1189, "SUMMER_MODE_I"
         ),
+        # Heat pump module (only populated when HEATPUMP_RADIATOR_ENABLE == 1)
+        REG_HP_RAD_ENABLE: RegisterDefinition(
+            REG_HP_RAD_ENABLE, 1124, "HEATPUMP_RADIATOR_ENABLE", writable=True
+        ),
+        REG_HP_RAD_OUTPUT: RegisterDefinition(
+            REG_HP_RAD_OUTPUT, 1050, "HP_RAD_O"
+        ),
+        REG_HP_RAD_MODE: RegisterDefinition(
+            REG_HP_RAD_MODE, 1091, "HP_RAD_MODE", writable=True
+        ),
+        REG_HP_RAD_WINTER_LIMIT: RegisterDefinition(
+            REG_HP_RAD_WINTER_LIMIT, 1092, "HP_RAD_WINTER", scale=0.1, writable=True
+        ),
+        REG_HP_RAD_SUMMER_LIMIT: RegisterDefinition(
+            REG_HP_RAD_SUMMER_LIMIT, 1093, "HP_RAD_SUMMER", scale=0.1, writable=True
+        ),
         # TE30_S: same physical register as REG_EXHAUST_TEMP_SETPOINT (target room temp in summer)
         REG_SUMMER_MODE_TEMP_LIMIT: RegisterDefinition(
             REG_SUMMER_MODE_TEMP_LIMIT, 1073, "TE30_S", scale=0.1, writable=True
@@ -435,8 +456,9 @@ REGISTERS = _build_registers_v1()
 # Static registers (read once at startup - values don't change during operation)
 STATIC_REGISTER_KEYS = (
     REG_SOFTWARE_VERSION,  # Software version never changes
-    REG_HARDWARE_TYPE,  # Hardware model (80/100/150) never changes
-    REG_HEATER_TYPE,  # Heater type (water/electric) rarely changes
+    REG_HARDWARE_TYPE,     # Hardware model (80/100/150) never changes
+    REG_HEATER_TYPE,       # Heater type (water/electric) rarely changes
+    REG_HP_RAD_ENABLE,     # Heat pump module installed flag (v2 only, skipped on v1)
 )
 
 # Dynamic registers (polled regularly - values change during operation)
@@ -496,6 +518,10 @@ POLLING_REGISTER_KEYS = (
     REG_CO2_HOME_THRESHOLD,
     REG_CO2_BOOST_THRESHOLD,
     REG_SUMMER_MODE_STATE,
+    REG_HP_RAD_OUTPUT,
+    REG_HP_RAD_MODE,
+    REG_HP_RAD_WINTER_LIMIT,
+    REG_HP_RAD_SUMMER_LIMIT,
 )
 
 

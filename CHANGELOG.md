@@ -1,3 +1,15 @@
+## 0.15.0 - Heat pump module (maalämpömoduuli) support (2026-06-01)
+
+### Added (firmware v2.x only, requires module installed)
+All new entities are only created when `HEATPUMP_RADIATOR_ENABLE == 1` (register 1124). They will not appear on devices without the module.
+
+- **Heat Pump Output** sensor — shows whether the heat pump module is currently active (`HP_RAD_O`, register 1050): `Inactive` / `Active`
+- **Heat Pump Mode** select — controls the automation mode (`HP_RAD_MODE`, register 1091): `Off` / `On` / `Auto` (default: Auto)
+- **Heat Pump Winter Limit** number — outdoor temperature below which the module activates in winter (`HP_RAD_WINTER`, register 1092, −30 to +15 °C)
+- **Heat Pump Summer Limit** number — outdoor temperature above which the module activates in summer (`HP_RAD_SUMMER`, register 1093, 0 to +40 °C)
+
+---
+
 ## 0.14.5 - Operational Mode: add Summer Cooling state (2026-06-01)
 
 ### Added (firmware v2.x only)

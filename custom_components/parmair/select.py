@@ -17,6 +17,7 @@ from .const import (
     REG_BOOST_TIME_SETTING,
     REG_FILTER_INTERVAL,
     REG_HOME_SPEED,
+    REG_HP_RAD_MODE,
     REG_OVERPRESSURE_TIME_SETTING,
     REG_SPEED_CONTROL,
     REG_SUMMER_MODE,
@@ -78,6 +79,10 @@ SUMMER_MODE_MAP: dict[int, str] = {0: "Off", 1: "On", 2: "Auto"}
 SUMMER_MODE_OPTIONS = list(SUMMER_MODE_MAP.values())
 SUMMER_MODE_TO_VALUE = {v: k for k, v in SUMMER_MODE_MAP.items()}
 
+HP_MODE_MAP: dict[int, str] = {0: "Off", 1: "On", 2: "Auto"}
+HP_MODE_OPTIONS = list(HP_MODE_MAP.values())
+HP_MODE_TO_VALUE = {v: k for k, v in HP_MODE_MAP.items()}
+
 BOOST_DURATION_MAP: dict[int, str] = {
     0: "30 min",
     1: "60 min",
@@ -121,6 +126,10 @@ async def async_setup_entry(
     ]
     if is_v2:
         entities.append(ParmairSummerModeSelect(coordinator, entry))
+
+    # Heat pump module entities — only when module is installed
+    if coordinator.data.get("hp_rad_enable") == 1:
+        entities.append(ParmairHeatPumpModeSelect(coordinator, entry))
 
     async_add_entities(entities)
 
@@ -414,4 +423,47 @@ class ParmairOverpressureDurationSelect(CoordinatorEntity[ParmairCoordinator], S
             await self.coordinator.async_request_refresh()
         except Exception as ex:
             _LOGGER.error("Failed to set overpressure duration to %s: %s", option, ex)
+            raise
+
+
+class ParmairHeatPumpModeSelect(CoordinatorEntity[ParmairCoordinator], SelectEntity):
+    """Select entity for heat pump module automation mode (Off / On / Auto).
+
+    Only created when HEATPUMP_RADIATOR_ENABLE == 1 (module is physically installed).
+    HP_RAD_MODE (register 1091): 0=Off, 1=On, 2=Auto (default 2).
+    """
+
+    _attr_has_entity_name = True
+    _attr_name = "Heat Pump Mode"
+    _attr_icon = "mdi:heat-pump"
+    _attr_options = HP_MODE_OPTIONS
+
+    def __init__(
+        self,
+        coordinator: ParmairCoordinator,
+        entry: ConfigEntry,
+    ) -> None:
+        """Initialize heat pump mode select."""
+        super().__init__(coordinator)
+        self._attr_unique_id = f"{entry.entry_id}_{REG_HP_RAD_MODE}"
+        self._attr_device_info = coordinator.device_info
+
+    @property
+    def current_option(self) -> str | None:
+        """Return the current selected option."""
+        value = self.coordinator.data.get(REG_HP_RAD_MODE)
+        if value is None:
+            return None
+        return HP_MODE_MAP.get(int(value))
+
+    async def async_select_option(self, option: str) -> None:
+        """Set the heat pump mode."""
+        raw = HP_MODE_TO_VALUE.get(option)
+        if raw is None:
+            return
+        try:
+            await self.coordinator.async_write_register(REG_HP_RAD_MODE, raw)
+            await self.coordinator.async_request_refresh()
+        except Exception as ex:
+            _LOGGER.error("Failed to set heat pump mode to %s: %s", option, ex)
             raise
