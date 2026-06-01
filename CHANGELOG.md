@@ -1,3 +1,10 @@
+## 0.14.5 - Operational Mode: add Summer Cooling state (2026-06-01)
+
+### Added (firmware v2.x only)
+- **Operational Mode sensor now shows "Summer Cooling"** when the Auto Summer Cool automation is active — detected by `SUMMER_MODE_I == 2` (firmware has determined summer conditions) combined with `AUTO_SUMMER_COOL_S != 0` (automation is not disabled). The underlying Home/Away user state is preserved in the entity attributes alongside `summer_mode_state` (winter / mid_season / summer).
+
+---
+
 ## 0.14.4 - Fix Operational Mode false CO2 Home state (2026-06-01)
 
 ### Fixed

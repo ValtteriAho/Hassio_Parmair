@@ -664,6 +664,7 @@ class ParmairOperationalStatusSensor(CoordinatorEntity[ParmairCoordinator], Sens
         "off",
         "away",
         "home",
+        "summer",
         "boost",
         "co2_boost",
         "humidity_boost",
@@ -731,6 +732,11 @@ class ParmairOperationalStatusSensor(CoordinatorEntity[ParmairCoordinator], Sens
         if control_state == 5:
             return "fireplace"
 
+        # Summer cooling active: SUMMER_MODE_I == 2 (firmware detected summer conditions)
+        # AND AUTO_SUMMER_COOL_S != 0 (automation is not disabled by user)
+        if data.get("summer_mode_state") == 2 and data.get("summer_mode", 0) != 0:
+            return "summer"
+
         if control_state == 2:  # Home
             return "home"
 
@@ -758,6 +764,13 @@ class ParmairOperationalStatusSensor(CoordinatorEntity[ParmairCoordinator], Sens
             val = data.get(key)
             if val is not None:
                 attrs[label] = bool(val)
+
+        # Summer cooling state (0=Winter, 1=Mid-season, 2=Summer)
+        summer_state = data.get("summer_mode_state")
+        if summer_state is not None:
+            attrs["summer_mode_state"] = {0: "winter", 1: "mid_season", 2: "summer"}.get(
+                summer_state, summer_state
+            )
 
         # CO2 readings and thresholds
         co2 = data.get("co2_exhaust")

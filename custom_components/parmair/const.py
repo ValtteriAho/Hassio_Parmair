@@ -129,6 +129,7 @@ REG_PRE_HEATER_OUTPUT = "pre_heater_output"
 REG_SPEED_CONTROL = "speed_control"
 REG_SUM_ALARM = "sum_alarm"
 REG_SUMMER_MODE = "summer_mode"
+REG_SUMMER_MODE_STATE = "summer_mode_state"  # v2.xx only — SUMMER_MODE_I (0=Winter, 1=Mid, 2=Summer)
 REG_SUMMER_MODE_TEMP_LIMIT = "summer_mode_temp_limit"
 REG_SUPPLY_AFTER_RECOVERY_TEMP = "supply_after_recovery_temp"
 REG_SUPPLY_FAN_SPEED = "supply_fan_speed"
@@ -372,6 +373,10 @@ def _build_registers_v2() -> dict[str, RegisterDefinition]:
         REG_OVERPRESSURE_TIME_SETTING: RegisterDefinition(
             REG_OVERPRESSURE_TIME_SETTING, 1069, "OVERP_TIME_S", writable=True
         ),
+        # Season state: 0=Winter, 1=Mid-season, 2=Summer (read-only)
+        REG_SUMMER_MODE_STATE: RegisterDefinition(
+            REG_SUMMER_MODE_STATE, 1189, "SUMMER_MODE_I"
+        ),
         # TE30_S: same physical register as REG_EXHAUST_TEMP_SETPOINT (target room temp in summer)
         REG_SUMMER_MODE_TEMP_LIMIT: RegisterDefinition(
             REG_SUMMER_MODE_TEMP_LIMIT, 1073, "TE30_S", scale=0.1, writable=True
@@ -490,6 +495,7 @@ POLLING_REGISTER_KEYS = (
     REG_AUTO_COLD_LOWSPEED,
     REG_CO2_HOME_THRESHOLD,
     REG_CO2_BOOST_THRESHOLD,
+    REG_SUMMER_MODE_STATE,
 )
 
 
