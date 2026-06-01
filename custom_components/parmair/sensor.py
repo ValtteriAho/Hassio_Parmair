@@ -664,7 +664,6 @@ class ParmairOperationalStatusSensor(CoordinatorEntity[ParmairCoordinator], Sens
         "off",
         "away",
         "home",
-        "co2_home",
         "boost",
         "co2_boost",
         "humidity_boost",
@@ -733,16 +732,6 @@ class ParmairOperationalStatusSensor(CoordinatorEntity[ParmairCoordinator], Sens
             return "fireplace"
 
         if control_state == 2:  # Home
-            # CO2-driven Home: automation enabled + CO2 ≥ home threshold
-            co2 = data.get("co2_exhaust")
-            co2_home_threshold = data.get("co2_home_threshold")
-            if (
-                data.get("auto_co2_home_away") == 1
-                and co2 is not None
-                and co2_home_threshold is not None
-                and co2 >= co2_home_threshold
-            ):
-                return "co2_home"
             return "home"
 
         if control_state == 1:

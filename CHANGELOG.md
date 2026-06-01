@@ -1,3 +1,10 @@
+## 0.14.4 - Fix Operational Mode false CO2 Home state (2026-06-01)
+
+### Fixed
+- **Operational Mode sensor showed "CO2 Home" when unit was manually set to Home** — it is impossible to distinguish "firmware automation switched to Home due to CO2" from "user manually set Home while CO2 happened to be above threshold". The `co2_home` state has been removed. Home mode always shows as **Home**. The CO2 level and home threshold are still visible in the entity attributes for reference.
+
+---
+
 ## 0.14.3 - Operational Mode sensor for v2.x (2026-06-01)
 
 ### Added (firmware v2.x only)
