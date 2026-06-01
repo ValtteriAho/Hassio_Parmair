@@ -1,3 +1,10 @@
+## 0.14.2 - Fix speed preset off-by-one for v2.x (2026-06-01)
+
+### Fixed
+- **Home Speed Preset, Away Speed Preset, and Boost Speed Preset showed wrong speed for v2.x devices** — v1.x encodes speeds as 0–4 and 2–4, but v2.x uses 1–5 and 3–5. The select entities were always using the v1 map, so a device value of `1` (Speed 1 on v2) was displayed as "Speed 2". Both read (display) and write (selection) are now version-aware. v1.x behaviour is unchanged.
+
+---
+
 ## 0.14.1 - Fix fan turn-on for v2.x (2026-05-31)
 
 ### Fixed

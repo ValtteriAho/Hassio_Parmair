@@ -20,6 +20,7 @@ from .const import (
     REG_OVERPRESSURE_TIME_SETTING,
     REG_SPEED_CONTROL,
     REG_SUMMER_MODE,
+    SOFTWARE_VERSION_1,
     SOFTWARE_VERSION_2,
 )
 from .coordinator import ParmairCoordinator
@@ -43,6 +44,7 @@ MANUAL_SPEED_MAP: dict[int, str] = {
 MANUAL_SPEED_OPTIONS = list(MANUAL_SPEED_MAP.values())
 MANUAL_SPEED_TO_VALUE = {v: k for k, v in MANUAL_SPEED_MAP.items()}
 
+# V1: HOME/AWAY_SPEED_S range 0-4  (0=Speed1 … 4=Speed5)
 SPEED_PRESET_MAP: dict[int, str] = {
     0: "Speed 1",
     1: "Speed 2",
@@ -53,9 +55,24 @@ SPEED_PRESET_MAP: dict[int, str] = {
 SPEED_PRESET_OPTIONS = list(SPEED_PRESET_MAP.values())
 SPEED_PRESET_TO_VALUE = {v: k for k, v in SPEED_PRESET_MAP.items()}
 
+# V2: HOME/AWAY_SPEED_S range 1-5  (1=Speed1 … 5=Speed5)
+SPEED_PRESET_MAP_V2: dict[int, str] = {
+    1: "Speed 1",
+    2: "Speed 2",
+    3: "Speed 3",
+    4: "Speed 4",
+    5: "Speed 5",
+}
+SPEED_PRESET_TO_VALUE_V2 = {v: k for k, v in SPEED_PRESET_MAP_V2.items()}
+
+# V1: BOOST_SETTING_S range 2-4  (2=Speed3, 3=Speed4, 4=Speed5)
 BOOST_SPEED_MAP: dict[int, str] = {2: "Speed 3", 3: "Speed 4", 4: "Speed 5"}
 BOOST_SPEED_OPTIONS = list(BOOST_SPEED_MAP.values())
 BOOST_SPEED_TO_VALUE = {v: k for k, v in BOOST_SPEED_MAP.items()}
+
+# V2: BOOST_SETTING_S range 3-5  (3=Speed3, 4=Speed4, 5=Speed5)
+BOOST_SPEED_MAP_V2: dict[int, str] = {3: "Speed 3", 4: "Speed 4", 5: "Speed 5"}
+BOOST_SPEED_TO_VALUE_V2 = {v: k for k, v in BOOST_SPEED_MAP_V2.items()}
 
 SUMMER_MODE_MAP: dict[int, str] = {0: "Off", 1: "On", 2: "Auto"}
 SUMMER_MODE_OPTIONS = list(SUMMER_MODE_MAP.values())
@@ -213,11 +230,19 @@ class ParmairSpeedPresetSelect(CoordinatorEntity[ParmairCoordinator], SelectEnti
         value = self.coordinator.data.get(self._data_key)
         if value is None:
             return None
-        return SPEED_PRESET_MAP.get(int(value))
+        is_v2 = self.coordinator.software_version == SOFTWARE_VERSION_2 or str(
+            self.coordinator.software_version
+        ).startswith("2.")
+        speed_map = SPEED_PRESET_MAP_V2 if is_v2 else SPEED_PRESET_MAP
+        return speed_map.get(int(value))
 
     async def async_select_option(self, option: str) -> None:
         """Set the speed preset."""
-        raw = SPEED_PRESET_TO_VALUE.get(option)
+        is_v2 = self.coordinator.software_version == SOFTWARE_VERSION_2 or str(
+            self.coordinator.software_version
+        ).startswith("2.")
+        to_value = SPEED_PRESET_TO_VALUE_V2 if is_v2 else SPEED_PRESET_TO_VALUE
+        raw = to_value.get(option)
         if raw is None:
             return
         try:
@@ -252,11 +277,19 @@ class ParmairBoostSpeedSelect(CoordinatorEntity[ParmairCoordinator], SelectEntit
         value = self.coordinator.data.get(REG_BOOST_SETTING)
         if value is None:
             return None
-        return BOOST_SPEED_MAP.get(int(value))
+        is_v2 = self.coordinator.software_version == SOFTWARE_VERSION_2 or str(
+            self.coordinator.software_version
+        ).startswith("2.")
+        boost_map = BOOST_SPEED_MAP_V2 if is_v2 else BOOST_SPEED_MAP
+        return boost_map.get(int(value))
 
     async def async_select_option(self, option: str) -> None:
         """Set the boost speed preset."""
-        raw = BOOST_SPEED_TO_VALUE.get(option)
+        is_v2 = self.coordinator.software_version == SOFTWARE_VERSION_2 or str(
+            self.coordinator.software_version
+        ).startswith("2.")
+        to_value = BOOST_SPEED_TO_VALUE_V2 if is_v2 else BOOST_SPEED_TO_VALUE
+        raw = to_value.get(option)
         if raw is None:
             return
         try:
