@@ -1,3 +1,13 @@
+## 0.17.2 - Remove redundant Boost and Overpressure switches (2026-06-10)
+
+### Removed
+- **Boost Mode switch** — redundant. Boost is already selectable as a preset on the State fan control.
+- **Overpressure Mode switch** — redundant. On V2 firmware, Overpressure is the same mode as Fireplace (register `TK01_I` is literally named "Fireplace switch (overpressure)"). Selectable as the Fireplace preset on the State fan control.
+
+The Boost Duration and Overpressure Duration selects in the Configuration section are kept — they set the timer duration used when those modes activate.
+
+---
+
 ## 0.17.1 - Fix fan entity name (2026-06-10)
 
 ### Fixed
