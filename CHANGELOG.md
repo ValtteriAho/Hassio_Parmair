@@ -1,3 +1,16 @@
+## 0.17.0 - Brand logo and entity grouping (2026-06-10)
+
+### Added
+- **Brand logo** — Parmair logo is now bundled in the integration (`brand/` folder). Displays automatically in HA 2026.3+ without requiring a separate brands repository submission.
+
+### Changed
+- **Entity grouping** — All entities are now organized into three sections on the device page:
+  - **Controls**: temperatures, humidity, CO2, alarms, fan, boost/overpressure switches, buttons
+  - **Configuration** *(collapsed)*: all setpoints, speed presets, duration presets, automation switches, summer/heat pump mode selects
+  - **Diagnostic** *(collapsed)*: power state, fan speeds, heater outputs, software version, heater type, filter date
+
+---
+
 ## 0.16.1 - Fix Sauna/Fireplace modes not appearing for existing V2 devices (2026-06-10)
 
 ### Fixed
