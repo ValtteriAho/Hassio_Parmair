@@ -70,9 +70,16 @@ class ParmairFan(CoordinatorEntity[ParmairCoordinator], FanEntity):
         self._attr_unique_id = f"{entry.entry_id}_fan"
         self._attr_device_info = coordinator.device_info
         # Determine if V2 firmware for extended mode support
-        self._is_v2 = coordinator.software_version == SOFTWARE_VERSION_2 or str(
-            coordinator.software_version
-        ).startswith("2.")
+        # Prefers device-reported software_version over config entry
+        # This ensures compatibility with devices configured before v0.16.0
+        dev_sw = coordinator.data.get("software_version") if coordinator.data else None
+        if dev_sw is not None:
+            self._is_v2 = dev_sw >= 2.0 if isinstance(dev_sw, int | float) else str(dev_sw).startswith("2.")
+        else:
+            # Fallback to config entry when device data not yet available
+            self._is_v2 = coordinator.software_version == SOFTWARE_VERSION_2 or str(
+                coordinator.software_version
+            ).startswith("2.")
         
         # Set preset modes and speed count based on firmware version
         if self._is_v2:
@@ -96,9 +103,8 @@ class ParmairFan(CoordinatorEntity[ParmairCoordinator], FanEntity):
         power_state = self.coordinator.data.get("power", POWER_OFF)
         control_state = self.coordinator.data.get("control_state", MODE_STOP)
         # V1: power 3 = Running. V2: power 1 = On.
-        is_v2 = self.coordinator.software_version == SOFTWARE_VERSION_2 or str(
-            self.coordinator.software_version
-        ).startswith("2.")
+        dev_sw = self.coordinator.data.get("software_version")
+        is_v2 = dev_sw >= 2.0 if isinstance(dev_sw, int | float) else str(dev_sw).startswith("2.") if dev_sw is not None else self._is_v2
         power_ok = (power_state == 1) if is_v2 else (power_state == POWER_RUNNING)
         return power_ok and control_state != MODE_STOP
 
@@ -153,7 +159,10 @@ class ParmairFan(CoordinatorEntity[ParmairCoordinator], FanEntity):
     ) -> None:
         """Turn on the fan."""
         # V2: UNIT_CONTROL_FO uses 0=Off, 1=On.  V1: POWER_BTN_FI uses 3=Running.
-        power_on_value = 1 if self._is_v2 else POWER_RUNNING
+        # Re-check version from device data in case it changed
+        dev_sw = self.coordinator.data.get("software_version")
+        is_v2 = dev_sw >= 2.0 if isinstance(dev_sw, int | float) else str(dev_sw).startswith("2.") if dev_sw is not None else self._is_v2
+        power_on_value = 1 if is_v2 else POWER_RUNNING
         if self.coordinator.data.get("power") != power_on_value:
             await self.coordinator.async_write_register(REG_POWER, power_on_value)
             await self.coordinator.async_request_refresh()
