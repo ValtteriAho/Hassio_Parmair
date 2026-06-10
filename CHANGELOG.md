@@ -1,3 +1,15 @@
+## 0.16.0 - Add Sauna (Humidity Override) and Fireplace modes (2026-06-10)
+
+### Added (firmware v2.x only)
+- **Sauna Mode** (preset mode in fan control) — corresponds to **"Kosteuden ohitus"** (Humidity Override) in Parmair's web interface. Users can now select Sauna mode alongside Away, Home, and Boost modes via the fan entity preset modes.
+- **Fireplace Mode** (preset mode in fan control) — supply-only ventilation mode for fireplace operation. Selectable as a preset mode on V2 devices.
+- **Extended fan speed control for V2** — V2 devices now support 5 preset speed levels (Away, Home, Boost, Sauna, Fireplace) instead of the V1 limitation of 3 modes.
+
+### Changed
+- **Fan preset modes are now dynamic** — firmware version detection at initialization determines whether 3 modes (V1) or 5 modes (V2) are available. V1 devices remain completely unchanged and backward compatible.
+
+---
+
 ## 0.15.1 - Fix Operational Mode: humidity/CO2 boost hidden by Summer Cooling (2026-06-01)
 
 ### Fixed
