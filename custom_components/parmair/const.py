@@ -548,12 +548,16 @@ MODE_STOP = 0
 MODE_AWAY = 1
 MODE_HOME = 2
 MODE_BOOST = 3
-MODE_OVERPRESSURE = 4
-MODE_AWAY_TIMER = 5
-MODE_HOME_TIMER = 6
-MODE_BOOST_TIMER = 7
-MODE_OVERPRESSURE_TIMER = 8
-MODE_MANUAL = 9
+MODE_OVERPRESSURE = 4  # V1 only
+MODE_AWAY_TIMER = 5  # V1 only
+MODE_HOME_TIMER = 6  # V1 only
+MODE_BOOST_TIMER = 7  # V1 only
+MODE_OVERPRESSURE_TIMER = 8  # V1 only
+MODE_MANUAL = 9  # V1 only
+
+# V2-specific modes (USERSTATECONTROL_FO register)
+MODE_SAUNA = 4  # V2 only — Humidity override / Sauna mode
+MODE_FIREPLACE = 5  # V2 only — Fireplace mode
 
 # Control state display mapping (differs by firmware version)
 # V1.x IV01_CONTROLSTATE_FO: Stop, Away, Home, Boost, Overpressure, timers, Manual

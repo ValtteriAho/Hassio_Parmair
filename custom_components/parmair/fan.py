@@ -19,7 +19,9 @@ from .const import (
     DOMAIN,
     MODE_AWAY,
     MODE_BOOST,
+    MODE_FIREPLACE,
     MODE_HOME,
+    MODE_SAUNA,
     MODE_STOP,
     POWER_OFF,
     POWER_RUNNING,
@@ -35,8 +37,13 @@ _LOGGER = logging.getLogger(__name__)
 PRESET_MODE_AWAY = "away"
 PRESET_MODE_HOME = "home"
 PRESET_MODE_BOOST = "boost"
+PRESET_MODE_SAUNA = "sauna"  # V2 only — Humidity override mode
+PRESET_MODE_FIREPLACE = "fireplace"  # V2 only
 
-ORDERED_NAMED_FAN_SPEEDS = ["away", "home", "boost"]
+# Base preset modes (V1 and V2)
+ORDERED_NAMED_FAN_SPEEDS_V1 = ["away", "home", "boost"]
+# Extended preset modes (V2 with sauna and fireplace)
+ORDERED_NAMED_FAN_SPEEDS_V2 = ["away", "home", "boost", "sauna", "fireplace"]
 
 
 async def async_setup_entry(
@@ -56,14 +63,32 @@ class ParmairFan(CoordinatorEntity[ParmairCoordinator], FanEntity):
     _attr_has_entity_name = True
     _attr_name = None
     _attr_supported_features = FanEntityFeature.SET_SPEED | FanEntityFeature.PRESET_MODE
-    _attr_preset_modes = [PRESET_MODE_AWAY, PRESET_MODE_HOME, PRESET_MODE_BOOST]
-    _attr_speed_count = 3
 
     def __init__(self, coordinator: ParmairCoordinator, entry: ConfigEntry) -> None:
         """Initialize the fan entity."""
         super().__init__(coordinator)
         self._attr_unique_id = f"{entry.entry_id}_fan"
         self._attr_device_info = coordinator.device_info
+        # Determine if V2 firmware for extended mode support
+        self._is_v2 = coordinator.software_version == SOFTWARE_VERSION_2 or str(
+            coordinator.software_version
+        ).startswith("2.")
+        
+        # Set preset modes and speed count based on firmware version
+        if self._is_v2:
+            self._attr_preset_modes = [
+                PRESET_MODE_AWAY,
+                PRESET_MODE_HOME,
+                PRESET_MODE_BOOST,
+                PRESET_MODE_SAUNA,
+                PRESET_MODE_FIREPLACE,
+            ]
+            self._attr_speed_count = 5
+            self._ordered_speeds = ORDERED_NAMED_FAN_SPEEDS_V2
+        else:
+            self._attr_preset_modes = [PRESET_MODE_AWAY, PRESET_MODE_HOME, PRESET_MODE_BOOST]
+            self._attr_speed_count = 3
+            self._ordered_speeds = ORDERED_NAMED_FAN_SPEEDS_V1
 
     @property
     def is_on(self) -> bool:
@@ -87,11 +112,15 @@ class ParmairFan(CoordinatorEntity[ParmairCoordinator], FanEntity):
 
         # Map control state to percentage
         if control_state == MODE_AWAY:
-            return ordered_list_item_to_percentage(ORDERED_NAMED_FAN_SPEEDS, PRESET_MODE_AWAY)
+            return ordered_list_item_to_percentage(self._ordered_speeds, PRESET_MODE_AWAY)
         elif control_state == MODE_HOME:
-            return ordered_list_item_to_percentage(ORDERED_NAMED_FAN_SPEEDS, PRESET_MODE_HOME)
+            return ordered_list_item_to_percentage(self._ordered_speeds, PRESET_MODE_HOME)
         elif control_state == MODE_BOOST:
-            return ordered_list_item_to_percentage(ORDERED_NAMED_FAN_SPEEDS, PRESET_MODE_BOOST)
+            return ordered_list_item_to_percentage(self._ordered_speeds, PRESET_MODE_BOOST)
+        elif self._is_v2 and control_state == MODE_SAUNA:
+            return ordered_list_item_to_percentage(self._ordered_speeds, PRESET_MODE_SAUNA)
+        elif self._is_v2 and control_state == MODE_FIREPLACE:
+            return ordered_list_item_to_percentage(self._ordered_speeds, PRESET_MODE_FIREPLACE)
 
         return None
 
@@ -109,6 +138,10 @@ class ParmairFan(CoordinatorEntity[ParmairCoordinator], FanEntity):
             return PRESET_MODE_HOME
         elif control_state == MODE_BOOST:
             return PRESET_MODE_BOOST
+        elif self._is_v2 and control_state == MODE_SAUNA:
+            return PRESET_MODE_SAUNA
+        elif self._is_v2 and control_state == MODE_FIREPLACE:
+            return PRESET_MODE_FIREPLACE
 
         return None
 
@@ -120,10 +153,7 @@ class ParmairFan(CoordinatorEntity[ParmairCoordinator], FanEntity):
     ) -> None:
         """Turn on the fan."""
         # V2: UNIT_CONTROL_FO uses 0=Off, 1=On.  V1: POWER_BTN_FI uses 3=Running.
-        is_v2 = self.coordinator.software_version == SOFTWARE_VERSION_2 or str(
-            self.coordinator.software_version
-        ).startswith("2.")
-        power_on_value = 1 if is_v2 else POWER_RUNNING
+        power_on_value = 1 if self._is_v2 else POWER_RUNNING
         if self.coordinator.data.get("power") != power_on_value:
             await self.coordinator.async_write_register(REG_POWER, power_on_value)
             await self.coordinator.async_request_refresh()
@@ -149,8 +179,8 @@ class ParmairFan(CoordinatorEntity[ParmairCoordinator], FanEntity):
             await self.async_turn_off()
             return
 
-        # Map percentage to preset mode
-        named_speed = percentage_to_ordered_list_item(ORDERED_NAMED_FAN_SPEEDS, percentage)
+        # Map percentage to preset mode using the appropriate speed list
+        named_speed = percentage_to_ordered_list_item(self._ordered_speeds, percentage)
         await self.async_set_preset_mode(named_speed)
 
     async def async_set_preset_mode(self, preset_mode: str) -> None:
@@ -160,6 +190,11 @@ class ParmairFan(CoordinatorEntity[ParmairCoordinator], FanEntity):
             PRESET_MODE_HOME: MODE_HOME,
             PRESET_MODE_BOOST: MODE_BOOST,
         }
+        
+        # Add V2-specific modes only for V2 devices
+        if self._is_v2:
+            mode_map[PRESET_MODE_SAUNA] = MODE_SAUNA
+            mode_map[PRESET_MODE_FIREPLACE] = MODE_FIREPLACE
 
         if preset_mode in mode_map:
             mode_value = mode_map[preset_mode]
