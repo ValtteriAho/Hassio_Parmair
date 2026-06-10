@@ -61,7 +61,7 @@ class ParmairFan(CoordinatorEntity[ParmairCoordinator], FanEntity):
     """Representation of a Parmair ventilation system as a fan."""
 
     _attr_has_entity_name = True
-    _attr_name = None
+    _attr_name = "State"
     _attr_supported_features = FanEntityFeature.SET_SPEED | FanEntityFeature.PRESET_MODE
 
     def __init__(self, coordinator: ParmairCoordinator, entry: ConfigEntry) -> None:
