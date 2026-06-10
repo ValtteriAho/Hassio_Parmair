@@ -1,3 +1,10 @@
+## 0.16.1 - Fix Sauna/Fireplace modes not appearing for existing V2 devices (2026-06-10)
+
+### Fixed
+- **Sauna and Fireplace modes not showing for devices configured before v0.16.0** — existing V2 device configs had V1 stored in the config entry. The fan entity now prefers the device-reported software version over the config entry, ensuring all V2 devices show 5 preset modes regardless of when they were originally configured.
+
+---
+
 ## 0.16.0 - Add Sauna (Humidity Override) and Fireplace modes (2026-06-10)
 
 ### Added (firmware v2.x only)
