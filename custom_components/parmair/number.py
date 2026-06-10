@@ -8,6 +8,7 @@ from homeassistant.components.number import NumberEntity, NumberMode
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONCENTRATION_PARTS_PER_MILLION, UnitOfTemperature
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers.entity import EntityCategory
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
@@ -102,6 +103,7 @@ class ParmairNumberEntity(CoordinatorEntity[ParmairCoordinator], NumberEntity):
     """Base class for Parmair number entities."""
 
     _attr_has_entity_name = True
+    _attr_entity_category = EntityCategory.CONFIG
 
     def __init__(
         self,

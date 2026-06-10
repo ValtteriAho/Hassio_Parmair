@@ -111,26 +111,26 @@ async def async_setup_entry(
         ),
         ParmairTemperatureSensor(coordinator, entry, "supply_temp", "Supply Air Temperature"),
         ParmairTemperatureSensor(coordinator, entry, "exhaust_temp", "Exhaust Air Temperature"),
-        ParmairTemperatureSensor(coordinator, entry, "waste_temp", "Waste Air Temperature"),
+        ParmairTemperatureSensor(coordinator, entry, "waste_temp", "Waste Air Temperature", EntityCategory.DIAGNOSTIC),
         ParmairTemperatureSensor(
-            coordinator, entry, "exhaust_temp_setpoint", "Exhaust Temperature Setpoint"
+            coordinator, entry, "exhaust_temp_setpoint", "Exhaust Temperature Setpoint", EntityCategory.DIAGNOSTIC
         ),
         ParmairTemperatureSensor(
-            coordinator, entry, "supply_temp_setpoint", "Supply Temperature Setpoint"
+            coordinator, entry, "supply_temp_setpoint", "Supply Temperature Setpoint", EntityCategory.DIAGNOSTIC
         ),
         # Other sensors
         ParmairControlStateSensor(coordinator, entry, "control_state", "Control State"),
         ParmairSpeedControlSensor(coordinator, entry, "actual_speed", "Current Speed"),
         ParmairPowerStateSensor(coordinator, entry, "power", "Power State"),
         ParmairBinarySensor(
-            coordinator, entry, "home_state", "Home/Away State", {0: "Away", 1: "Home"}
+            coordinator, entry, "home_state", "Home/Away State", {0: "Away", 1: "Home"}, EntityCategory.DIAGNOSTIC
         ),
-        ParmairBinarySensor(coordinator, entry, "boost_state", "Boost State", {0: "Off", 1: "On"}),
+        ParmairBinarySensor(coordinator, entry, "boost_state", "Boost State", {0: "Off", 1: "On"}, EntityCategory.DIAGNOSTIC),
         ParmairAlarmSensor(coordinator, entry, "alarm_count", "Alarm Count"),
         ParmairAlarmSensor(coordinator, entry, "sum_alarm", "Summary Alarm"),
         # State sensors
         ParmairBinarySensor(
-            coordinator, entry, "defrost_state", "Defrost State", {0: "Off", 1: "Active"}
+            coordinator, entry, "defrost_state", "Defrost State", {0: "Off", 1: "Active"}, EntityCategory.DIAGNOSTIC
         ),
         ParmairBinarySensor(
             coordinator,
@@ -184,6 +184,7 @@ async def async_setup_entry(
                 "hp_rad_output",
                 "Heat Pump Output",
                 {0: "Inactive", 1: "Active"},
+                EntityCategory.DIAGNOSTIC,
             )
         )
 
@@ -235,9 +236,12 @@ class ParmairTemperatureSensor(ParmairRegisterEntity, SensorEntity):
         entry: ConfigEntry,
         data_key: str,
         name: str,
+        entity_category: EntityCategory | None = None,
     ) -> None:
         """Initialize the sensor."""
         super().__init__(coordinator, entry, data_key, name)
+        if entity_category is not None:
+            self._attr_entity_category = entity_category
 
     @property
     def native_value(self) -> float | None:
@@ -367,6 +371,7 @@ class ParmairPercentageSensor(ParmairRegisterEntity, SensorEntity):
     _attr_state_class = SensorStateClass.MEASUREMENT
     _attr_native_unit_of_measurement = PERCENTAGE
     _attr_icon = "mdi:gauge"
+    _attr_entity_category = EntityCategory.DIAGNOSTIC
 
     def __init__(
         self,
@@ -444,6 +449,7 @@ class ParmairSpeedControlSensor(ParmairRegisterEntity, SensorEntity):
 
     _attr_has_entity_name = True
     _attr_icon = "mdi:fan"
+    _attr_entity_category = EntityCategory.DIAGNOSTIC
 
     def __init__(
         self,
@@ -478,6 +484,7 @@ class ParmairPowerStateSensor(ParmairRegisterEntity, SensorEntity):
 
     _attr_has_entity_name = True
     _attr_device_class = SensorDeviceClass.ENUM
+    _attr_entity_category = EntityCategory.DIAGNOSTIC
 
     def __init__(
         self,
@@ -567,6 +574,7 @@ class ParmairBinarySensor(ParmairRegisterEntity, SensorEntity):
         data_key: str,
         name: str,
         state_map: dict[int, str],
+        entity_category: EntityCategory | None = None,
     ) -> None:
         """Initialize the sensor."""
         super().__init__(coordinator, entry, data_key, name)
@@ -574,6 +582,8 @@ class ParmairBinarySensor(ParmairRegisterEntity, SensorEntity):
         self._attr_device_class = SensorDeviceClass.ENUM
         # Include "Unknown" so Home Assistant accepts unmapped values (e.g. v2 USERSTATECONTROL 2-5)
         self._attr_options = list(state_map.values()) + ["Unknown"]
+        if entity_category is not None:
+            self._attr_entity_category = entity_category
 
     @property
     def native_value(self) -> str | None:

@@ -7,6 +7,7 @@ import logging
 from homeassistant.components.select import SelectEntity
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers.entity import EntityCategory
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
@@ -141,6 +142,7 @@ class ParmairFilterIntervalSelect(CoordinatorEntity[ParmairCoordinator], SelectE
     _attr_name = "Filter Change Interval"
     _attr_icon = "mdi:air-filter"
     _attr_options = FILTER_INTERVAL_OPTIONS
+    _attr_entity_category = EntityCategory.CONFIG
 
     def __init__(
         self,
@@ -180,6 +182,7 @@ class ParmairManualSpeedSelect(CoordinatorEntity[ParmairCoordinator], SelectEnti
     _attr_name = "Manual Speed Control"
     _attr_icon = "mdi:fan-speed-1"
     _attr_options = MANUAL_SPEED_OPTIONS
+    _attr_entity_category = EntityCategory.CONFIG
 
     def __init__(
         self,
@@ -218,6 +221,7 @@ class ParmairSpeedPresetSelect(CoordinatorEntity[ParmairCoordinator], SelectEnti
     _attr_has_entity_name = True
     _attr_icon = "mdi:fan"
     _attr_options = SPEED_PRESET_OPTIONS
+    _attr_entity_category = EntityCategory.CONFIG
 
     def __init__(
         self,
@@ -269,6 +273,7 @@ class ParmairBoostSpeedSelect(CoordinatorEntity[ParmairCoordinator], SelectEntit
     _attr_name = "Boost Speed Preset"
     _attr_icon = "mdi:fan"
     _attr_options = BOOST_SPEED_OPTIONS
+    _attr_entity_category = EntityCategory.CONFIG
 
     def __init__(
         self,
@@ -316,6 +321,7 @@ class ParmairSummerModeSelect(CoordinatorEntity[ParmairCoordinator], SelectEntit
     _attr_name = "Summer Mode"
     _attr_icon = "mdi:weather-sunny"
     _attr_options = SUMMER_MODE_OPTIONS
+    _attr_entity_category = EntityCategory.CONFIG
 
     def __init__(
         self,
@@ -355,6 +361,7 @@ class ParmairBoostDurationSelect(CoordinatorEntity[ParmairCoordinator], SelectEn
     _attr_name = "Boost Duration Preset"
     _attr_icon = "mdi:timer"
     _attr_options = BOOST_DURATION_OPTIONS
+    _attr_entity_category = EntityCategory.CONFIG
 
     def __init__(
         self,
@@ -394,6 +401,7 @@ class ParmairOverpressureDurationSelect(CoordinatorEntity[ParmairCoordinator], S
     _attr_name = "Overpressure Duration Preset"
     _attr_icon = "mdi:timer"
     _attr_options = OVERPRESSURE_DURATION_OPTIONS
+    _attr_entity_category = EntityCategory.CONFIG
 
     def __init__(
         self,
@@ -437,6 +445,7 @@ class ParmairHeatPumpModeSelect(CoordinatorEntity[ParmairCoordinator], SelectEnt
     _attr_name = "Heat Pump Mode"
     _attr_icon = "mdi:heat-pump"
     _attr_options = HP_MODE_OPTIONS
+    _attr_entity_category = EntityCategory.CONFIG
 
     def __init__(
         self,
