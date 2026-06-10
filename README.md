@@ -1,4 +1,4 @@
-# Parmair MAC for Home Assistant (v0.15.0)
+# Parmair MAC for Home Assistant (v0.16.0)
 
 ![Parmair MAC Logo](parmair_logo.jpg)
 
@@ -10,7 +10,7 @@ Perfect for creating smart automations, monitoring air quality, and managing you
 
 ## What You Can Do
 
-✅ **Control ventilation modes** - Switch between Home, Away, and Boost  
+✅ **Control ventilation modes** - Switch between Away, Home, Boost, and more (Sauna/Fireplace for v2.x)  
 ✅ **Monitor air quality** - Track temperature, humidity, and CO2 levels  
 ✅ **Create automations** - Schedule ventilation based on time, occupancy, or air quality  
 ✅ **Get notifications** - Alerts when filters need changing or alarms occur  
