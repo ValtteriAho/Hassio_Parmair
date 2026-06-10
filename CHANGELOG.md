@@ -1,3 +1,10 @@
+## 0.17.1 - Fix fan entity name (2026-06-10)
+
+### Fixed
+- **Fan entity renamed to "State"** — previously showed as "Parmair MAC" which was uninformative. Now matches the naming used in the native Parmair app (Home / Away / Boost / etc.).
+
+---
+
 ## 0.17.0 - Brand logo and entity grouping (2026-06-10)
 
 ### Added
