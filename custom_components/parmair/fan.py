@@ -121,7 +121,6 @@ class ParmairFan(CoordinatorEntity[ParmairCoordinator], FanEntity):
         """Expose high-level metadata for diagnostics."""
 
         return {
-            "parmair_power_register": self.coordinator.get_register_definition(REG_POWER).label,
             "parmair_control_register": self.coordinator.get_register_definition(
                 REG_CONTROL_STATE
             ).label,

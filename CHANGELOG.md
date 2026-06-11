@@ -1,3 +1,10 @@
+## 0.17.4 - Fix fan entity unavailable after 0.17.3 (2026-06-11)
+
+### Fixed
+- **State entity unavailable** — `REG_POWER` was removed from imports during 0.17.3 refactor but still referenced in `extra_state_attributes`, causing a `NameError` at load time. Removed the stale attribute.
+
+---
+
 ## 0.17.3 - State control shows preset selector instead of on/off toggle (2026-06-11)
 
 ### Changed
