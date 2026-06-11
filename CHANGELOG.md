@@ -1,3 +1,14 @@
+## 0.17.5 - State is now a select entity, no more fan toggle (2026-06-11)
+
+### Changed
+- **State moved from fan to select entity** — HA fan entities always render with a power toggle in the UI regardless of supported features. The ventilation state (Away / Home / Boost / Sauna / Fireplace) is now a `select` entity, which shows as a clean dropdown with no toggle.
+
+### Notes
+- The old `fan.parmair_mac_state` entity will show as "no longer provided" — delete it in **Settings → Devices & Services → Parmair → entities**.
+- The new entity is `select.parmair_mac_state`.
+
+---
+
 ## 0.17.4 - Fix fan entity unavailable after 0.17.3 (2026-06-11)
 
 ### Fixed

@@ -13,9 +13,16 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import (
     DOMAIN,
+    MODE_AWAY,
+    MODE_BOOST,
+    MODE_FIREPLACE,
+    MODE_HOME,
+    MODE_SAUNA,
+    MODE_STOP,
     REG_AWAY_SPEED,
     REG_BOOST_SETTING,
     REG_BOOST_TIME_SETTING,
+    REG_CONTROL_STATE,
     REG_FILTER_INTERVAL,
     REG_HOME_SPEED,
     REG_HP_RAD_MODE,
@@ -117,6 +124,7 @@ async def async_setup_entry(
     ).startswith("2.")
 
     entities: list[SelectEntity] = [
+        ParmairStateSelect(coordinator, entry),
         ParmairFilterIntervalSelect(coordinator, entry),
         ParmairManualSpeedSelect(coordinator, entry),
         ParmairSpeedPresetSelect(coordinator, entry, REG_HOME_SPEED, "Home Speed Preset"),
@@ -133,6 +141,55 @@ async def async_setup_entry(
         entities.append(ParmairHeatPumpModeSelect(coordinator, entry))
 
     async_add_entities(entities)
+
+
+# Ventilation state options
+_STATE_OPTIONS_V1 = ["Away", "Home", "Boost"]
+_STATE_OPTIONS_V2 = ["Away", "Home", "Boost", "Sauna", "Fireplace"]
+_STATE_LABEL_TO_MODE = {
+    "Away": MODE_AWAY,
+    "Home": MODE_HOME,
+    "Boost": MODE_BOOST,
+    "Sauna": MODE_SAUNA,
+    "Fireplace": MODE_FIREPLACE,
+}
+_STATE_MODE_TO_LABEL = {v: k for k, v in _STATE_LABEL_TO_MODE.items()}
+
+
+class ParmairStateSelect(CoordinatorEntity[ParmairCoordinator], SelectEntity):
+    """Select entity for ventilation state (Away / Home / Boost / Sauna / Fireplace)."""
+
+    _attr_has_entity_name = True
+    _attr_name = "State"
+    _attr_icon = "mdi:air-filter"
+    # No entity_category — shows in Controls
+
+    def __init__(self, coordinator: ParmairCoordinator, entry: ConfigEntry) -> None:
+        super().__init__(coordinator)
+        self._attr_unique_id = f"{entry.entry_id}_state"
+        self._attr_device_info = coordinator.device_info
+        dev_sw = coordinator.data.get("software_version") if coordinator.data else None
+        if dev_sw is not None:
+            is_v2 = dev_sw >= 2.0 if isinstance(dev_sw, int | float) else str(dev_sw).startswith("2.")
+        else:
+            is_v2 = coordinator.software_version == SOFTWARE_VERSION_2 or str(
+                coordinator.software_version
+            ).startswith("2.")
+        self._attr_options = _STATE_OPTIONS_V2 if is_v2 else _STATE_OPTIONS_V1
+
+    @property
+    def current_option(self) -> str | None:
+        control_state = self.coordinator.data.get(REG_CONTROL_STATE)
+        if control_state is None or int(control_state) == MODE_STOP:
+            return None
+        return _STATE_MODE_TO_LABEL.get(int(control_state))
+
+    async def async_select_option(self, option: str) -> None:
+        mode_value = _STATE_LABEL_TO_MODE.get(option)
+        if mode_value is None:
+            return
+        if await self.coordinator.async_write_register(REG_CONTROL_STATE, mode_value):
+            await self.coordinator.async_request_refresh()
 
 
 class ParmairFilterIntervalSelect(CoordinatorEntity[ParmairCoordinator], SelectEntity):
