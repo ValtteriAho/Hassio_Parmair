@@ -1,3 +1,10 @@
+## 0.17.3 - State control shows preset selector instead of on/off toggle (2026-06-11)
+
+### Changed
+- **State entity is now a pure preset selector** — removed the on/off toggle. The entity now shows only the mode selector (Away / Home / Boost / Sauna / Fireplace). A ventilation unit should always be running; toggling it off from a dashboard makes no sense.
+
+---
+
 ## 0.17.2 - Remove redundant Boost and Overpressure switches (2026-06-10)
 
 ### Removed
