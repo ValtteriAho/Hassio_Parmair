@@ -1,3 +1,11 @@
+## 0.17.6 - Rename State to Control State, fix icon (2026-06-12)
+
+### Changed
+- **State select renamed to "Control State"** for clarity
+- **Icon updated** to `mdi:state-machine`
+
+---
+
 ## 0.17.5 - State is now a select entity, no more fan toggle (2026-06-11)
 
 ### Changed

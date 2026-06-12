@@ -160,8 +160,8 @@ class ParmairStateSelect(CoordinatorEntity[ParmairCoordinator], SelectEntity):
     """Select entity for ventilation state (Away / Home / Boost / Sauna / Fireplace)."""
 
     _attr_has_entity_name = True
-    _attr_name = "State"
-    _attr_icon = "mdi:air-filter"
+    _attr_name = "Control State"
+    _attr_icon = "mdi:state-machine"
     # No entity_category — shows in Controls
 
     def __init__(self, coordinator: ParmairCoordinator, entry: ConfigEntry) -> None:
