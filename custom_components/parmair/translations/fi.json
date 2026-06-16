@@ -21,6 +21,21 @@
       "already_configured": "Tämä laite on jo määritetty."
     }
   },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Parmair-asetukset",
+        "data": {
+          "host": "IP-osoite",
+          "port": "Portti",
+          "name": "Nimi",
+          "scan_interval": "Kyselyväli (sekuntia)",
+          "software_version": "Ohjelmistoversio",
+          "heater_type": "Lämmittimen tyyppi"
+        }
+      }
+    }
+  },
   "entity": {
     "sensor": {
       "operational_mode": {

@@ -754,31 +754,32 @@ class ParmairOperationalStatusSensor(CoordinatorEntity[ParmairCoordinator], Sens
         if control_state == 5:
             return "fireplace"
 
-        # Summer cooling active: check automation boosts first — firmware may keep
-        # USERSTATECONTROL_FO at Home (2) even when humidity/CO2 boost is triggered
-        # during summer mode instead of switching to Boost (3).
-        if data.get("summer_mode_state") == 2 and data.get("summer_mode", 0) != 0:
-            co2 = data.get("co2_exhaust")
-            co2_threshold = data.get("co2_boost_threshold")
-            if (
-                data.get("auto_co2_boost") == 1
-                and co2 is not None
-                and co2_threshold is not None
-                and co2 >= co2_threshold
-            ):
-                return "co2_boost"
-            humidity = data.get("humidity")
-            humidity_avg = data.get("humidity_24h_avg")
-            if (
-                data.get("auto_humidity_boost") == 1
-                and humidity is not None
-                and humidity_avg is not None
-                and humidity > humidity_avg + 5
-            ):
-                return "humidity_boost"
-            return "summer"
-
         if control_state == 2:  # Home
+            # Summer cooling: firmware keeps USERSTATECONTROL_FO at Home (2) while the
+            # bypass is active.  Only check here — Away/Boost/Sauna/Fireplace are not
+            # affected by summer cooling and must not be overridden.
+            if data.get("summer_mode_state") == 2 and data.get("summer_mode", 0) != 0:
+                # Automation boosts take priority even in summer mode (firmware may not
+                # switch control_state to 3 when CO2/humidity boost triggers in summer).
+                co2 = data.get("co2_exhaust")
+                co2_threshold = data.get("co2_boost_threshold")
+                if (
+                    data.get("auto_co2_boost") == 1
+                    and co2 is not None
+                    and co2_threshold is not None
+                    and co2 >= co2_threshold
+                ):
+                    return "co2_boost"
+                humidity = data.get("humidity")
+                humidity_avg = data.get("humidity_24h_avg")
+                if (
+                    data.get("auto_humidity_boost") == 1
+                    and humidity is not None
+                    and humidity_avg is not None
+                    and humidity > humidity_avg + 5
+                ):
+                    return "humidity_boost"
+                return "summer"
             return "home"
 
         if control_state == 1:

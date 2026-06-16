@@ -227,7 +227,7 @@ The integration automatically detects your software version and uses the correct
 - Filter Replaced: Reset filter change counter
 
 ### Sensors
-- **Operational Mode**: Derived status showing effective mode and automation trigger (Off / Away / Home / Boost / CO2 Boost / Humidity Boost / Summer Cooling / Sauna / Fireplace) *(v2.x)*
+- **Operational Mode**: Derived status showing effective mode and automation trigger (Off / Away / Home / Boost / CO2 Boost / Humidity Boost / Summer Cooling / Sauna / Fireplace) *(v2.x — Summer Cooling only applies when in Home mode)*
 - **Heat Pump Output**: Whether the heat pump module is currently active *(v2.x, if installed)*
 - **Heat Pump Mode**: Automation mode for the heat pump module (Off / On / Auto) *(v2.x, if installed)*
 - All temperature sensors, humidity, CO2, fan speeds, operating states, timers, alarms, and diagnostic information
@@ -268,7 +268,7 @@ If auto-detection fails, you can manually select these during setup.
 
 See [CHANGELOG.md](CHANGELOG.md) for complete version history.
 
-**Latest:** v0.15.1 - Fix Operational Mode humidity/CO2 boost hidden by Summer Cooling
+**Latest:** v0.17.8 - Fix Operational Mode always showing Summer Cooling when Away
 
 ---
 

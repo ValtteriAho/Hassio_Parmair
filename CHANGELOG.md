@@ -1,3 +1,18 @@
+## 0.17.8 - Fix Operational Mode always showing Summer Cooling (2026-06-16)
+
+### Fixed
+- **Operational Mode almost always showed "Summer Cooling"** — the summer cooling check ran before the Away/Home checks, so any time the season was summer (`SUMMER_MODE_I == 2`) and the feature was enabled, even devices in Away mode showed "summer". Summer cooling detection is now scoped to `control_state == 2` (Home) only — Away, Boost, Sauna, and Fireplace are no longer overridden by it.
+
+---
+
+## 0.17.7 - Fix options flow heater type validation error (2026-06-16)
+
+### Fixed
+- **Options dialog "value must be one of [0, 1, 2]" error** — if the stored `heater_type` was `-1` (unknown, e.g. from a failed auto-detection), the options flow schema rejected it on load. The default is now sanitised to `None` (2) when the stored value is not a valid heater type.
+- **Options field labels** — `scan_interval`, `software_version`, and `heater_type` were displayed as raw snake_case keys. Added `options` translation entries to `en.json`, `fi.json`, and `strings.json` so they render as "Polling Interval (seconds)", "Software Version", and "Heater Type".
+
+---
+
 ## 0.17.6 - Rename State to Control State, fix icon (2026-06-12)
 
 ### Changed

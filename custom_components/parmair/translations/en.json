@@ -29,6 +29,21 @@
       "already_configured": "This device is already configured."
     }
   },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Parmair Options",
+        "data": {
+          "host": "IP Address",
+          "port": "Port",
+          "name": "Name",
+          "scan_interval": "Polling Interval (seconds)",
+          "software_version": "Software Version",
+          "heater_type": "Heater Type"
+        }
+      }
+    }
+  },
   "entity": {
     "sensor": {
       "operational_mode": {

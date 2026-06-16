@@ -442,6 +442,10 @@ class ParmairOptionsFlowHandler(config_entries.OptionsFlowWithConfigEntry):
         data = self.config_entry.data
         options = self.config_entry.options or {}
 
+        # Sanitize stored heater_type — HEATER_TYPE_UNKNOWN (-1) is not a valid option
+        _stored_heater = options.get(CONF_HEATER_TYPE, data.get(CONF_HEATER_TYPE, HEATER_TYPE_NONE))
+        _heater_default = _stored_heater if _stored_heater in (HEATER_TYPE_NONE, HEATER_TYPE_WATER, HEATER_TYPE_ELECTRIC) else HEATER_TYPE_NONE
+
         return self.async_show_form(
             step_id="init",
             data_schema=vol.Schema(
@@ -478,9 +482,7 @@ class ParmairOptionsFlowHandler(config_entries.OptionsFlowWithConfigEntry):
                     ),
                     vol.Required(
                         CONF_HEATER_TYPE,
-                        default=options.get(
-                            CONF_HEATER_TYPE, data.get(CONF_HEATER_TYPE, HEATER_TYPE_NONE)
-                        ),
+                        default=_heater_default,
                     ): vol.In(
                         {
                             HEATER_TYPE_NONE: "None",
