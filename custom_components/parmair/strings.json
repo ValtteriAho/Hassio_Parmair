@@ -37,7 +37,6 @@
           "port": "Port",
           "name": "Name",
           "scan_interval": "Polling Interval (seconds)",
-          "software_version": "Software Version",
           "heater_type": "Heater Type"
         }
       }

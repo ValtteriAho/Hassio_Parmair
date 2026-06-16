@@ -1,3 +1,11 @@
+## 0.18.0 - Remove redundant v2 state sensors, fix options flow (2026-06-16)
+
+### Changed
+- **`software_version` removed from options dialog** — it controls the entire register map and must not be user-editable after setup. Accidentally changing it switches all Modbus addresses and breaks every sensor silently.
+- **`boost_state` and `home_state` sensors are now v1-only** — in v2 these had no dedicated registers and were incorrectly mapped to `USERSTATECONTROL_FO` (the same register as `control_state`), producing wrong readings. In v2, `control_state` already shows the full state (Off/Away/Home/Boost/Sauna/Fireplace).
+
+---
+
 ## 0.17.8 - Fix Operational Mode always showing Summer Cooling (2026-06-16)
 
 ### Fixed

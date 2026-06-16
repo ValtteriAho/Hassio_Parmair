@@ -469,18 +469,6 @@ class ParmairOptionsFlowHandler(config_entries.OptionsFlowWithConfigEntry):
                         ),
                     ): vol.All(vol.Coerce(int), vol.Range(min=5, max=300)),
                     vol.Required(
-                        CONF_SOFTWARE_VERSION,
-                        default=options.get(
-                            CONF_SOFTWARE_VERSION,
-                            data.get(CONF_SOFTWARE_VERSION, SOFTWARE_VERSION_1),
-                        ),
-                    ): vol.In(
-                        {
-                            SOFTWARE_VERSION_1: "Software 1.xx",
-                            SOFTWARE_VERSION_2: "Software 2.xx",
-                        }
-                    ),
-                    vol.Required(
                         CONF_HEATER_TYPE,
                         default=_heater_default,
                     ): vol.In(

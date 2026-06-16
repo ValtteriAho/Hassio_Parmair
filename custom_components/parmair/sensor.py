@@ -122,10 +122,6 @@ async def async_setup_entry(
         ParmairControlStateSensor(coordinator, entry, "control_state", "Control State"),
         ParmairSpeedControlSensor(coordinator, entry, "actual_speed", "Current Speed"),
         ParmairPowerStateSensor(coordinator, entry, "power", "Power State"),
-        ParmairBinarySensor(
-            coordinator, entry, "home_state", "Home/Away State", {0: "Away", 1: "Home"}, EntityCategory.DIAGNOSTIC
-        ),
-        ParmairBinarySensor(coordinator, entry, "boost_state", "Boost State", {0: "Off", 1: "On"}, EntityCategory.DIAGNOSTIC),
         ParmairAlarmSensor(coordinator, entry, "alarm_count", "Alarm Count"),
         ParmairAlarmSensor(coordinator, entry, "sum_alarm", "Summary Alarm"),
         # State sensors
@@ -174,6 +170,17 @@ async def async_setup_entry(
     )
     if is_v2:
         entities.append(ParmairOperationalStatusSensor(coordinator, entry))
+    else:
+        # v1-only: dedicated binary state registers (HOME_STATE_FI, BOOST_STATE_FI)
+        # In v2 these don't exist — USERSTATECONTROL_FO already covers all states via control_state
+        entities.extend([
+            ParmairBinarySensor(
+                coordinator, entry, "home_state", "Home/Away State", {0: "Away", 1: "Home"}, EntityCategory.DIAGNOSTIC
+            ),
+            ParmairBinarySensor(
+                coordinator, entry, "boost_state", "Boost State", {0: "Off", 1: "On"}, EntityCategory.DIAGNOSTIC
+            ),
+        ])
 
     # Heat pump module: only add entities when module is installed (hp_rad_enable == 1)
     if coordinator.data.get("hp_rad_enable") == 1:

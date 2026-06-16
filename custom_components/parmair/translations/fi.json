@@ -30,7 +30,6 @@
           "port": "Portti",
           "name": "Nimi",
           "scan_interval": "Kyselyväli (sekuntia)",
-          "software_version": "Ohjelmistoversio",
           "heater_type": "Lämmittimen tyyppi"
         }
       }
