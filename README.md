@@ -1,4 +1,4 @@
-# Parmair MAC for Home Assistant (v0.18.0)
+# Parmair MAC for Home Assistant (v0.18.1)
 
 ![Parmair MAC Logo](parmair_logo.jpg)
 
@@ -268,7 +268,7 @@ If auto-detection fails, you can manually select these during setup.
 
 See [CHANGELOG.md](CHANGELOG.md) for complete version history.
 
-**Latest:** v0.18.0 - Remove redundant v2 state sensors, lock software version in options
+**Latest:** v0.18.1 - Fix Operational Mode not detecting humidity/CO2 boost in Home mode
 
 ---
 

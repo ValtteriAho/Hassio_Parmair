@@ -673,9 +673,8 @@ class ParmairOperationalStatusSensor(CoordinatorEntity[ParmairCoordinator], Sens
     sensor readings to indicate *why* the unit is in its current state:
 
       off              — unit is off
-      away             — Away mode (manual / time-program)
-      home             — Home mode (manual / time-program)
-      co2_home         — Home mode triggered by CO2 automation
+      away             — Away mode (manual / time-program / CO2 home-away automation)
+      home             — Home mode (manual / time-program / CO2 home-away automation)
       boost            — Boost mode (manual / button / time-program)
       co2_boost        — Boost triggered by CO2 level exceeding threshold
       humidity_boost   — Boost triggered by humidity exceeding 24h average
@@ -728,6 +727,9 @@ class ParmairOperationalStatusSensor(CoordinatorEntity[ParmairCoordinator], Sens
             return None
         control_state = int(control_state)
 
+        if control_state == 0:  # Off state via user state register (USERSTATECONTROL_FO)
+            return "off"
+
         if control_state == 3:  # Boost
             # CO2-triggered boost: automation enabled + CO2 ≥ boost threshold
             co2 = data.get("co2_exhaust")
@@ -762,31 +764,35 @@ class ParmairOperationalStatusSensor(CoordinatorEntity[ParmairCoordinator], Sens
             return "fireplace"
 
         if control_state == 2:  # Home
+            # Auto-triggered boosts keep USERSTATECONTROL_FO at Home (2) — the firmware
+            # increases fan speed transparently without changing the user state register.
+            # Must check here, not only in control_state==3 (which handles manual boost).
+            co2 = data.get("co2_exhaust")
+            co2_threshold = data.get("co2_boost_threshold")
+            if (
+                data.get("auto_co2_boost") == 1
+                and co2 is not None
+                and co2_threshold is not None
+                and co2 >= co2_threshold
+            ):
+                return "co2_boost"
+
+            humidity = data.get("humidity")
+            humidity_avg = data.get("humidity_24h_avg")
+            if (
+                data.get("auto_humidity_boost") == 1
+                and humidity is not None
+                and humidity_avg is not None
+                and humidity > humidity_avg + 5
+            ):
+                return "humidity_boost"
+
             # Summer cooling: firmware keeps USERSTATECONTROL_FO at Home (2) while the
             # bypass is active.  Only check here — Away/Boost/Sauna/Fireplace are not
             # affected by summer cooling and must not be overridden.
             if data.get("summer_mode_state") == 2 and data.get("summer_mode", 0) != 0:
-                # Automation boosts take priority even in summer mode (firmware may not
-                # switch control_state to 3 when CO2/humidity boost triggers in summer).
-                co2 = data.get("co2_exhaust")
-                co2_threshold = data.get("co2_boost_threshold")
-                if (
-                    data.get("auto_co2_boost") == 1
-                    and co2 is not None
-                    and co2_threshold is not None
-                    and co2 >= co2_threshold
-                ):
-                    return "co2_boost"
-                humidity = data.get("humidity")
-                humidity_avg = data.get("humidity_24h_avg")
-                if (
-                    data.get("auto_humidity_boost") == 1
-                    and humidity is not None
-                    and humidity_avg is not None
-                    and humidity > humidity_avg + 5
-                ):
-                    return "humidity_boost"
                 return "summer"
+
             return "home"
 
         if control_state == 1:

@@ -1,3 +1,12 @@
+## 0.18.1 - Fix Operational Mode automation detection in Home state (2026-06-17)
+
+### Fixed
+- **Operational Mode showed "Home" instead of "Humidity Boost" (or "CO2 Boost")** — when the device’s humidity or CO2 automation triggered a boost, the firmware keeps `USERSTATECONTROL_FO` at `2` (Home) and boosts the fan internally without changing the user state register. The automation checks were previously only evaluated when `control_state == 3` (manual Boost) or inside the summer-mode gate. They now run first whenever `control_state == 2` (Home), regardless of season.
+- **`control_state == 0` (Off via user state register) now returns `"off"`** — previously fell through to `None`.
+- Removed stale `co2_home` mode from class docstring (never implemented; CO2 home/away automation changes `USERSTATECONTROL_FO` to Home (2) like a normal mode switch, indistinguishable from manual Home).
+
+---
+
 ## 0.18.0 - Remove redundant v2 state sensors, fix options flow (2026-06-16)
 
 ### Changed
