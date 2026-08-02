@@ -13,6 +13,7 @@ from typing import Any
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_HOST, CONF_NAME, CONF_PORT
 from homeassistant.core import HomeAssistant
+from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 from pymodbus.client import ModbusTcpClient
 from pymodbus.exceptions import ModbusException
@@ -280,18 +281,25 @@ class ParmairCoordinator(DataUpdateCoordinator[dict[str, Any]]):
     def write_register(self, key: str, value: float | int) -> bool:
         """Write a value to a Modbus register respecting scaling with pymodbus 3.x."""
         definition = get_register_definition(key, self._registers)
+        # Use a fresh client per write to avoid stale TCP connections (same reason reads do this)
+        write_client = ModbusTcpClient(host=self.host, port=self.port)
         try:
             with self._lock:
-                if not self._client.connected and not self._client.connect():
+                if not write_client.connect():
+                    _LOGGER.error(
+                        "Failed to connect for writing register %s (%s)",
+                        definition.register_id,
+                        definition.label,
+                    )
                     return False
 
-                # Set unit ID on client
-                _set_unit_id(self._client, self.slave_id)
+                _set_unit_id(write_client, self.slave_id)
+                time.sleep(0.3)
 
                 raw_value = self._to_raw(definition, value)
 
                 result = pymodbus_compat.write_register(
-                    self._client, definition.address, raw_value, self.slave_id
+                    write_client, definition.address, raw_value, self.slave_id
                 )
 
                 _LOGGER.debug(
@@ -314,11 +322,19 @@ class ParmairCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                 ex,
             )
             return False
+        finally:
+            with contextlib.suppress(Exception):
+                write_client.close()
 
     async def async_write_register(self, key: str, value: float | int) -> bool:
-        """Write a value to a Modbus register (async)."""
-
-        return await self.hass.async_add_executor_job(self.write_register, key, value)
+        """Write a value to a Modbus register (async). Raises HomeAssistantError on failure."""
+        success = await self.hass.async_add_executor_job(self.write_register, key, value)
+        if not success:
+            definition = get_register_definition(key, self._registers)
+            raise HomeAssistantError(
+                f"Failed to write register {definition.label} ({definition.register_id})"
+            )
+        return success
 
     async def async_shutdown(self) -> None:
         """Close the Modbus connection."""

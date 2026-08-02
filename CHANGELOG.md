@@ -1,3 +1,9 @@
+## 0.18.2 - Fix write register not sticking (2026-08-02)
+
+### Fixed
+- Speed preset (and all other writable registers) would revert to the old value after changing: `write_register` was reusing a persistent TCP client that could have a stale/dropped connection, causing writes to fail silently. Writes now use a fresh connection per call, consistent with how polling reads work.
+- `async_write_register` now raises `HomeAssistantError` on failure instead of returning `False` unnoticed, so a failed write surfaces as a proper error notification rather than a silent no-op.
+
 ## 0.18.1 - Fix Operational Mode automation detection in Home state (2026-06-17)
 
 ### Fixed
