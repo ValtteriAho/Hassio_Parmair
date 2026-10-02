@@ -1,8 +1,23 @@
+## 0.18.3 - Fix decimal setpoint truncation, heater type detection & options (2026-10-02)
+
+### Fixed
+- **Decimal temperature setpoints (0.5 °C steps) were truncated to integers** — `ParmairNumberEntity.async_set_native_value` cast `value` with `int(value)` before writing to Modbus registers. Because temperature setpoints (`exhaust_temp_setpoint`, `supply_temp_setpoint`, `summer_mode_temp_limit`, and heat pump limits) use 0.5 °C steps and a 0.1 register scaling factor, any fractional value (such as 21.5 °C) was truncated to an integer (21 -> 21.0 °C). The `int()` cast was removed so `coordinator._to_raw` can correctly calculate scaled values (`round(value / scale)` -> 215).
+- **Heater type auto-detection on firmware 2.xx mapped inverted values** — on firmware 2.xx (register 1127), `0 = Electric` and `1 = Water` (opposite of v1.xx). The config flow detection previously logged and mapped raw `0` to "Water" using a hardcoded v1 mapping dictionary. It now uses version-specific mapping (`HEATER_TYPE_MAP_V2` vs `HEATER_TYPE_MAP_V1`).
+- **Manual version setup maps heater type to firmware-specific register values** — manual version selection now maps choices ("none", "water", "electric") to the correct firmware-specific register constants.
+- **Removed non-functional `heater_type` from options dialog** — heater type is a physical hardware attribute read directly from Modbus holding registers, not a user-configurable runtime setting. Options dialog was also displaying inverted labels on v2 devices.
+- **`ParmairHeaterTypeSensor` uses `coordinator.heater_type` as fallback** if the live register reading is temporarily unavailable.
+- **Removed duplicate polling register** — `REG_OVERPRESSURE_TIMER` was listed twice in `POLLING_REGISTER_KEYS` in [const.py](file:///c:/Users/valtt/OneDrive/vscodeprojects/Hassio_Parmair/custom_components/parmair/const.py), which caused redundant Modbus block splitting.
+- **Fixed offline pytest suite** — unit tests in [tests/test_interpretation.py](file:///c:/Users/valtt/OneDrive/vscodeprojects/Hassio_Parmair/tests/test_interpretation.py) no longer import Home Assistant packages directly during collection, allowing full standalone execution via `pytest` and `uv` using mock coordinators.
+- **Aligned translation keys and cleaned options schema** — removed deprecated `slave_id` references from setup step error keys, aligned operational mode strings in [strings.json](file:///c:/Users/valtt/OneDrive/vscodeprojects/Hassio_Parmair/custom_components/parmair/strings.json), and updated Finnish translations for manual firmware version selection.
+
+---
+
 ## 0.18.2 - Fix write register not sticking (2026-08-02)
 
 ### Fixed
 - Speed preset (and all other writable registers) would revert to the old value after changing: `write_register` was reusing a persistent TCP client that could have a stale/dropped connection, causing writes to fail silently. Writes now use a fresh connection per call, consistent with how polling reads work.
 - `async_write_register` now raises `HomeAssistantError` on failure instead of returning `False` unnoticed, so a failed write surfaces as a proper error notification rather than a silent no-op.
+
 
 ## 0.18.1 - Fix Operational Mode automation detection in Home state (2026-06-17)
 

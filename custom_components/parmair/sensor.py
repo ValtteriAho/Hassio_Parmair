@@ -26,12 +26,9 @@ from .const import (
     DOMAIN,
     FILTER_STATE_MAP_V1,
     FILTER_STATE_MAP_V2,
-    HEATER_TYPE_ELECTRIC_V1,
-    HEATER_TYPE_ELECTRIC_V2,
-    HEATER_TYPE_NONE_V1,
-    HEATER_TYPE_NONE_V2,
-    HEATER_TYPE_WATER_V1,
-    HEATER_TYPE_WATER_V2,
+    HEATER_TYPE_MAP_V1,
+    HEATER_TYPE_MAP_V2,
+    HEATER_TYPE_UNKNOWN,
     POWER_STATE_MAP_V1,
     POWER_STATE_MAP_V2,
     SOFTWARE_VERSION_2,
@@ -111,12 +108,22 @@ async def async_setup_entry(
         ),
         ParmairTemperatureSensor(coordinator, entry, "supply_temp", "Supply Air Temperature"),
         ParmairTemperatureSensor(coordinator, entry, "exhaust_temp", "Exhaust Air Temperature"),
-        ParmairTemperatureSensor(coordinator, entry, "waste_temp", "Waste Air Temperature", EntityCategory.DIAGNOSTIC),
         ParmairTemperatureSensor(
-            coordinator, entry, "exhaust_temp_setpoint", "Exhaust Temperature Setpoint", EntityCategory.DIAGNOSTIC
+            coordinator, entry, "waste_temp", "Waste Air Temperature", EntityCategory.DIAGNOSTIC
         ),
         ParmairTemperatureSensor(
-            coordinator, entry, "supply_temp_setpoint", "Supply Temperature Setpoint", EntityCategory.DIAGNOSTIC
+            coordinator,
+            entry,
+            "exhaust_temp_setpoint",
+            "Exhaust Temperature Setpoint",
+            EntityCategory.DIAGNOSTIC,
+        ),
+        ParmairTemperatureSensor(
+            coordinator,
+            entry,
+            "supply_temp_setpoint",
+            "Supply Temperature Setpoint",
+            EntityCategory.DIAGNOSTIC,
         ),
         # Other sensors
         ParmairControlStateSensor(coordinator, entry, "control_state", "Control State"),
@@ -126,7 +133,12 @@ async def async_setup_entry(
         ParmairAlarmSensor(coordinator, entry, "sum_alarm", "Summary Alarm"),
         # State sensors
         ParmairBinarySensor(
-            coordinator, entry, "defrost_state", "Defrost State", {0: "Off", 1: "Active"}, EntityCategory.DIAGNOSTIC
+            coordinator,
+            entry,
+            "defrost_state",
+            "Defrost State",
+            {0: "Off", 1: "Active"},
+            EntityCategory.DIAGNOSTIC,
         ),
         ParmairBinarySensor(
             coordinator,
@@ -164,23 +176,34 @@ async def async_setup_entry(
         pass
 
     # Operational Mode sensor: v2.xx only (requires auto-feature & CO2 threshold registers)
-    is_v2 = (
-        coordinator.software_version == SOFTWARE_VERSION_2
-        or str(coordinator.software_version).startswith("2.")
-    )
+    is_v2 = coordinator.software_version == SOFTWARE_VERSION_2 or str(
+        coordinator.software_version
+    ).startswith("2.")
     if is_v2:
         entities.append(ParmairOperationalStatusSensor(coordinator, entry))
     else:
         # v1-only: dedicated binary state registers (HOME_STATE_FI, BOOST_STATE_FI)
         # In v2 these don't exist — USERSTATECONTROL_FO already covers all states via control_state
-        entities.extend([
-            ParmairBinarySensor(
-                coordinator, entry, "home_state", "Home/Away State", {0: "Away", 1: "Home"}, EntityCategory.DIAGNOSTIC
-            ),
-            ParmairBinarySensor(
-                coordinator, entry, "boost_state", "Boost State", {0: "Off", 1: "On"}, EntityCategory.DIAGNOSTIC
-            ),
-        ])
+        entities.extend(
+            [
+                ParmairBinarySensor(
+                    coordinator,
+                    entry,
+                    "home_state",
+                    "Home/Away State",
+                    {0: "Away", 1: "Home"},
+                    EntityCategory.DIAGNOSTIC,
+                ),
+                ParmairBinarySensor(
+                    coordinator,
+                    entry,
+                    "boost_state",
+                    "Boost State",
+                    {0: "Off", 1: "On"},
+                    EntityCategory.DIAGNOSTIC,
+                ),
+            ]
+        )
 
     # Heat pump module: only add entities when module is installed (hp_rad_enable == 1)
     if coordinator.data.get("hp_rad_enable") == 1:
@@ -529,18 +552,10 @@ class ParmairHeaterTypeSensor(ParmairRegisterEntity, SensorEntity):
     _attr_entity_category = EntityCategory.DIAGNOSTIC
 
     # v1.xx mapping (register 1240)
-    STATE_MAP_V1 = {
-        HEATER_TYPE_WATER_V1: "Water",
-        HEATER_TYPE_ELECTRIC_V1: "Electric",
-        HEATER_TYPE_NONE_V1: "None",
-    }
+    STATE_MAP_V1 = HEATER_TYPE_MAP_V1
 
     # v2.xx mapping (register 1127)
-    STATE_MAP_V2 = {
-        HEATER_TYPE_ELECTRIC_V2: "Electric",
-        HEATER_TYPE_WATER_V2: "Water",
-        HEATER_TYPE_NONE_V2: "None",
-    }
+    STATE_MAP_V2 = HEATER_TYPE_MAP_V2
 
     def __init__(
         self,
@@ -557,6 +572,8 @@ class ParmairHeaterTypeSensor(ParmairRegisterEntity, SensorEntity):
         """Return the sensor value using correct mapping for firmware version."""
         raw_value = self.coordinator.data.get(self._data_key)
         if raw_value is None:
+            raw_value = self.coordinator.heater_type
+        if raw_value is None or raw_value == HEATER_TYPE_UNKNOWN:
             return None
 
         # Determine firmware version from software_version sensor

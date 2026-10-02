@@ -27,10 +27,15 @@ from .const import (
     DEFAULT_SCAN_INTERVAL,
     DEFAULT_SLAVE_ID,
     DOMAIN,
-    HEATER_TYPE_ELECTRIC,
-    HEATER_TYPE_NONE,
+    HEATER_TYPE_ELECTRIC_V1,
+    HEATER_TYPE_ELECTRIC_V2,
+    HEATER_TYPE_MAP_V1,
+    HEATER_TYPE_MAP_V2,
+    HEATER_TYPE_NONE_V1,
+    HEATER_TYPE_NONE_V2,
     HEATER_TYPE_UNKNOWN,
-    HEATER_TYPE_WATER,
+    HEATER_TYPE_WATER_V1,
+    HEATER_TYPE_WATER_V2,
     REG_POWER,
     SOFTWARE_VERSION_1,
     SOFTWARE_VERSION_2,
@@ -226,14 +231,18 @@ async def validate_connection(hass: HomeAssistant, data: dict[str, Any]) -> dict
             # Return None to indicate detection failed - user will be asked to select manually
             return None
 
-        # Now detect heater type using the correct address for detected firmware
+        # Now detect heater type using the correct address and mapping for detected firmware
         heater_addresses = []
         if detected_firmware_registers == "2.xx":
-            # Firmware 2.xx: heater type at address 1127
+            # Firmware 2.xx: heater type at address 1127 (0=Electric, 1=Water, 2=None)
             heater_addresses = [(1127, "2.xx")]
+            heater_map = HEATER_TYPE_MAP_V2
+            default_heater = HEATER_TYPE_NONE_V2
         else:
-            # Firmware 1.xx: heater type at address 1240
+            # Firmware 1.xx: heater type at address 1240 (0=Water, 1=Electric, 2=None)
             heater_addresses = [(1240, "1.xx")]
+            heater_map = HEATER_TYPE_MAP_V1
+            default_heater = HEATER_TYPE_NONE_V1
 
         # Try to read heater type from the correct address
         for heater_address, fw_label in heater_addresses:
@@ -245,20 +254,14 @@ async def validate_connection(hass: HomeAssistant, data: dict[str, Any]) -> dict
 
             raw_heater = _read_register(heater_address)
 
-            # Validate heater type (0=Water, 1=Electric, 2=None)
+            # Validate heater type (0, 1, 2)
             if raw_heater is not None and raw_heater in [0, 1, 2]:
                 detected_heater_type = int(raw_heater)
-
-                heater_names = {
-                    HEATER_TYPE_NONE: "None",
-                    HEATER_TYPE_WATER: "Water",
-                    HEATER_TYPE_ELECTRIC: "Electric",
-                }
 
                 _LOGGER.info(
                     "Auto-detected heater type: %s (%s) from address %d (firmware %s)",
                     detected_heater_type,
-                    heater_names.get(detected_heater_type, "Unknown"),
+                    heater_map.get(detected_heater_type, "Unknown"),
                     heater_address,
                     fw_label,
                 )
@@ -270,7 +273,7 @@ async def validate_connection(hass: HomeAssistant, data: dict[str, Any]) -> dict
 
         # Use defaults if detection failed
         if detected_heater_type == HEATER_TYPE_UNKNOWN:
-            detected_heater_type = HEATER_TYPE_NONE
+            detected_heater_type = default_heater
             _LOGGER.warning("Heater type detection failed, defaulting to None (no heater)")
 
         # Log final detection summary
@@ -278,11 +281,7 @@ async def validate_connection(hass: HomeAssistant, data: dict[str, Any]) -> dict
             "=== Detection Complete === Firmware: %s | Machine Type: %s | Heater: %s",
             detected_sw_version,
             detected_machine_type if detected_machine_type is not None else "Unknown",
-            {
-                HEATER_TYPE_NONE: "None",
-                HEATER_TYPE_WATER: "Water",
-                HEATER_TYPE_ELECTRIC: "Electric",
-            }.get(detected_heater_type, "Unknown"),
+            heater_map.get(detected_heater_type, "Unknown"),
         )
 
         return detected_sw_version, detected_heater_type
@@ -392,6 +391,23 @@ class ParmairConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     ) -> FlowResult:
         """Handle manual software version selection when auto-detection fails."""
         if user_input is not None:
+            sw_ver = user_input.get(CONF_SOFTWARE_VERSION, SOFTWARE_VERSION_1)
+            selected_heater = user_input.get(CONF_HEATER_TYPE, "none")
+            is_v2 = sw_ver == SOFTWARE_VERSION_2 or str(sw_ver).startswith("2.")
+            if is_v2:
+                raw_heater = {
+                    "none": HEATER_TYPE_NONE_V2,
+                    "water": HEATER_TYPE_WATER_V2,
+                    "electric": HEATER_TYPE_ELECTRIC_V2,
+                }.get(selected_heater, HEATER_TYPE_NONE_V2)
+            else:
+                raw_heater = {
+                    "none": HEATER_TYPE_NONE_V1,
+                    "water": HEATER_TYPE_WATER_V1,
+                    "electric": HEATER_TYPE_ELECTRIC_V1,
+                }.get(selected_heater, HEATER_TYPE_NONE_V1)
+            user_input[CONF_HEATER_TYPE] = raw_heater
+
             # Combine stored connection info with manual selections
             final_data = {**self._user_input, **user_input}
 
@@ -409,11 +425,11 @@ class ParmairConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                             SOFTWARE_VERSION_2: "Software 2.xx",
                         }
                     ),
-                    vol.Required(CONF_HEATER_TYPE, default=HEATER_TYPE_NONE): vol.In(
+                    vol.Required(CONF_HEATER_TYPE, default="none"): vol.In(
                         {
-                            HEATER_TYPE_NONE: "None",
-                            HEATER_TYPE_WATER: "Water",
-                            HEATER_TYPE_ELECTRIC: "Electric",
+                            "none": "None",
+                            "water": "Water",
+                            "electric": "Electric",
                         }
                     ),
                 }
@@ -432,7 +448,7 @@ class ParmairConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
 
 class ParmairOptionsFlowHandler(config_entries.OptionsFlowWithConfigEntry):
-    """Handle Parmair options (change host, port, name, scan interval, software version, heater type)."""
+    """Handle Parmair options (change host, port, name, scan interval)."""
 
     async def async_step_init(self, user_input: dict[str, Any] | None = None) -> FlowResult:
         """Manage the options."""
@@ -441,10 +457,6 @@ class ParmairOptionsFlowHandler(config_entries.OptionsFlowWithConfigEntry):
 
         data = self.config_entry.data
         options = self.config_entry.options or {}
-
-        # Sanitize stored heater_type — HEATER_TYPE_UNKNOWN (-1) is not a valid option
-        _stored_heater = options.get(CONF_HEATER_TYPE, data.get(CONF_HEATER_TYPE, HEATER_TYPE_NONE))
-        _heater_default = _stored_heater if _stored_heater in (HEATER_TYPE_NONE, HEATER_TYPE_WATER, HEATER_TYPE_ELECTRIC) else HEATER_TYPE_NONE
 
         return self.async_show_form(
             step_id="init",
@@ -468,16 +480,6 @@ class ParmairOptionsFlowHandler(config_entries.OptionsFlowWithConfigEntry):
                             CONF_SCAN_INTERVAL, data.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)
                         ),
                     ): vol.All(vol.Coerce(int), vol.Range(min=5, max=300)),
-                    vol.Required(
-                        CONF_HEATER_TYPE,
-                        default=_heater_default,
-                    ): vol.In(
-                        {
-                            HEATER_TYPE_NONE: "None",
-                            HEATER_TYPE_WATER: "Water",
-                            HEATER_TYPE_ELECTRIC: "Electric",
-                        }
-                    ),
                 }
             ),
         )

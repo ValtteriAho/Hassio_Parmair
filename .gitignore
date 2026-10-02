@@ -41,3 +41,7 @@ v2_register.md
 
 # Tools
 tools/dumps/
+
+# AI Agent instructions (local only)
+agents.md
+AGENTS.md

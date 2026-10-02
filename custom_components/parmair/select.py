@@ -29,7 +29,6 @@ from .const import (
     REG_OVERPRESSURE_TIME_SETTING,
     REG_SPEED_CONTROL,
     REG_SUMMER_MODE,
-    SOFTWARE_VERSION_1,
     SOFTWARE_VERSION_2,
 )
 from .coordinator import ParmairCoordinator
@@ -170,7 +169,9 @@ class ParmairStateSelect(CoordinatorEntity[ParmairCoordinator], SelectEntity):
         self._attr_device_info = coordinator.device_info
         dev_sw = coordinator.data.get("software_version") if coordinator.data else None
         if dev_sw is not None:
-            is_v2 = dev_sw >= 2.0 if isinstance(dev_sw, int | float) else str(dev_sw).startswith("2.")
+            is_v2 = (
+                dev_sw >= 2.0 if isinstance(dev_sw, int | float) else str(dev_sw).startswith("2.")
+            )
         else:
             is_v2 = coordinator.software_version == SOFTWARE_VERSION_2 or str(
                 coordinator.software_version

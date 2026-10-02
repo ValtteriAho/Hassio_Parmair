@@ -7,7 +7,7 @@
         "data": {
           "host": "IP Address",
           "port": "Port",
-          "slave_id": "Modbus Slave ID",
+          "scan_interval": "Polling Interval (seconds)",
           "name": "Name"
         }
       },
@@ -21,7 +21,7 @@
       }
     },
     "error": {
-      "cannot_connect": "Failed to connect to the device. Please check the IP address, port, and slave ID.",
+      "cannot_connect": "Failed to connect to the device. Please check the IP address and port.",
       "unknown": "An unexpected error occurred."
     },
     "abort": {
@@ -36,8 +36,25 @@
           "host": "IP Address",
           "port": "Port",
           "name": "Name",
-          "scan_interval": "Polling Interval (seconds)",
-          "heater_type": "Heater Type"
+          "scan_interval": "Polling Interval (seconds)"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "operational_mode": {
+        "name": "Operational Mode",
+        "state": {
+          "off": "Off",
+          "away": "Away",
+          "home": "Home",
+          "summer": "Summer Cooling",
+          "boost": "Boost",
+          "co2_boost": "CO2 Boost",
+          "humidity_boost": "Humidity Boost",
+          "sauna": "Sauna",
+          "fireplace": "Fireplace"
         }
       }
     }

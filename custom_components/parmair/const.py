@@ -24,18 +24,18 @@ SOFTWARE_VERSION_UNKNOWN = "unknown"
 
 # VENT_MACHINE register codes -> display model suffix (same encoding for v1 reg 1244 and v2 reg 1125)
 HARDWARE_TYPE_MAP: dict[int, int | str] = {
-    107: 70,            # MAC 70
-    108: 80,            # MAC 80
-    109: 105,           # MAC 105
-    110: 100,           # MAC 100
-    111: "105 SLIM",    # MAC 105 SLIM
-    112: 120,           # MAC 120
-    115: 150,           # MAC 150
-    117: 170,           # MAC 170
-    122: 220,           # MAC 220
-    125: 250,           # MAC 250
-    212: "Rexo 120",    # MAC Rexo 120
-    215: "Rexo 150",    # MAC Rexo 150
+    107: 70,  # MAC 70
+    108: 80,  # MAC 80
+    109: 105,  # MAC 105
+    110: 100,  # MAC 100
+    111: "105 SLIM",  # MAC 105 SLIM
+    112: 120,  # MAC 120
+    115: 150,  # MAC 150
+    117: 170,  # MAC 170
+    122: 220,  # MAC 220
+    125: 250,  # MAC 250
+    212: "Rexo 120",  # MAC Rexo 120
+    215: "Rexo 150",  # MAC Rexo 150
     300: "Lämpöiivari II",  # MAC Lämpöiivari II
 }
 
@@ -58,6 +58,19 @@ HEATER_TYPE_ELECTRIC = 1
 HEATER_TYPE_NONE = 2
 HEATER_TYPE_UNKNOWN = -1
 HEATER_TYPE_WATER = 0
+
+# Heater type display mappings per firmware version
+HEATER_TYPE_MAP_V1: dict[int, str] = {
+    HEATER_TYPE_WATER_V1: "Water",
+    HEATER_TYPE_ELECTRIC_V1: "Electric",
+    HEATER_TYPE_NONE_V1: "None",
+}
+
+HEATER_TYPE_MAP_V2: dict[int, str] = {
+    HEATER_TYPE_ELECTRIC_V2: "Electric",
+    HEATER_TYPE_WATER_V2: "Water",
+    HEATER_TYPE_NONE_V2: "None",
+}
 
 
 @dataclass(frozen=True)
@@ -117,9 +130,9 @@ REG_HEATER_ENABLE = "heater_enable"
 REG_HEATER_TYPE = "heater_type"
 REG_HOME_SPEED = "home_speed"
 REG_HOME_STATE = "home_state"
-REG_HP_RAD_ENABLE = "hp_rad_enable"          # v2.xx only — HEATPUMP_RADIATOR_ENABLE (0/1)
-REG_HP_RAD_MODE = "hp_rad_mode"              # v2.xx only — HP_RAD_MODE (0=Off, 1=On, 2=Auto)
-REG_HP_RAD_OUTPUT = "hp_rad_output"          # v2.xx only — HP_RAD_O, current output (0/1, RO)
+REG_HP_RAD_ENABLE = "hp_rad_enable"  # v2.xx only — HEATPUMP_RADIATOR_ENABLE (0/1)
+REG_HP_RAD_MODE = "hp_rad_mode"  # v2.xx only — HP_RAD_MODE (0=Off, 1=On, 2=Auto)
+REG_HP_RAD_OUTPUT = "hp_rad_output"  # v2.xx only — HP_RAD_O, current output (0/1, RO)
 REG_HP_RAD_SUMMER_LIMIT = "hp_rad_summer_limit"  # v2.xx only — HP_RAD_SUMMER (°C)
 REG_HP_RAD_WINTER_LIMIT = "hp_rad_winter_limit"  # v2.xx only — HP_RAD_WINTER (°C)
 REG_HUMIDITY = "humidity"
@@ -134,7 +147,9 @@ REG_PRE_HEATER_OUTPUT = "pre_heater_output"
 REG_SPEED_CONTROL = "speed_control"
 REG_SUM_ALARM = "sum_alarm"
 REG_SUMMER_MODE = "summer_mode"
-REG_SUMMER_MODE_STATE = "summer_mode_state"  # v2.xx only — SUMMER_MODE_I (0=Winter, 1=Mid, 2=Summer)
+REG_SUMMER_MODE_STATE = (
+    "summer_mode_state"  # v2.xx only — SUMMER_MODE_I (0=Winter, 1=Mid, 2=Summer)
+)
 REG_SUMMER_MODE_TEMP_LIMIT = "summer_mode_temp_limit"
 REG_SUPPLY_AFTER_RECOVERY_TEMP = "supply_after_recovery_temp"
 REG_SUPPLY_FAN_SPEED = "supply_fan_speed"
@@ -379,19 +394,13 @@ def _build_registers_v2() -> dict[str, RegisterDefinition]:
             REG_OVERPRESSURE_TIME_SETTING, 1069, "OVERP_TIME_S", writable=True
         ),
         # Season state: 0=Winter, 1=Mid-season, 2=Summer (read-only)
-        REG_SUMMER_MODE_STATE: RegisterDefinition(
-            REG_SUMMER_MODE_STATE, 1189, "SUMMER_MODE_I"
-        ),
+        REG_SUMMER_MODE_STATE: RegisterDefinition(REG_SUMMER_MODE_STATE, 1189, "SUMMER_MODE_I"),
         # Heat pump module (only populated when HEATPUMP_RADIATOR_ENABLE == 1)
         REG_HP_RAD_ENABLE: RegisterDefinition(
             REG_HP_RAD_ENABLE, 1124, "HEATPUMP_RADIATOR_ENABLE", writable=True
         ),
-        REG_HP_RAD_OUTPUT: RegisterDefinition(
-            REG_HP_RAD_OUTPUT, 1050, "HP_RAD_O"
-        ),
-        REG_HP_RAD_MODE: RegisterDefinition(
-            REG_HP_RAD_MODE, 1091, "HP_RAD_MODE", writable=True
-        ),
+        REG_HP_RAD_OUTPUT: RegisterDefinition(REG_HP_RAD_OUTPUT, 1050, "HP_RAD_O"),
+        REG_HP_RAD_MODE: RegisterDefinition(REG_HP_RAD_MODE, 1091, "HP_RAD_MODE", writable=True),
         REG_HP_RAD_WINTER_LIMIT: RegisterDefinition(
             REG_HP_RAD_WINTER_LIMIT, 1092, "HP_RAD_WINTER", scale=0.1, writable=True
         ),
@@ -456,9 +465,9 @@ REGISTERS = _build_registers_v1()
 # Static registers (read once at startup - values don't change during operation)
 STATIC_REGISTER_KEYS = (
     REG_SOFTWARE_VERSION,  # Software version never changes
-    REG_HARDWARE_TYPE,     # Hardware model (80/100/150) never changes
-    REG_HEATER_TYPE,       # Heater type (water/electric) rarely changes
-    REG_HP_RAD_ENABLE,     # Heat pump module installed flag (v2 only, skipped on v1)
+    REG_HARDWARE_TYPE,  # Hardware model (80/100/150) never changes
+    REG_HEATER_TYPE,  # Heater type (water/electric) rarely changes
+    REG_HP_RAD_ENABLE,  # Heat pump module installed flag (v2 only, skipped on v1)
 )
 
 # Dynamic registers (polled regularly - values change during operation)
@@ -489,7 +498,6 @@ POLLING_REGISTER_KEYS = (
     REG_SUM_ALARM,
     REG_ALARMS_STATE,
     REG_HEAT_RECOVERY_EFFICIENCY,
-    REG_OVERPRESSURE_TIMER,
     REG_DEFROST_STATE,
     REG_SUPPLY_FAN_SPEED,
     REG_EXHAUST_FAN_SPEED,

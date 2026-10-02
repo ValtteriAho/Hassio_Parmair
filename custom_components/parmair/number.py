@@ -127,7 +127,7 @@ class ParmairNumberEntity(CoordinatorEntity[ParmairCoordinator], NumberEntity):
     async def async_set_native_value(self, value: float) -> None:
         """Set new value."""
         try:
-            await self.coordinator.async_write_register(self._data_key, int(value))
+            await self.coordinator.async_write_register(self._data_key, value)
             await self.coordinator.async_request_refresh()
         except Exception as ex:
             _LOGGER.error("Failed to set %s to %s: %s", self._data_key, value, ex)

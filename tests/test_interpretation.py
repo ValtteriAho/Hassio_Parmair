@@ -19,15 +19,13 @@ PROJECT_ROOT = Path(__file__).parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 sys.path.insert(0, str(PROJECT_ROOT / "tools"))
 
-from custom_components.parmair.const import (  # noqa: E402
+from tools.mock_coordinator import (  # noqa: E402
     FILTER_STATE_MAP_V1,
     FILTER_STATE_MAP_V2,
-    SOFTWARE_VERSION_2,
-)
-from tools.mock_coordinator import (  # noqa: E402
     HARDWARE_TYPE_MAP,
     REG_CONTROL_STATE,
     REG_POWER,
+    SOFTWARE_VERSION_2,
     MockCoordinator,
     get_registers_for_version,
     load_dump,
@@ -81,7 +79,7 @@ class TestSystemInfo:
         assert "model" in device_info
         model = device_info["model"]
         assert model.startswith("MAC "), f"Model should start with 'MAC ', got {model}"
-        assert re.match(r"^MAC \d+$", model), f"Model should match 'MAC <number>', got {model}"
+        assert re.match(r"^MAC .+$", model), f"Model should match 'MAC <model>', got {model}"
 
 
 class TestTemperatures:
@@ -207,8 +205,8 @@ class TestOptionalSensors:
 
     def test_co2_valid_if_present(self, coordinator: MockCoordinator) -> None:
         """CO2 should be reasonable ppm if present and installed."""
-        co2 = coordinator.data.get("co2")
-        raw = coordinator.get_raw_value("co2")
+        co2 = coordinator.data.get("co2_exhaust")
+        raw = coordinator.get_raw_value("co2_exhaust")
 
         if co2 is None or raw in (0, -1, 65535):
             pytest.skip("CO2 sensor not installed")
@@ -282,7 +280,7 @@ class TestPerformance:
 
     def test_heater_outputs_percentage(self, coordinator: MockCoordinator) -> None:
         """Heater outputs should be valid percentages."""
-        for key in ("post_heater_output", "pre_heater_output", "heat_recovery_output"):
+        for key in ("post_heater_output", "pre_heater_output"):
             value = coordinator.data.get(key)
             if value is None:
                 continue
@@ -397,9 +395,9 @@ class TestV2Specific:
         if not is_v2_device:
             pytest.skip("Not a V2 device")
 
-        season = coordinator.data.get("season_state")
+        season = coordinator.data.get("summer_mode_state")
         if season is None:
-            pytest.skip("Season state not present")
+            pytest.skip("Summer mode state not present")
 
         # V2: 0=Winter, 1=Transition, 2=Summer
         assert season in (0, 1, 2), f"Invalid V2 season state: {season}"

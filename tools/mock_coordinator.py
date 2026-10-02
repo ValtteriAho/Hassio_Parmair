@@ -38,6 +38,8 @@ REG_CONTROL_STATE = _const.REG_CONTROL_STATE
 RegisterDefinition = _const.RegisterDefinition
 get_register_definition = _const.get_register_definition
 get_registers_for_version = _const.get_registers_for_version
+FILTER_STATE_MAP_V1 = _const.FILTER_STATE_MAP_V1
+FILTER_STATE_MAP_V2 = _const.FILTER_STATE_MAP_V2
 
 
 @dataclass

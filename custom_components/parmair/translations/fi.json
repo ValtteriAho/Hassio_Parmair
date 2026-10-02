@@ -7,14 +7,21 @@
         "data": {
           "host": "IP-osoite",
           "port": "Portti",
-          "slave_id": "Modbus Slave ID",
           "scan_interval": "Kyselyväli (sekuntia)",
           "name": "Nimi"
+        }
+      },
+      "manual_version": {
+        "title": "Valitse ohjelmistoversio",
+        "description": "Automaattinen tunnistus epäonnistui. Valitse laitteesi ohjelmistoversio ja lämmittimen tyyppi manuaalisesti. Tarkista ohjelmistoversio laitteen näytöltä tai ohjekirjasta.",
+        "data": {
+          "software_version": "Ohjelmistoversio",
+          "heater_type": "Lämmittimen tyyppi"
         }
       }
     },
     "error": {
-      "cannot_connect": "Laitteeseen ei saatu yhteyttä. Tarkista IP-osoite, portti ja slave ID.",
+      "cannot_connect": "Laitteeseen ei saatu yhteyttä. Tarkista IP-osoite ja portti.",
       "unknown": "Odottamaton virhe tapahtui."
     },
     "abort": {
@@ -29,8 +36,7 @@
           "host": "IP-osoite",
           "port": "Portti",
           "name": "Nimi",
-          "scan_interval": "Kyselyväli (sekuntia)",
-          "heater_type": "Lämmittimen tyyppi"
+          "scan_interval": "Kyselyväli (sekuntia)"
         }
       }
     }
