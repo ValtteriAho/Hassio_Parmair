@@ -16,7 +16,7 @@ views:
       - type: vertical-stack
         cards:
           - type: tile
-            entity: fan.parmair_mac
+            entity: select.parmair_mac_control_state
             name: Ventilation Mode
             features_position: bottom
             vertical: false

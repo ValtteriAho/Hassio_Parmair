@@ -14,11 +14,11 @@ automation:
         for: "00:05:00"
     condition: []
     action:
-      - service: fan.set_preset_mode
+      - action: select.select_option
         target:
-          entity_id: fan.parmair_mac
+          entity_id: select.parmair_mac_control_state
         data:
-          preset_mode: boost
+          option: "Boost"
 
   - alias: "Parmair: Return to Home mode when CO2 normal"
     id: parmair_home_when_co2_normal
@@ -30,11 +30,11 @@ automation:
         for: "00:10:00"
     condition: []
     action:
-      - service: fan.set_preset_mode
+      - action: select.select_option
         target:
-          entity_id: fan.parmair_mac
+          entity_id: select.parmair_mac_control_state
         data:
-          preset_mode: home
+          option: "Home"
 
   - alias: "Parmair: Boost when bathroom humidity rises"
     id: parmair_boost_on_humidity_rise
@@ -46,20 +46,20 @@ automation:
         for: "00:03:00"
     condition:
       - condition: state
-        entity_id: fan.parmair_mac
-        state: "on"
+        entity_id: select.parmair_mac_control_state
+        state: "Home"
     action:
-      - service: fan.set_preset_mode
+      - action: select.select_option
         target:
-          entity_id: fan.parmair_mac
+          entity_id: select.parmair_mac_control_state
         data:
-          preset_mode: boost
+          option: "Boost"
       - delay: "00:20:00"
-      - service: fan.set_preset_mode
+      - action: select.select_option
         target:
-          entity_id: fan.parmair_mac
+          entity_id: select.parmair_mac_control_state
         data:
-          preset_mode: home
+          option: "Home"
 
   - alias: "Parmair: Away mode when nobody is home"
     id: parmair_away_when_empty
@@ -71,11 +71,11 @@ automation:
         for: "00:30:00"
     condition: []
     action:
-      - service: fan.set_preset_mode
+      - action: select.select_option
         target:
-          entity_id: fan.parmair_mac
+          entity_id: select.parmair_mac_control_state
         data:
-          preset_mode: away
+          option: "Away"
 
   - alias: "Parmair: Home mode when someone arrives"
     id: parmair_home_when_arrival
@@ -86,11 +86,11 @@ automation:
         to: "home"
     condition: []
     action:
-      - service: fan.set_preset_mode
+      - action: select.select_option
         target:
-          entity_id: fan.parmair_mac
+          entity_id: select.parmair_mac_control_state
         data:
-          preset_mode: home
+          option: "Home"
 
   - alias: "Parmair: Notify when filter needs replacement"
     id: parmair_filter_replace_notification

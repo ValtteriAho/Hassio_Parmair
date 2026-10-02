@@ -9,12 +9,12 @@ type: entities
 title: Parmair Quick Controls
 show_header_toggle: false
 entities:
-  - entity: fan.parmair_mac
+  - entity: select.parmair_mac_control_state
   - entity: select.parmair_mac_manual_speed_control
   - entity: select.parmair_mac_home_speed_preset
   - entity: select.parmair_mac_away_speed_preset
   - entity: select.parmair_mac_boost_speed_preset
-  - entity: switch.parmair_mac_boost_mode
+  - entity: switch.parmair_mac_post_heater
 
 # 2) Temperatures card
 # --------------------------------------------------
@@ -164,15 +164,12 @@ cards:
           red: 15
 
   - type: grid
-    columns: 3
+    columns: 2
     square: false
     cards:
       - type: tile
-        entity: switch.parmair_mac_overpressure_mode
-        name: Fireplace Mode
-      - type: tile
-        entity: switch.parmair_mac_boost_mode
-        name: Boost Mode
+        entity: switch.parmair_mac_time_program
+        name: Time Program
       - type: tile
         entity: switch.parmair_mac_post_heater
         name: Post Heater

@@ -1,4 +1,4 @@
-# Parmair MAC for Home Assistant (v0.18.1)
+# Parmair MAC for Home Assistant (v0.18.3)
 
 ![Parmair MAC Logo](parmair_logo.jpg)
 
@@ -86,9 +86,10 @@ Perfect for creating smart automations, monitoring air quality, and managing you
 Once installed, you'll have control over:
 
 ### Main Controls
-- **Fan Entity** - Power on/off and mode switching (Away/Home/Boost)
-- **Speed Presets** - Set fan speeds for each mode (Home, Away, Boost)
-- **Temperature Targets** - Adjust supply and exhaust temperature setpoints
+- **Control State** - Dedicated mode selector (`select.parmair_mac_control_state`) to switch between Away, Home, Boost (plus Sauna and Fireplace on v2.x) with no awkward on/off toggles
+- **Manual Speed Control** - Override fan speeds directly or keep on Auto
+- **Speed Presets** - Configure preset fan speeds for each mode (Home, Away, Boost)
+- **Temperature Targets** - Adjust supply and exhaust temperature setpoints with 0.5 °C precision
 - **Timers** - Control how long Boost and Overpressure modes run
 
 ### Monitoring
@@ -96,6 +97,7 @@ Once installed, you'll have control over:
 - **Humidity** - Current level and 24-hour average (if equipped)
 - **CO2 Levels** - Exhaust air quality monitoring (if equipped)
 - **Operating Status** - Current mode, speed, and power state
+- **Heater Type** - Detected heater hardware (Electric, Water, or None)
 - **Alarms** - Active warnings and filter status
 
 ### Smart Features
@@ -138,11 +140,11 @@ automation:
         entity_id: binary_sensor.kitchen_motion
         to: "on"
     action:
-      - service: fan.set_preset_mode
+      - action: select.select_option
         target:
-          entity_id: fan.parmair_mac
+          entity_id: select.parmair_mac_control_state
         data:
-          preset_mode: "Boost"
+          option: "Boost"
 ```
 
 ### Away Mode When Nobody Home
@@ -155,11 +157,11 @@ automation:
         to: "not_home"
         for: "00:30:00"
     action:
-      - service: fan.set_preset_mode
+      - action: select.select_option
         target:
-          entity_id: fan.parmair_mac
+          entity_id: select.parmair_mac_control_state
         data:
-          preset_mode: "Away"
+          option: "Away"
 ```
 
 ### Filter Change Reminder
@@ -171,7 +173,7 @@ automation:
         entity_id: sensor.parmair_mac_filter_status
         to: "Replace"
     action:
-      - service: notify.mobile_app
+      - action: notify.mobile_app
         data:
           title: "Ventilation Filter"
           message: "Time to change the air filter!"
@@ -196,14 +198,15 @@ The integration automatically detects your software version and uses the correct
 <summary>Complete Entity List (Click to expand)</summary>
 
 ### Controls
-- Fan: Main power and mode control
-- Home Speed: Fan speed when in Home mode (v1: 0–4, v2: 1–5)
-- Away Speed: Fan speed when in Away mode (v1: 0–4, v2: 1–5)
-- Boost Speed: Fan speed level for Boost mode (v1: 2–4, v2: 3–5)
+- Control State: Ventilation mode selector (Away, Home, Boost; plus Sauna & Fireplace on v2.x)
+- Manual Speed: Manual fan speed or auto
+- Home Speed: Fan speed preset when in Home mode (v1: Speed 1–4, v2: Speed 1–5)
+- Away Speed: Fan speed preset when in Away mode (v1: Speed 1–4, v2: Speed 1–5)
+- Boost Speed: Fan speed preset for Boost mode (v1: Speed 3–4, v2: Speed 3–5)
 - Boost Duration: How long Boost mode runs (30–180 min)
 - Overpressure Duration: How long Overpressure mode runs (15–120 min)
-- Exhaust Temperature: Target temperature for exhaust air (18–26 °C)
-- Supply Temperature: Target temperature for supply air (15–25 °C)
+- Exhaust Temperature: Target temperature for exhaust air (18–26 °C, 0.5 °C steps)
+- Supply Temperature: Target temperature for supply air (15–25 °C, 0.5 °C steps)
 - Summer Mode Temperature: Outdoor temp limit for summer mode
 - Filter Interval: Filter change interval (3 / 4 / 6 months)
 - CO2 Home Threshold: CO2 level (ppm) that triggers Home mode *(v2.x)*
@@ -212,11 +215,9 @@ The integration automatically detects your software version and uses the correct
 - Heat Pump Summer Limit: Outdoor temp above which heat pump activates in summer *(v2.x, if installed)*
 
 ### Switches
-- Summer Mode: Enable/disable summer cooling automation *(v2.x)*
-- Time Program: Enable/disable scheduled operation
-- Heater: Enable/disable heating elements
-- Boost Mode: Activate high-speed ventilation
-- Overpressure Mode: Supply-only ventilation (fireplace/overpressure mode)
+- Summer Mode: Enable/disable summer cooling automation *(v1.x switch; v2.x uses select)*
+- Time Program: Enable/disable weekly scheduled operation
+- Post Heater: Enable/disable post-heating element
 - Auto CO2 Boost: Automatically boost when CO2 exceeds threshold *(v2.x)*
 - Auto Humidity Boost: Automatically boost when humidity is elevated *(v2.x)*
 - Auto CO2 Home/Away: Switch Home/Away mode based on CO2 level *(v2.x)*
@@ -230,6 +231,7 @@ The integration automatically detects your software version and uses the correct
 - **Operational Mode**: Derived status showing effective mode and automation trigger (Off / Away / Home / Boost / CO2 Boost / Humidity Boost / Summer Cooling / Sauna / Fireplace) *(v2.x — Summer Cooling only applies when in Home mode)*
 - **Heat Pump Output**: Whether the heat pump module is currently active *(v2.x, if installed)*
 - **Heat Pump Mode**: Automation mode for the heat pump module (Off / On / Auto) *(v2.x, if installed)*
+- **Heater Type**: Detected heater hardware (Electric / Water / None)
 - All temperature sensors, humidity, CO2, fan speeds, operating states, timers, alarms, and diagnostic information
 
 </details>
@@ -249,7 +251,7 @@ The integration automatically detects your software version and uses the correct
 - Modbus TCP must be enabled on device
 
 ### Performance
-The integration reads registers sequentially with 200ms delays to prevent overwhelming the device. Updates occur every 30 seconds by default. More frequent polling may cause communication errors.
+The integration batches register reads into optimized contiguous blocks with delays between requests to prevent overwhelming the device's Modbus stack. Updates occur every 30 seconds by default. Sub-zero temperatures are handled via signed 16-bit integer conversion.
 
 ### Version Detection
 The integration automatically reads:
@@ -268,7 +270,9 @@ If auto-detection fails, you can manually select these during setup.
 
 See [CHANGELOG.md](CHANGELOG.md) for complete version history.
 
-**Latest:** v0.18.1 - Fix Operational Mode not detecting humidity/CO2 boost in Home mode
+- **v0.18.3**: Fix decimal temperature setpoint truncation (0.5 °C steps), heater type auto-detection on firmware 2.xx, and options schema.
+- **v0.18.2**: Ensure reliable Modbus write persistence with fresh connection per write; surface proper Home Assistant errors on write failures.
+- **v0.18.1**: Fix Operational Mode automation detection (Humidity & CO2 Boost) in Home state.
 
 ---
 
