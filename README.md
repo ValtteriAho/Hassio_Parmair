@@ -1,4 +1,4 @@
-# Parmair MAC for Home Assistant (v0.18.3)
+# Parmair MAC for Home Assistant (v0.18.4)
 
 ![Parmair MAC Logo](parmair_logo.jpg)
 
@@ -68,7 +68,7 @@ Perfect for creating smart automations, monitoring air quality, and managing you
 
 **Sensors showing 0 or -1?**
 - This is normal! The device reports these values during calibration
-- Sensors update every 30 seconds
+- Sensors update every 60 seconds (or your configured polling interval)
 - -1 means "calibrating" for CO2 sensors
 - 0% humidity is a valid reading
 
@@ -243,7 +243,7 @@ The integration automatically detects your software version and uses the correct
 - Protocol: Modbus TCP
 - Default Port: 502
 - Slave ID: 0 (changed from 1 in v0.9.0.5)
-- Polling: Every 30 seconds (configurable 10-120s)
+- Polling: Every 60 seconds by default (configurable 5-300s)
 
 ### Requirements
 - Home Assistant 2023.1 or newer
@@ -251,7 +251,7 @@ The integration automatically detects your software version and uses the correct
 - Modbus TCP must be enabled on device
 
 ### Performance
-The integration batches register reads into optimized contiguous blocks with delays between requests to prevent overwhelming the device's Modbus stack. Updates occur every 30 seconds by default. Sub-zero temperatures are handled via signed 16-bit integer conversion.
+The integration batches register reads into optimized contiguous blocks with delays between requests to prevent overwhelming the device's Modbus stack. Updates occur every 60 seconds by default (configurable). Sub-zero temperatures are handled via signed 16-bit integer conversion.
 
 ### Version Detection
 The integration automatically reads:
@@ -270,6 +270,7 @@ If auto-detection fails, you can manually select these during setup.
 
 See [CHANGELOG.md](CHANGELOG.md) for complete version history.
 
+- **v0.18.4**: Clean up coordinator connection lifecycle, remove redundant fan platform registration, type number device classes, and align polling documentation.
 - **v0.18.3**: Fix decimal temperature setpoint truncation (0.5 °C steps), heater type auto-detection on firmware 2.xx, and options schema.
 - **v0.18.2**: Ensure reliable Modbus write persistence with fresh connection per write; surface proper Home Assistant errors on write failures.
 - **v0.18.1**: Fix Operational Mode automation detection (Humidity & CO2 Boost) in Home state.

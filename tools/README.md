@@ -123,11 +123,13 @@ print(coord.get_raw_value("fresh_air_temp"))  # Raw value
 print(coord.device_info)  # Device info dict
 
 # Or create from dict for unit tests
-coord = MockCoordinator.from_dict({
-    "power": 3,
-    "control_state": 2,
-    "fresh_air_temp": -5.0,
-})
+coord = MockCoordinator.from_dict(
+    {
+        "power": 3,
+        "control_state": 2,
+        "fresh_air_temp": -5.0,
+    }
+)
 ```
 
 ## Firmware Versions

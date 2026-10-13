@@ -1,3 +1,14 @@
+## 0.18.4 - Clean up coordinator & fan platform, typed number device class (2026-10-13)
+
+### Changed
+- **Removed empty fan platform setup** — `Platform.FAN` was removed from `PLATFORMS` in `__init__.py` since ventilation mode control was migrated to `select.parmair_mac_control_state`.
+- **Cleaned up coordinator client lifecycle & removed dead code** — removed unused persistent `ModbusTcpClient` instance from `ParmairCoordinator.__init__` and removed dead `_read_register_value` method; polling reads and writes continue using isolated, thread-safe per-call connections.
+- **Typed `NumberDeviceClass.TEMPERATURE`** — updated `ParmairTemperatureSetpointNumber` and `ParmairHeatPumpTempLimitNumber` to use typed `NumberDeviceClass.TEMPERATURE` enum instead of raw string.
+- **Python version requirement update in pyproject.toml** — updated `requires-python` to `>=3.13.2` to ensure seamless dependency resolution with `homeassistant-stubs>=2025.5.0` on modern tooling (`uv`, `pip`).
+- **Documentation alignment** — updated polling interval in README to 60s default (configurable 5–300s) matching `const.py` and `config_flow.py`.
+
+---
+
 ## 0.18.3 - Fix decimal setpoint truncation, heater type detection & options (2026-10-02)
 
 ### Fixed

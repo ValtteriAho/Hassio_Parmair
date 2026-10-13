@@ -130,7 +130,6 @@ class ParmairCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         self._static_data: dict[str, Any] = {}
         self._static_data_read = False
 
-        self._client = ModbusTcpClient(host=self.host, port=self.port)
         self._lock = threading.Lock()
 
         super().__init__(
@@ -337,14 +336,9 @@ class ParmairCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         return success
 
     async def async_shutdown(self) -> None:
-        """Close the Modbus connection."""
-
-        def _close():
-            with self._lock:
-                if self._client.connected:
-                    self._client.close()
-
-        await self.hass.async_add_executor_job(_close)
+        """Close any open resources on integration unload."""
+        # Polling reads and writes manage their own connection lifecycles per call
+        # with fresh ModbusTcpClient instances and proper try/finally closure.
 
     @property
     def device_info(self) -> dict[str, Any]:
@@ -380,12 +374,11 @@ class ParmairCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         return get_register_definition(key, self._registers)
 
     def _read_register_block(
-        self, address: int, count: int, client: ModbusTcpClient | None = None
+        self, address: int, count: int, client: ModbusTcpClient
     ) -> list[int] | None:
         """Read a block of consecutive registers. Returns raw values or None on failure."""
-        c = client if client is not None else self._client
         try:
-            result = pymodbus_compat.read_holding_registers(c, address, count, self.slave_id)
+            result = pymodbus_compat.read_holding_registers(client, address, count, self.slave_id)
             if not result or (hasattr(result, "isError") and result.isError()):
                 return None
             if hasattr(result, "registers"):
@@ -411,46 +404,6 @@ class ParmairCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                 ex,
             )
             return None
-
-    def _read_register_value(self, definition: RegisterDefinition) -> Any | None:
-        """Read and scale a single register with pymodbus 3.x."""
-        try:
-            result = pymodbus_compat.read_holding_registers(
-                self._client, definition.address, 1, self.slave_id
-            )
-            if not result or (hasattr(result, "isError") and result.isError()):
-                _LOGGER.warning(
-                    "Failed reading register %s (%s) at address %d",
-                    definition.register_id,
-                    definition.label,
-                    definition.address,
-                )
-                return None
-
-            if hasattr(result, "registers"):
-                raw = result.registers[0]
-            elif isinstance(result, list | tuple):
-                raw = result[0]
-            else:
-                raw = result
-
-            # Convert to signed int16 if value is > 32767 (handle negative temperatures)
-            if raw > 32767:
-                raw = raw - 65536
-
-            if definition.optional and raw < 0:
-                # Device reports -1 when module isn't installed
-                return None
-        except Exception as ex:
-            _LOGGER.warning(
-                "Exception reading register %s (%s): %s",
-                definition.register_id,
-                definition.label,
-                ex,
-            )
-            return None
-
-        return self._from_raw(definition, raw)
 
     @staticmethod
     def _from_raw(definition: RegisterDefinition, raw: int) -> float | int:

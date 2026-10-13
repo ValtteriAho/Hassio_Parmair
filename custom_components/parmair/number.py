@@ -4,7 +4,11 @@ from __future__ import annotations
 
 import logging
 
-from homeassistant.components.number import NumberEntity, NumberMode
+from homeassistant.components.number import (
+    NumberDeviceClass,
+    NumberEntity,
+    NumberMode,
+)
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONCENTRATION_PARTS_PER_MILLION, UnitOfTemperature
 from homeassistant.core import HomeAssistant
@@ -139,7 +143,7 @@ class ParmairTemperatureSetpointNumber(ParmairNumberEntity):
 
     _attr_mode = NumberMode.BOX
     _attr_native_unit_of_measurement = UnitOfTemperature.CELSIUS
-    _attr_device_class = "temperature"
+    _attr_device_class = NumberDeviceClass.TEMPERATURE
     _attr_icon = "mdi:thermometer"
 
     def __init__(
@@ -215,7 +219,7 @@ class ParmairHeatPumpTempLimitNumber(ParmairNumberEntity):
 
     _attr_mode = NumberMode.BOX
     _attr_native_unit_of_measurement = UnitOfTemperature.CELSIUS
-    _attr_device_class = "temperature"
+    _attr_device_class = NumberDeviceClass.TEMPERATURE
     _attr_icon = "mdi:heat-pump"
 
     def __init__(
