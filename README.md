@@ -1,4 +1,4 @@
-# Parmair MAC for Home Assistant (v0.20.1)
+# Parmair MAC for Home Assistant (v0.21.0)
 
 ![Parmair MAC Logo](parmair_logo.jpg)
 
@@ -120,13 +120,21 @@ Once installed, you'll have control over:
 
 ---
 
-## Dashboard Examples
+## Dashboard & Lovelace Custom Card
 
-We provide ready-made, beautiful Lovelace cards matching Parmair's Nordic design:
+### Built-in Parmair MAC Card (`custom:parmair-mac-card`)
+The integration ships with a built-in Lovelace card featuring an authentic Scandinavian 2D schematic, live air duct temperatures, LTO recovery power, heating element status, and one-touch mode buttons (Kotona, Poissa, Tehostus, Sauna, Takka).
 
-- **[docs/parmair_schematic.svg](docs/parmair_schematic.svg)**: Authentic Scandinavian 2D vector schematic showing air flows, LTO heat exchanger, EC fan locations, and post-heating element coil.
-- **[docs/dashboard_manual_card_examples.yaml](docs/dashboard_manual_card_examples.yaml)**: Ready-to-paste **Parmair Schematic Card** with live channel temperatures, recovery power, heating output, and one-touch mode buttons (Kotona, Poissa, Tehostus, Sauna, Takka).
-- **[docs/dashboard_example.yaml](docs/dashboard_example.yaml)**: Full multi-section dashboard view configuration for the Raw dashboard editor.
+To use it, simply add a **Manual** card to your dashboard:
+```yaml
+type: custom:parmair-mac-card
+```
+
+*(No extra HACS cards, repository downloads, or complex YAML required — works completely out of the box!)*
+
+### Alternative YAML Cards
+- **[docs/dashboard_manual_card_examples.yaml](docs/dashboard_manual_card_examples.yaml)**: Native YAML cards (Mushroom chips, picture-elements, entities).
+- **[docs/dashboard_example.yaml](docs/dashboard_example.yaml)**: Full multi-section dashboard view configuration.
 
 ## Example Automations
 
@@ -271,6 +279,7 @@ If auto-detection fails, you can manually select these during setup.
 
 See [CHANGELOG.md](CHANGELOG.md) for complete version history.
 
+- **v0.21.0**: Ship built-in Lovelace custom card (`custom:parmair-mac-card`) served directly by the integration, providing an interactive Scandinavian 2D schematic, live temperatures, LTO recovery, electric heater monitoring, and mode control buttons.
 - **v0.20.1**: Add native `sensor.parmair_mac_total_energy` (kWh) state-restoring sensor for out-of-the-box Home Assistant Energy Dashboard integration, and provide a full Scandinavian 2D schematic card in dashboard examples.
 - **v0.20.0**: Add model-based power and energy estimation (EC fan power, electric heater power, total power, heat recovery thermal power) across all Parmair MAC hardware models, Home Assistant diagnostics support, and options flow overrides.
 - **v0.19.0**: Refine v1/v2 select architecture (remove incompatible manual speed control on firmware 2.xx), enforce Home Assistant Core ENUM sensor contracts, fix typing annotations, and clean up switch logic.

@@ -1,3 +1,14 @@
+## 0.21.0 - Built-in Parmair MAC Lovelace Custom Card (2026-10-14)
+
+### Added
+- **Built-in Parmair MAC Lovelace Custom Card (`custom:parmair-mac-card`)** — ships directly with the integration without requiring any manual file copying, HACS card installations, or complex YAML setups.
+  - Automatically served via `/parmair/parmair-mac-card.js` and `/parmair/parmair_schematic.svg`.
+  - Automatically connects to live Parmair MAC entities (all 4 channel temperatures, LTO heat recovery efficiency & power, electric post-heater output & power, EC fan speed, total power, cumulative energy, and filter days).
+  - Provides intuitive one-touch mode control buttons (Poissa, Kotona, Tehostus, Sauna, Takka) matching the physical Parmair MAC controller.
+  - Simply use `type: custom:parmair-mac-card` on any dashboard!
+
+---
+
 ## 0.20.1 - Native Total Energy Sensor for Energy Dashboard (2026-10-14)
 
 ### Added
