@@ -36,7 +36,9 @@
           "host": "IP-osoite",
           "port": "Portti",
           "name": "Nimi",
-          "scan_interval": "Kyselyväli (sekuntia)"
+          "scan_interval": "Kyselyväli (sekuntia)",
+          "custom_heater_rating": "Jälkilämmittimen mukautettu teho (W)",
+          "custom_fan_rating": "Puhaltimen mukautettu teho per puhallin (W)"
         }
       }
     }

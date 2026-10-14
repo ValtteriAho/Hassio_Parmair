@@ -18,6 +18,8 @@ from pymodbus.client import ModbusTcpClient
 
 from . import pymodbus_compat
 from .const import (
+    CONF_CUSTOM_FAN_RATING,
+    CONF_CUSTOM_HEATER_RATING,
     CONF_HEATER_TYPE,
     CONF_SCAN_INTERVAL,
     CONF_SLAVE_ID,
@@ -480,6 +482,14 @@ class ParmairOptionsFlowHandler(config_entries.OptionsFlowWithConfigEntry):
                             CONF_SCAN_INTERVAL, data.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)
                         ),
                     ): vol.All(vol.Coerce(int), vol.Range(min=5, max=300)),
+                    vol.Optional(
+                        CONF_CUSTOM_HEATER_RATING,
+                        description={"suggested_value": options.get(CONF_CUSTOM_HEATER_RATING)},
+                    ): vol.Any(None, vol.All(vol.Coerce(float), vol.Range(min=0, max=5000))),
+                    vol.Optional(
+                        CONF_CUSTOM_FAN_RATING,
+                        description={"suggested_value": options.get(CONF_CUSTOM_FAN_RATING)},
+                    ): vol.Any(None, vol.All(vol.Coerce(float), vol.Range(min=0, max=1000))),
                 }
             ),
         )

@@ -36,7 +36,9 @@
           "host": "IP Address",
           "port": "Port",
           "name": "Name",
-          "scan_interval": "Polling Interval (seconds)"
+          "scan_interval": "Polling Interval (seconds)",
+          "custom_heater_rating": "Custom Post-Heater Power Rating (W)",
+          "custom_fan_rating": "Custom Fan Power Rating per Fan (W)"
         }
       }
     }

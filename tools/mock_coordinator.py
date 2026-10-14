@@ -40,6 +40,9 @@ get_register_definition = _const.get_register_definition
 get_registers_for_version = _const.get_registers_for_version
 FILTER_STATE_MAP_V1 = _const.FILTER_STATE_MAP_V1
 FILTER_STATE_MAP_V2 = _const.FILTER_STATE_MAP_V2
+PARMAIR_MODEL_SPECS = _const.PARMAIR_MODEL_SPECS
+DEFAULT_MODEL_SPECS = _const.DEFAULT_MODEL_SPECS
+
 
 
 @dataclass

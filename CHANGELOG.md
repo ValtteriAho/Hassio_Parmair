@@ -1,3 +1,17 @@
+## 0.20.0 - Model-based power & energy monitoring and diagnostics (2026-10-14)
+
+### Added
+- **Model-based Power & Energy Monitoring** — added hardware power specifications for all Parmair MAC models (MAC 70, 80, 100, 105, 120, 150, 170, 220, 250, Rexo 120/150, Lämpöiivari II) based on manufacturer data.
+  - `sensor.parmair_mac_fan_power` (`W`) — active electrical power drawn by EC supply and exhaust fans using an affinity law model ($P \propto (\text{speed}/100)^{2.2}$).
+  - `sensor.parmair_mac_post_heater_power` (`W`) — electric post-heater power based on heating output percentage ($0\text{ W}$ for water or unequipped systems).
+  - `sensor.parmair_mac_total_power` (`W`) — total real-time ventilation unit power consumption (fans + heating + ~5 W standby electronics) ready for Home Assistant Energy Dashboard integration via Riemann sum integral sensors.
+  - `sensor.parmair_mac_heat_recovery_power` (`W`) — thermal power recovered by the heat exchanger into supply air calculated from live airflow and temperature delta ($\Delta T$).
+- **Custom Rating Overrides in Options Flow** — users can optionally customize or override nominal fan and post-heater ratings via Configure / Options dialog.
+- **Home Assistant Diagnostics Support** — added `diagnostics.py` enabling one-click diagnostic downloads from Home Assistant's device page with automatic IP address redaction.
+- **Lovelace Dashboard Power Card** — added Power & Heat Recovery section to example dashboard templates in `docs/dashboard_example.yaml`.
+
+---
+
 ## 0.19.0 - Refine v1/v2 select architecture & enforce ENUM contracts (2026-10-14)
 
 ### Changed

@@ -23,6 +23,7 @@ from tools.mock_coordinator import (  # noqa: E402
     FILTER_STATE_MAP_V1,
     FILTER_STATE_MAP_V2,
     HARDWARE_TYPE_MAP,
+    PARMAIR_MODEL_SPECS,
     REG_CONTROL_STATE,
     REG_POWER,
     SOFTWARE_VERSION_2,
@@ -432,3 +433,26 @@ class TestV2Specific:
             if value is None:
                 continue
             assert value in (0, 1), f"{key} must be 0 or 1 for binary sensor, got {value}"
+
+
+class TestPowerCalculations:
+    """Tests for model power specifications and power calculations."""
+
+    def test_all_known_models_have_power_specs(self) -> None:
+        """Every hardware model code in HARDWARE_TYPE_MAP must have defined power specs."""
+        for code, model_name in HARDWARE_TYPE_MAP.items():
+            assert code in PARMAIR_MODEL_SPECS, f"Model {code} ({model_name}) missing from PARMAIR_MODEL_SPECS"
+            specs = PARMAIR_MODEL_SPECS[code]
+            assert specs.fan_power_max_w > 0, f"Fan power must be positive for {model_name}"
+            assert specs.fan_count in (2, 4), f"Fan count must be 2 or 4 for {model_name}"
+            assert specs.heater_power_max_w in (1000.0, 2000.0), f"Heater power must be 1kW or 2kW for {model_name}"
+            assert specs.max_airflow_ls > 50, f"Airflow must be realistic for {model_name}"
+
+    def test_model_power_specs_lookup(self, coordinator: MockCoordinator) -> None:
+        """Verify model specs lookup for loaded fixture."""
+        hw_type = coordinator.data.get("hardware_type")
+        if hw_type is None:
+            pytest.skip("Hardware type not present")
+        specs = PARMAIR_MODEL_SPECS.get(int(hw_type))
+        assert specs is not None, f"Specs should exist for hardware type {hw_type}"
+

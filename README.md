@@ -1,4 +1,4 @@
-# Parmair MAC for Home Assistant (v0.19.0)
+# Parmair MAC for Home Assistant (v0.20.0)
 
 ![Parmair MAC Logo](parmair_logo.jpg)
 
@@ -12,6 +12,7 @@ Perfect for creating smart automations, monitoring air quality, and managing you
 
 ✅ **Control ventilation modes** - Switch between Away, Home, Boost, and more (Sauna/Fireplace for v2.x)  
 ✅ **Monitor air quality** - Track temperature, humidity, and CO2 levels  
+✅ **Track power & heat recovery** - Live electrical power (fans, post-heater, total) and thermal power recovered by heat exchanger (Watts)  
 ✅ **Create automations** - Schedule ventilation based on time, occupancy, or air quality  
 ✅ **Get notifications** - Alerts when filters need changing or alarms occur  
 ✅ **Adjust settings remotely** - Change fan speeds and temperature targets from anywhere  
@@ -270,6 +271,7 @@ If auto-detection fails, you can manually select these during setup.
 
 See [CHANGELOG.md](CHANGELOG.md) for complete version history.
 
+- **v0.20.0**: Add model-based power and energy estimation (EC fan power, electric heater power, total power, heat recovery thermal power) across all Parmair MAC hardware models, Home Assistant diagnostics support, and options flow overrides.
 - **v0.19.0**: Refine v1/v2 select architecture (remove incompatible manual speed control on firmware 2.xx), enforce Home Assistant Core ENUM sensor contracts, fix typing annotations, and clean up switch logic.
 - **v0.18.4**: Clean up coordinator connection lifecycle, remove redundant fan platform registration, type number device classes, and align polling documentation.
 - **v0.18.3**: Fix decimal temperature setpoint truncation (0.5 °C steps), heater type auto-detection on firmware 2.xx, and options schema.

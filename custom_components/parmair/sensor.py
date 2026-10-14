@@ -14,6 +14,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (
     CONCENTRATION_PARTS_PER_MILLION,
     PERCENTAGE,
+    UnitOfPower,
     UnitOfTemperature,
 )
 from homeassistant.core import HomeAssistant
@@ -22,16 +23,27 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import (
+    CONF_CUSTOM_FAN_RATING,
+    CONF_CUSTOM_HEATER_RATING,
     CONTROL_STATE_MAP_V1,
     CONTROL_STATE_MAP_V2,
+    DEFAULT_MODEL_SPECS,
     DOMAIN,
     FILTER_STATE_MAP_V1,
     FILTER_STATE_MAP_V2,
+    HEATER_TYPE_ELECTRIC,
     HEATER_TYPE_MAP_V1,
     HEATER_TYPE_MAP_V2,
     HEATER_TYPE_UNKNOWN,
+    PARMAIR_MODEL_SPECS,
     POWER_STATE_MAP_V1,
     POWER_STATE_MAP_V2,
+    REG_EXHAUST_FAN_SPEED,
+    REG_FRESH_AIR_TEMP,
+    REG_HARDWARE_TYPE,
+    REG_POST_HEATER_OUTPUT,
+    REG_SUPPLY_AFTER_RECOVERY_TEMP,
+    REG_SUPPLY_FAN_SPEED,
     SOFTWARE_VERSION_2,
 )
 from .coordinator import ParmairCoordinator
@@ -218,6 +230,16 @@ async def async_setup_entry(
                 EntityCategory.DIAGNOSTIC,
             )
         )
+
+    # Power & Energy Estimation sensors
+    entities.extend(
+        [
+            ParmairFanPowerSensor(coordinator, entry),
+            ParmairHeaterPowerSensor(coordinator, entry),
+            ParmairTotalPowerSensor(coordinator, entry),
+            ParmairHeatRecoveryPowerSensor(coordinator, entry),
+        ]
+    )
 
     async_add_entities(entities)
 
@@ -865,3 +887,166 @@ class ParmairOperationalStatusSensor(CoordinatorEntity[ParmairCoordinator], Sens
             attrs["humidity_24h_avg_pct"] = humidity_avg
 
         return attrs
+
+
+class _ParmairPowerSensorBase(CoordinatorEntity[ParmairCoordinator], SensorEntity):
+    """Base class for power sensors calculating model-based consumption."""
+
+    _attr_has_entity_name = True
+    _attr_device_class = SensorDeviceClass.POWER
+    _attr_state_class = SensorStateClass.MEASUREMENT
+    _attr_native_unit_of_measurement = UnitOfPower.WATT
+
+    def __init__(self, coordinator: ParmairCoordinator, entry: ConfigEntry) -> None:
+        super().__init__(coordinator)
+        self._entry = entry
+        self._attr_device_info = coordinator.device_info
+
+    def _get_model_specs(self):
+        """Retrieve model power specs, considering options overrides if configured."""
+        hw_type = self.coordinator.data.get(REG_HARDWARE_TYPE)
+        specs = PARMAIR_MODEL_SPECS.get(int(hw_type), DEFAULT_MODEL_SPECS) if hw_type is not None else DEFAULT_MODEL_SPECS
+
+        options = self._entry.options or {}
+        custom_heater = options.get(CONF_CUSTOM_HEATER_RATING)
+        custom_fan = options.get(CONF_CUSTOM_FAN_RATING)
+
+        fan_rating = float(custom_fan) if custom_fan is not None else specs.fan_power_max_w
+        heater_rating = float(custom_heater) if custom_heater is not None else specs.heater_power_max_w
+
+        return specs, fan_rating, heater_rating
+
+
+class ParmairFanPowerSensor(_ParmairPowerSensorBase):
+    """Estimates active electrical power consumed by supply and exhaust EC fans."""
+
+    def __init__(self, coordinator: ParmairCoordinator, entry: ConfigEntry) -> None:
+        super().__init__(coordinator, entry)
+        self._attr_name = "Fan Power"
+        self._attr_unique_id = f"{entry.entry_id}_fan_power"
+
+    @property
+    def native_value(self) -> float | None:
+        """Calculate total fan power in Watts based on fan speeds (0-100%)."""
+        supply_speed = self.coordinator.data.get(REG_SUPPLY_FAN_SPEED)
+        exhaust_speed = self.coordinator.data.get(REG_EXHAUST_FAN_SPEED)
+
+        if supply_speed is None and exhaust_speed is None:
+            return None
+
+        specs, fan_rating, _ = self._get_model_specs()
+
+        # Affinity law model: P ~ (speed_pct / 100) ^ 2.2 for EC motors
+        power = 0.0
+        if supply_speed is not None and supply_speed > 0:
+            power += fan_rating * ((supply_speed / 100.0) ** 2.2)
+        if exhaust_speed is not None and exhaust_speed > 0:
+            power += fan_rating * ((exhaust_speed / 100.0) ** 2.2)
+
+        # Scale if machine has 4 fans (e.g., MAC 220 has 2 supply + 2 exhaust)
+        if specs.fan_count == 4:
+            power *= 2.0
+
+        return round(power, 1)
+
+
+class ParmairHeaterPowerSensor(_ParmairPowerSensorBase):
+    """Estimates active electrical power consumed by post-heater."""
+
+    def __init__(self, coordinator: ParmairCoordinator, entry: ConfigEntry) -> None:
+        super().__init__(coordinator, entry)
+        self._attr_name = "Post Heater Power"
+        self._attr_unique_id = f"{entry.entry_id}_post_heater_power"
+
+    @property
+    def native_value(self) -> float | None:
+        """Calculate electric heater power in Watts based on heating output percentage."""
+        # Check heater type: only electric post-heaters draw electrical power
+        heater_type = self.coordinator.heater_type
+        if heater_type != HEATER_TYPE_ELECTRIC:
+            # Water or None draws 0 W of electrical power
+            return 0.0
+
+        heater_output = self.coordinator.data.get(REG_POST_HEATER_OUTPUT)
+        if heater_output is None:
+            return None
+
+        _, _, heater_rating = self._get_model_specs()
+        power = heater_rating * (heater_output / 100.0)
+        return round(power, 1)
+
+
+class ParmairTotalPowerSensor(_ParmairPowerSensorBase):
+    """Estimates total electrical power consumed by the entire ventilation unit."""
+
+    def __init__(self, coordinator: ParmairCoordinator, entry: ConfigEntry) -> None:
+        super().__init__(coordinator, entry)
+        self._attr_name = "Total Power"
+        self._attr_unique_id = f"{entry.entry_id}_total_power"
+
+    @property
+    def native_value(self) -> float | None:
+        """Sum of fans, electric heater, and standby electronics."""
+        # Standby electronics / control panel baseline: ~5 W
+        total = 5.0
+
+        # Fan power
+        supply_speed = self.coordinator.data.get(REG_SUPPLY_FAN_SPEED)
+        exhaust_speed = self.coordinator.data.get(REG_EXHAUST_FAN_SPEED)
+        specs, fan_rating, heater_rating = self._get_model_specs()
+
+        fan_power = 0.0
+        if supply_speed is not None and supply_speed > 0:
+            fan_power += fan_rating * ((supply_speed / 100.0) ** 2.2)
+        if exhaust_speed is not None and exhaust_speed > 0:
+            fan_power += fan_rating * ((exhaust_speed / 100.0) ** 2.2)
+        if specs.fan_count == 4:
+            fan_power *= 2.0
+
+        total += fan_power
+
+        # Electric heater power (if applicable)
+        if self.coordinator.heater_type == HEATER_TYPE_ELECTRIC:
+            heater_output = self.coordinator.data.get(REG_POST_HEATER_OUTPUT)
+            if heater_output is not None and heater_output > 0:
+                total += heater_rating * (heater_output / 100.0)
+
+        return round(total, 1)
+
+
+class ParmairHeatRecoveryPowerSensor(_ParmairPowerSensorBase):
+    """Estimates thermal heat recovery power recovered from exhaust air into supply air."""
+
+    def __init__(self, coordinator: ParmairCoordinator, entry: ConfigEntry) -> None:
+        super().__init__(coordinator, entry)
+        self._attr_name = "Heat Recovery Power"
+        self._attr_unique_id = f"{entry.entry_id}_heat_recovery_power"
+
+    @property
+    def native_value(self) -> float | None:
+        """Calculate thermal power recovered: P = m_dot * c_p * delta_T (Watts)."""
+        supply_after_lto = self.coordinator.data.get(REG_SUPPLY_AFTER_RECOVERY_TEMP)
+        fresh_air = self.coordinator.data.get(REG_FRESH_AIR_TEMP)
+        supply_speed = self.coordinator.data.get(REG_SUPPLY_FAN_SPEED)
+
+        if supply_after_lto is None or fresh_air is None:
+            return None
+
+        # Temperature delta across the heat exchanger
+        delta_t = supply_after_lto - fresh_air
+        if delta_t <= 0:
+            return 0.0
+
+        specs, _, _ = self._get_model_specs()
+
+        # Airflow estimation (m³/s): (supply_speed% / 100) * max_airflow_ls / 1000
+        # If supply_speed is unavailable, assume ~50% nominal speed
+        speed_factor = (supply_speed / 100.0) if supply_speed is not None else 0.5
+        v_dot = (speed_factor * specs.max_airflow_ls) / 1000.0  # m³/s
+
+        # Air density rho ~ 1.204 kg/m³, specific heat capacity c_p ~ 1005 J/(kg*K)
+        # P = rho * v_dot * c_p * delta_t
+        rho_cp = 1.204 * 1005.0  # ~1210 J/(m³*K)
+        heat_power = v_dot * rho_cp * delta_t
+
+        return round(heat_power, 1)

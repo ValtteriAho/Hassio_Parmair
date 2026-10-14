@@ -112,6 +112,19 @@ views:
             name: CO2
 
       - type: entities
+        title: Power & Heat Recovery
+        show_header_toggle: false
+        entities:
+          - entity: sensor.parmair_mac_total_power
+            name: Total Power
+          - entity: sensor.parmair_mac_fan_power
+            name: Fan Power
+          - entity: sensor.parmair_mac_post_heater_power
+            name: Post-Heater Power
+          - entity: sensor.parmair_mac_heat_recovery_power
+            name: Heat Recovery Power
+
+      - type: entities
         title: Maintenance
         show_header_toggle: false
         entities:

@@ -11,11 +11,49 @@ CONF_HEATER_TYPE = "heater_type"
 CONF_SCAN_INTERVAL = "scan_interval"
 CONF_SLAVE_ID = "slave_id"
 CONF_SOFTWARE_VERSION = "software_version"
+CONF_CUSTOM_HEATER_RATING = "custom_heater_rating"
+CONF_CUSTOM_FAN_RATING = "custom_fan_rating"
 
 DEFAULT_NAME = "Parmair MAC"
 DEFAULT_PORT = 502
 DEFAULT_SCAN_INTERVAL = 60  # seconds
 DEFAULT_SLAVE_ID = 0  # Parmair devices respond with unit ID 0
+
+
+@dataclass(frozen=True)
+class ModelPowerSpecs:
+    """Hardware specs for calculating fan, heating, and heat recovery power."""
+
+    fan_power_max_w: float  # Max power per fan in Watts
+    fan_count: int  # Number of fans (typically 2, or 4 for MAC 220)
+    heater_power_max_w: float  # Electric post-heater power in Watts
+    max_airflow_ls: float  # Max airflow in liters/second (at ~50 Pa)
+
+
+# Default fallback specs if hardware_type is unknown or missing
+DEFAULT_MODEL_SPECS = ModelPowerSpecs(
+    fan_power_max_w=118.0,
+    fan_count=2,
+    heater_power_max_w=1000.0,
+    max_airflow_ls=120.0,
+)
+
+# Specs per VENT_MACHINE register code
+PARMAIR_MODEL_SPECS: dict[int, ModelPowerSpecs] = {
+    107: ModelPowerSpecs(fan_power_max_w=85.0, fan_count=2, heater_power_max_w=1000.0, max_airflow_ls=75.0),  # MAC 70
+    108: ModelPowerSpecs(fan_power_max_w=85.0, fan_count=2, heater_power_max_w=1000.0, max_airflow_ls=95.0),  # MAC 80
+    109: ModelPowerSpecs(fan_power_max_w=118.0, fan_count=2, heater_power_max_w=1000.0, max_airflow_ls=105.0),  # MAC 105
+    110: ModelPowerSpecs(fan_power_max_w=118.0, fan_count=2, heater_power_max_w=1000.0, max_airflow_ls=110.0),  # MAC 100
+    111: ModelPowerSpecs(fan_power_max_w=118.0, fan_count=2, heater_power_max_w=1000.0, max_airflow_ls=105.0),  # MAC 105 SLIM
+    112: ModelPowerSpecs(fan_power_max_w=118.0, fan_count=2, heater_power_max_w=1000.0, max_airflow_ls=120.0),  # MAC 120
+    115: ModelPowerSpecs(fan_power_max_w=165.0, fan_count=2, heater_power_max_w=1000.0, max_airflow_ls=145.0),  # MAC 150
+    117: ModelPowerSpecs(fan_power_max_w=165.0, fan_count=2, heater_power_max_w=1000.0, max_airflow_ls=165.0),  # MAC 170
+    122: ModelPowerSpecs(fan_power_max_w=118.0, fan_count=4, heater_power_max_w=2000.0, max_airflow_ls=220.0),  # MAC 220
+    125: ModelPowerSpecs(fan_power_max_w=500.0, fan_count=2, heater_power_max_w=2000.0, max_airflow_ls=240.0),  # MAC 250
+    212: ModelPowerSpecs(fan_power_max_w=118.0, fan_count=2, heater_power_max_w=1000.0, max_airflow_ls=120.0),  # Rexo 120
+    215: ModelPowerSpecs(fan_power_max_w=165.0, fan_count=2, heater_power_max_w=1000.0, max_airflow_ls=145.0),  # Rexo 150
+    300: ModelPowerSpecs(fan_power_max_w=118.0, fan_count=2, heater_power_max_w=1000.0, max_airflow_ls=115.0),  # Lämpöiivari II
+}
 
 # Software versions
 SOFTWARE_VERSION_1 = "1.x"
