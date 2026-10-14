@@ -21,9 +21,13 @@ class ParmairMacCard extends HTMLElement {
     return 6;
   }
 
+  static async getConfigElement() {
+    return document.createElement("parmair-mac-card-editor");
+  }
+
   static getStubConfig() {
     return {
-      entity: "select.parmair_mac_control_state",
+      type: "custom:parmair-mac-card",
       name: "Parmair MAC",
     };
   }
@@ -416,6 +420,24 @@ class ParmairMacCard extends HTMLElement {
   }
 }
 
+class ParmairMacCardEditor extends HTMLElement {
+  setConfig(config) {
+    this._config = config;
+    if (!this.innerHTML) {
+      this.innerHTML = `
+        <div style="padding: 16px; font-family: inherit;">
+          <p style="margin: 0 0 8px; font-weight: 600;">Parmair MAC Card</p>
+          <p style="margin: 0; color: var(--secondary-text-color, #94a3b8); font-size: 13px;">
+            Tämä kortti yhdistää automaattisesti kaikki asennetun Parmair MAC -laitteesi anturit ja käyttötilat.
+            Lisäasetuksia ei tarvita!
+          </p>
+        </div>
+      `;
+    }
+  }
+}
+
+customElements.define("parmair-mac-card-editor", ParmairMacCardEditor);
 customElements.define("parmair-mac-card", ParmairMacCard);
 
 window.customCards = window.customCards || [];
@@ -425,3 +447,4 @@ window.customCards.push({
   preview: true,
   description: "Interactive Scandinavian HVAC schematic card with live airflow, LTO heat recovery, and heating element controls for Parmair MAC.",
 });
+

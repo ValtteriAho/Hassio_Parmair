@@ -1,3 +1,11 @@
+## 0.21.1 - Automatic Lovelace Resource Registration & UI Card Picker (2026-10-14)
+
+### Added
+- **Automatic Lovelace Resource Registration** — the integration now automatically registers `/parmair/parmair-mac-card.js` directly into Home Assistant's Lovelace resources upon integration setup.
+- **Visual Card Picker Support (`ParmairMacCardEditor`)** — added a visual card editor and schema so **Parmair MAC Card** appears directly in the standard graphical **Add Card** dialog with preview and setup assistance.
+
+---
+
 ## 0.21.0 - Built-in Parmair MAC Lovelace Custom Card (2026-10-14)
 
 ### Added

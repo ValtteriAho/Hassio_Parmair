@@ -75,8 +75,36 @@ async def _async_register_frontend(hass: HomeAssistant) -> None:
         )
         hass.data[DOMAIN]["parmair_frontend_registered"] = True
         _LOGGER.debug("Registered Parmair frontend at /parmair")
+
+        # Automatically register as Lovelace resource so it appears in UI Add Card picker
+        await _async_register_lovelace_resource(hass)
     except Exception as err:
         _LOGGER.warning("Could not register Parmair frontend path: %s", err)
+
+
+async def _async_register_lovelace_resource(hass: HomeAssistant) -> None:
+    """Automatically add Parmair custom card to Lovelace resources."""
+    card_url = "/parmair/parmair-mac-card.js"
+
+    # 1. Try modern lovelace resources collection (storage mode)
+    if hasattr(hass.data, "get") and "lovelace" in hass.data:
+        ll = hass.data["lovelace"]
+        resources = getattr(ll, "resources", None)
+        if resources and hasattr(resources, "async_get_items"):
+            try:
+                items = resources.async_get_items()
+                if not any(item.get("url", "").startswith("/parmair/") for item in items):
+                    await resources.async_create_item({"res_type": "module", "url": card_url})
+                    _LOGGER.info("Registered Parmair MAC Card in Lovelace resources: %s", card_url)
+                return
+            except Exception as ex:
+                _LOGGER.debug("Could not add to Lovelace resources collection: %s", ex)
+
+    # 2. Try frontend_extra_module_url fallback
+    if "frontend_extra_module_url" not in hass.data:
+        hass.data["frontend_extra_module_url"] = set()
+    hass.data["frontend_extra_module_url"].add(card_url)
+    _LOGGER.debug("Registered Parmair card via frontend_extra_module_url: %s", card_url)
 
 
 async def _async_options_updated(hass: HomeAssistant, entry: ConfigEntry) -> None:
