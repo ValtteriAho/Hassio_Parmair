@@ -1,7 +1,205 @@
-# Parmair MAC manual card examples
-#
-# Use these in Home Assistant: Add card -> Manual
-# Each block below is a complete single card configuration.
+# 0) Parmair MAC Scandinavian Schematic Card (with Heating Element & Flow)
+# -------------------------------------------------------------------------
+# Kopioi tämä koodi Home Assistantin "Lisää kortti -> Manuaalinen (Manual)" -kohtaan.
+# Varmista, että tiedosto 'parmair_schematic.svg' on kopioitu kansioon 'www/'
+# jotta kuva löytyy polusta '/local/parmair_schematic.svg'.
+type: vertical-stack
+cards:
+  - type: custom:mushroom-chips-card
+    alignment: justify
+    chips:
+      - type: entity
+        entity: select.parmair_mac_control_state
+        icon: mdi:home-outline
+        name: Tila
+      - type: entity
+        entity: sensor.parmair_mac_actual_fan_speed
+        icon: mdi:fan
+        name: Nopeus
+      - type: entity
+        entity: sensor.parmair_mac_total_power
+        icon: mdi:flash
+      - type: entity
+        entity: sensor.parmair_mac_filter_state
+        icon: mdi:air-filter
+
+  - type: picture-elements
+    image: /local/parmair_schematic.svg
+    elements:
+      # --- LÄMPÖTILAT KANAVISSA ---
+      # 1) Ulkoilma (Fresh air in) - Ylävasen
+      - type: state-label
+        entity: sensor.parmair_mac_fresh_air_temperature
+        style:
+          top: 22%
+          left: 14%
+          font-weight: bold
+          font-size: 15px
+          color: "#38bdf8"
+          background: "rgba(15, 23, 42, 0.75)"
+          padding: 4px 8px
+          border-radius: 6px
+          border: "1px solid #0284c7"
+
+      # 2) Poistoilma (Exhaust from rooms) - Yläoikea
+      - type: state-label
+        entity: sensor.parmair_mac_exhaust_air_temperature
+        style:
+          top: 22%
+          left: 86%
+          font-weight: bold
+          font-size: 15px
+          color: "#f87171"
+          background: "rgba(15, 23, 42, 0.75)"
+          padding: 4px 8px
+          border-radius: 6px
+          border: "1px solid #ef4444"
+
+      # 3) LTO-kennon jälkeen ennen lämmitintä (Recovery intermediate)
+      - type: state-label
+        entity: sensor.parmair_mac_supply_air_temperature_after_recovery
+        prefix: "LTO: "
+        style:
+          top: 60%
+          left: 32%
+          font-size: 12px
+          color: "#38bdf8"
+          background: "rgba(15, 23, 42, 0.85)"
+          padding: 2px 6px
+          border-radius: 4px
+
+      # 4) Tuloilma huoneisiin (Supply out to home) - Alavasen
+      - type: state-label
+        entity: sensor.parmair_mac_supply_air_temperature
+        style:
+          top: 74%
+          left: 14%
+          font-weight: bold
+          font-size: 16px
+          color: "#f59e0b"
+          background: "rgba(15, 23, 42, 0.85)"
+          padding: 4px 8px
+          border-radius: 6px
+          border: "1px solid #ea580c"
+
+      # 5) Jäteilma ulos (Waste air out) - Alaoikea
+      - type: state-label
+        entity: sensor.parmair_mac_waste_air_temperature
+        style:
+          top: 74%
+          left: 86%
+          font-weight: bold
+          font-size: 15px
+          color: "#94a3b8"
+          background: "rgba(15, 23, 42, 0.75)"
+          padding: 4px 8px
+          border-radius: 6px
+          border: "1px solid #475569"
+
+      # --- LÄMMÖNTALTEENOTTO (LTO KESKUS) ---
+      - type: state-label
+        entity: sensor.parmair_mac_heat_recovery_efficiency
+        prefix: "LTO: "
+        style:
+          top: 44%
+          left: 50%
+          font-weight: bold
+          font-size: 14px
+          color: "#ffffff"
+
+      - type: state-label
+        entity: sensor.parmair_mac_heat_recovery_power
+        prefix: "Talteenotto: "
+        style:
+          top: 54%
+          left: 50%
+          font-size: 13px
+          color: "#38bdf8"
+
+      # --- JÄLKILÄMMITIN (HEATING ELEMENT) ---
+      # Lämmittimen teholukema
+      - type: state-label
+        entity: sensor.parmair_mac_post_heater_power
+        style:
+          top: 64%
+          left: 23%
+          font-size: 11px
+          font-weight: bold
+          color: "#fb923c"
+          background: "rgba(30, 27, 24, 0.85)"
+          padding: 2px 5px
+          border-radius: 4px
+          border: "1px solid #ea580c"
+
+      # Lämmittimen ohjausprosentti
+      - type: state-label
+        entity: sensor.parmair_mac_post_heater_output
+        prefix: "Teho: "
+        style:
+          top: 84%
+          left: 23%
+          font-size: 11px
+          color: "#fdba74"
+
+  # Käyttötilojen pikapainikkeet Parmairin ohjaintyyliin
+  - type: grid
+    columns: 5
+    square: false
+    cards:
+      - type: button
+        name: Poissa
+        icon: mdi:home-export-outline
+        tap_action:
+          action: call-service
+          service: select.select_option
+          target:
+            entity_id: select.parmair_mac_control_state
+          data:
+            option: Away
+
+      - type: button
+        name: Kotona
+        icon: mdi:home
+        tap_action:
+          action: call-service
+          service: select.select_option
+          target:
+            entity_id: select.parmair_mac_control_state
+          data:
+            option: Home
+
+      - type: button
+        name: Tehostus
+        icon: mdi:fan-chevron-up
+        tap_action:
+          action: call-service
+          service: select.select_option
+          target:
+            entity_id: select.parmair_mac_control_state
+          data:
+            option: Boost
+
+      - type: button
+        name: Sauna
+        icon: mdi:radiator
+        tap_action:
+          action: call-service
+          service: select.select_option
+          target:
+            entity_id: select.parmair_mac_control_state
+          data:
+            option: Sauna
+
+      - type: button
+        name: Takka
+        icon: mdi:fire
+        tap_action:
+          action: call-service
+          service: select.select_option
+          target:
+            entity_id: select.parmair_mac_control_state
+          data:
+            option: Fireplace
 
 # 1) Quick Controls card
 # --------------------------------------------------

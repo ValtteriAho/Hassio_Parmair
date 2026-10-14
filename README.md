@@ -120,13 +120,13 @@ Once installed, you'll have control over:
 
 ---
 
-## Dashboard Example
+## Dashboard Examples
 
-Use the ready-made Lovelace view template in [docs/dashboard_example.yaml](docs/dashboard_example.yaml).
+We provide ready-made, beautiful Lovelace cards matching Parmair's Nordic design:
 
-- [docs/dashboard_example.yaml](docs/dashboard_example.yaml) is for the dashboard raw YAML editor (full view config with `title:` and `views:`)
-- For Add card -> Manual, use a single-card config from [docs/dashboard_manual_card_examples.yaml](docs/dashboard_manual_card_examples.yaml)
-- Replace entity IDs with your own (entity IDs can vary by device name)
+- **[docs/parmair_schematic.svg](docs/parmair_schematic.svg)**: Authentic Scandinavian 2D vector schematic showing air flows, LTO heat exchanger, EC fan locations, and post-heating element coil.
+- **[docs/dashboard_manual_card_examples.yaml](docs/dashboard_manual_card_examples.yaml)**: Ready-to-paste **Parmair Schematic Card** with live channel temperatures, recovery power, heating output, and one-touch mode buttons (Kotona, Poissa, Tehostus, Sauna, Takka).
+- **[docs/dashboard_example.yaml](docs/dashboard_example.yaml)**: Full multi-section dashboard view configuration for the Raw dashboard editor.
 
 ## Example Automations
 
