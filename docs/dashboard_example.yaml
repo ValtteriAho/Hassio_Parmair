@@ -117,6 +117,8 @@ views:
         entities:
           - entity: sensor.parmair_mac_total_power
             name: Total Power
+          - entity: sensor.parmair_mac_total_energy
+            name: Total Energy
           - entity: sensor.parmair_mac_fan_power
             name: Fan Power
           - entity: sensor.parmair_mac_post_heater_power

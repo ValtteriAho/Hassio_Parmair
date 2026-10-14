@@ -1,4 +1,4 @@
-# Parmair MAC for Home Assistant (v0.20.0)
+# Parmair MAC for Home Assistant (v0.20.1)
 
 ![Parmair MAC Logo](parmair_logo.jpg)
 
@@ -271,6 +271,7 @@ If auto-detection fails, you can manually select these during setup.
 
 See [CHANGELOG.md](CHANGELOG.md) for complete version history.
 
+- **v0.20.1**: Add native `sensor.parmair_mac_total_energy` (kWh) state-restoring sensor for out-of-the-box Home Assistant Energy Dashboard integration, and provide a full Scandinavian 2D schematic card in dashboard examples.
 - **v0.20.0**: Add model-based power and energy estimation (EC fan power, electric heater power, total power, heat recovery thermal power) across all Parmair MAC hardware models, Home Assistant diagnostics support, and options flow overrides.
 - **v0.19.0**: Refine v1/v2 select architecture (remove incompatible manual speed control on firmware 2.xx), enforce Home Assistant Core ENUM sensor contracts, fix typing annotations, and clean up switch logic.
 - **v0.18.4**: Clean up coordinator connection lifecycle, remove redundant fan platform registration, type number device classes, and align polling documentation.

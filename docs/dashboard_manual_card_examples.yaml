@@ -20,6 +20,9 @@ cards:
         entity: sensor.parmair_mac_total_power
         icon: mdi:flash
       - type: entity
+        entity: sensor.parmair_mac_total_energy
+        icon: mdi:counter
+      - type: entity
         entity: sensor.parmair_mac_filter_state
         icon: mdi:air-filter
 

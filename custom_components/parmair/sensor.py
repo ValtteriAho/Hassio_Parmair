@@ -5,6 +5,7 @@ from __future__ import annotations
 import logging
 from typing import Any
 
+import homeassistant.util.dt as dt_util
 from homeassistant.components.sensor import (
     SensorDeviceClass,
     SensorEntity,
@@ -14,12 +15,14 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (
     CONCENTRATION_PARTS_PER_MILLION,
     PERCENTAGE,
+    UnitOfEnergy,
     UnitOfPower,
     UnitOfTemperature,
 )
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity import EntityCategory
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.helpers.restore_state import RestoreEntity
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import (
@@ -237,6 +240,7 @@ async def async_setup_entry(
             ParmairFanPowerSensor(coordinator, entry),
             ParmairHeaterPowerSensor(coordinator, entry),
             ParmairTotalPowerSensor(coordinator, entry),
+            ParmairTotalEnergySensor(coordinator, entry),
             ParmairHeatRecoveryPowerSensor(coordinator, entry),
         ]
     )
@@ -1050,3 +1054,78 @@ class ParmairHeatRecoveryPowerSensor(_ParmairPowerSensorBase):
         heat_power = v_dot * rho_cp * delta_t
 
         return round(heat_power, 1)
+
+
+class ParmairTotalEnergySensor(CoordinatorEntity[ParmairCoordinator], RestoreEntity, SensorEntity):
+    """Accumulates total active energy consumption in kWh for Home Assistant Energy dashboard."""
+
+    _attr_has_entity_name = True
+    _attr_device_class = SensorDeviceClass.ENERGY
+    _attr_state_class = SensorStateClass.TOTAL_INCREASING
+    _attr_native_unit_of_measurement = UnitOfEnergy.KILO_WATT_HOUR
+
+    def __init__(self, coordinator: ParmairCoordinator, entry: ConfigEntry) -> None:
+        super().__init__(coordinator)
+        self._entry = entry
+        self._attr_name = "Total Energy"
+        self._attr_unique_id = f"{entry.entry_id}_total_energy"
+        self._attr_device_info = coordinator.device_info
+        self._state: float = 0.0
+        self._last_update_time: float | None = None
+
+    async def async_added_to_hass(self) -> None:
+        """Restore previous accumulated energy state on restart."""
+        await super().async_added_to_hass()
+        last_state = await self.async_get_last_state()
+        if last_state and last_state.state not in (None, "unknown", "unavailable"):
+            try:
+                self._state = float(last_state.state)
+            except (ValueError, TypeError):
+                self._state = 0.0
+
+    @property
+    def native_value(self) -> float:
+        """Return cumulative energy in kWh."""
+        return round(self._state, 3)
+
+    def _handle_coordinator_update(self) -> None:
+        """Calculate and accumulate energy on each coordinator polling cycle."""
+        now = dt_util.utcnow().timestamp()
+
+        # Calculate current total power
+        specs_hw = self.coordinator.data.get(REG_HARDWARE_TYPE)
+        specs = PARMAIR_MODEL_SPECS.get(int(specs_hw), DEFAULT_MODEL_SPECS) if specs_hw is not None else DEFAULT_MODEL_SPECS
+
+        options = self._entry.options or {}
+        custom_heater = options.get(CONF_CUSTOM_HEATER_RATING)
+        custom_fan = options.get(CONF_CUSTOM_FAN_RATING)
+
+        fan_rating = float(custom_fan) if custom_fan is not None else specs.fan_power_max_w
+        heater_rating = float(custom_heater) if custom_heater is not None else specs.heater_power_max_w
+
+        supply_speed = self.coordinator.data.get(REG_SUPPLY_FAN_SPEED)
+        exhaust_speed = self.coordinator.data.get(REG_EXHAUST_FAN_SPEED)
+
+        power = 5.0  # Standby electronics
+        if supply_speed is not None and supply_speed > 0:
+            power += fan_rating * ((supply_speed / 100.0) ** 2.2)
+        if exhaust_speed is not None and exhaust_speed > 0:
+            power += fan_rating * ((exhaust_speed / 100.0) ** 2.2)
+        if specs.fan_count == 4:
+            power *= 2.0
+
+        if self.coordinator.heater_type == HEATER_TYPE_ELECTRIC:
+            heater_output = self.coordinator.data.get(REG_POST_HEATER_OUTPUT)
+            if heater_output is not None and heater_output > 0:
+                power += heater_rating * (heater_output / 100.0)
+
+        # Trapezoidal or left-Riemann integration: E (kWh) += P (W) * dt (s) / (3600 * 1000)
+        if self._last_update_time is not None:
+            time_delta = now - self._last_update_time
+            # Discard unreasonable gaps (e.g., system was offline for days or clock jumped)
+            if 0 < time_delta < 3600:
+                energy_kwh = (power * time_delta) / 3600000.0
+                self._state += energy_kwh
+
+        self._last_update_time = now
+        super()._handle_coordinator_update()

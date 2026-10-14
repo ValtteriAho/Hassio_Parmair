@@ -1,3 +1,11 @@
+## 0.20.1 - Native Total Energy Sensor for Energy Dashboard (2026-10-14)
+
+### Added
+- **Native Cumulative Energy Sensor (`sensor.parmair_mac_total_energy`)** — added state-restoring `SensorDeviceClass.ENERGY` sensor accumulating total electrical energy consumption in `kWh` (`state_class = TOTAL_INCREASING`). Integrates seamlessly and automatically into the official Home Assistant Energy Dashboard (Individual Devices) without requiring manual Riemann sum helpers or YAML configuration.
+- **Scandinavian Schematic Card in Dashboard Docs** — added interactive 2D ventilation unit schematic card with heating element display and mode selector tiles in `docs/dashboard_manual_card_examples.yaml`.
+
+---
+
 ## 0.20.0 - Model-based power & energy monitoring and diagnostics (2026-10-14)
 
 ### Added
