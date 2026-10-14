@@ -1,3 +1,16 @@
+## 0.19.0 - Refine v1/v2 select architecture & enforce ENUM contracts (2026-10-14)
+
+### Changed
+- **Removed incompatible manual speed select on firmware v2.xx** — `ParmairManualSpeedSelect` (`select.parmair_mac_manual_speed`) is now restricted strictly to firmware v1.xx units. On firmware 2.xx, register 1187 (`IV01_SPEED_FO`) is a read-only actual running speed register, while speed control is handled exclusively via mode presets (`Home Speed`, `Away Speed`, `Boost Speed`).
+- **Marked v2 `REG_SPEED_CONTROL` as read-only** — removed `writable=True` attribute from register 1187 in the v2 register mapping in `const.py` to match the manufacturer's Modbus specification.
+
+### Fixed
+- **Home Assistant Core ENUM contract compliance** — `ParmairControlStateSensor`, `ParmairPowerStateSensor`, and `ParmairHeaterTypeSensor` now return `None` (resulting in a clean `unknown` state) when an unmapped integer is received from Modbus, preventing schema validation warnings with `SensorDeviceClass.ENUM`.
+- **Type hint fix in sensor platform** — fixed method signature `dict[str, any]` to use `dict[str, Any]` in `ParmairFilterChangeDateSensor.extra_state_attributes`.
+- **Cleaned dead summer mode branch in switch platform** — removed redundant v2 conditional branch in `ParmairSwitch.is_on` and removed unused `SOFTWARE_VERSION_2` import.
+
+---
+
 ## 0.18.4 - Clean up coordinator & fan platform, typed number device class (2026-10-13)
 
 ### Changed

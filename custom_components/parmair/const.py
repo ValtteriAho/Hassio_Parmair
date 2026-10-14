@@ -296,7 +296,7 @@ def _build_registers_v2() -> dict[str, RegisterDefinition]:
         ),
         REG_ACTUAL_SPEED: RegisterDefinition(REG_ACTUAL_SPEED, 1187, "IV01_SPEED_FO"),
         REG_SPEED_CONTROL: RegisterDefinition(
-            REG_SPEED_CONTROL, 1187, "IV01_SPEED_FO", writable=True
+            REG_SPEED_CONTROL, 1187, "IV01_SPEED_FO"
         ),
         # Temperature sensors (×0.1°C scaling)
         REG_FRESH_AIR_TEMP: RegisterDefinition(REG_FRESH_AIR_TEMP, 1020, "TE01_M", scale=0.1),

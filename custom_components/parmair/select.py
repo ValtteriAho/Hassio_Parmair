@@ -125,14 +125,15 @@ async def async_setup_entry(
     entities: list[SelectEntity] = [
         ParmairStateSelect(coordinator, entry),
         ParmairFilterIntervalSelect(coordinator, entry),
-        ParmairManualSpeedSelect(coordinator, entry),
         ParmairSpeedPresetSelect(coordinator, entry, REG_HOME_SPEED, "Home Speed Preset"),
         ParmairSpeedPresetSelect(coordinator, entry, REG_AWAY_SPEED, "Away Speed Preset"),
         ParmairBoostSpeedSelect(coordinator, entry),
         ParmairBoostDurationSelect(coordinator, entry),
         ParmairOverpressureDurationSelect(coordinator, entry),
     ]
-    if is_v2:
+    if not is_v2:
+        entities.append(ParmairManualSpeedSelect(coordinator, entry))
+    else:
         entities.append(ParmairSummerModeSelect(coordinator, entry))
 
     # Heat pump module entities — only when module is installed

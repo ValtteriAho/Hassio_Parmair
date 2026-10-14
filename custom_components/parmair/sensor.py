@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+from typing import Any
 
 from homeassistant.components.sensor import (
     SensorDeviceClass,
@@ -471,7 +472,7 @@ class ParmairControlStateSensor(ParmairRegisterEntity, SensorEntity):
         if raw_value is None:
             return None
         state_map = _control_state_map(self.coordinator)
-        return state_map.get(int(raw_value), f"Unknown ({raw_value})")
+        return state_map.get(int(raw_value))
 
 
 class ParmairSpeedControlSensor(ParmairRegisterEntity, SensorEntity):
@@ -535,7 +536,7 @@ class ParmairPowerStateSensor(ParmairRegisterEntity, SensorEntity):
         if raw_value is None:
             return None
         state_map = _power_state_map(self.coordinator)
-        return state_map.get(int(raw_value), f"Unknown ({raw_value})")
+        return state_map.get(int(raw_value))
 
 
 class ParmairHeaterTypeSensor(ParmairRegisterEntity, SensorEntity):
@@ -580,10 +581,10 @@ class ParmairHeaterTypeSensor(ParmairRegisterEntity, SensorEntity):
         software_version = self.coordinator.data.get("software_version")
         if software_version and software_version >= 2.0:
             # v2.xx firmware uses reversed mapping
-            return self.STATE_MAP_V2.get(raw_value, f"Unknown ({raw_value})")
+            return self.STATE_MAP_V2.get(raw_value)
         else:
             # v1.xx firmware uses original mapping
-            return self.STATE_MAP_V1.get(raw_value, f"Unknown ({raw_value})")
+            return self.STATE_MAP_V1.get(raw_value)
 
 
 class ParmairBinarySensor(ParmairRegisterEntity, SensorEntity):
@@ -665,7 +666,7 @@ class ParmairFilterChangeDateSensor(CoordinatorEntity[ParmairCoordinator], Senso
             return None
 
     @property
-    def extra_state_attributes(self) -> dict[str, any]:
+    def extra_state_attributes(self) -> dict[str, Any]:
         """Return additional attributes."""
         next_day = self.coordinator.data.get("filter_next_day")
         next_month = self.coordinator.data.get("filter_next_month")

@@ -23,7 +23,6 @@ from .const import (
     REG_SUMMER_MODE_TEMP_LIMIT,
     REG_TIME_PROGRAM_ENABLE,
     SOFTWARE_VERSION_1,
-    SOFTWARE_VERSION_2,
 )
 from .coordinator import ParmairCoordinator
 
@@ -147,13 +146,6 @@ class ParmairSwitch(CoordinatorEntity[ParmairCoordinator], SwitchEntity):
         value = self.coordinator.data.get(self._data_key)
         if value is None:
             return None
-        # V2 summer mode (AUTO_SUMMER_COOL_S): 0=off, 1=on, 2=auto
-        if self._data_key == REG_SUMMER_MODE:
-            is_v2 = self.coordinator.software_version == SOFTWARE_VERSION_2 or str(
-                self.coordinator.software_version
-            ).startswith("2.")
-            if is_v2:
-                return value in (1, 2)
         return value == 1
 
     @property
