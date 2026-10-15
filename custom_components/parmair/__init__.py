@@ -130,13 +130,13 @@ async def _async_register_lovelace_resource(hass: HomeAssistant) -> None:
                 if existing_item is None:
                     await resources.async_create_item({"res_type": "module", "url": card_url})
                     _LOGGER.info("Registered Parmair MAC Card in Lovelace resources: %s", card_url)
-                elif existing_item.get("url") != card_url and hasattr(resources, "async_update_item"):
+                elif existing_item.get("url") != card_url and hasattr(
+                    resources, "async_update_item"
+                ):
                     await resources.async_update_item(
                         existing_item["id"], {"res_type": "module", "url": card_url}
                     )
-                    _LOGGER.info(
-                        "Updated Parmair MAC Card in Lovelace resources to %s", card_url
-                    )
+                    _LOGGER.info("Updated Parmair MAC Card in Lovelace resources to %s", card_url)
             except Exception as ex:
                 _LOGGER.debug("Could not register in Lovelace storage collection: %s", ex)
 
