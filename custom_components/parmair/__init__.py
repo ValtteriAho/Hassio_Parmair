@@ -69,7 +69,7 @@ async def _async_register_frontend(hass: HomeAssistant) -> None:
                 StaticPathConfig(
                     url_path="/parmair",
                     path=str(frontend_dir),
-                    cache_headers=False,
+                    cache_headers=True,
                 )
             ]
         )

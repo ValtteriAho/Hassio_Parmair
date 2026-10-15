@@ -80,40 +80,44 @@
   <!-- ==================== DUCTS & DIRECTION ARROWS ==================== -->
 
   <!-- 1) TOP-LEFT: ULKOILMA (Fresh outdoor air in - LVI Green) -->
-  <text x="120" y="85" fill="#34d399" font-size="13" font-weight="700" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" letter-spacing="1" text-anchor="middle">ULKOILMA</text>
-  <path d="M 50 125 L 200 125" stroke="#10b981" stroke-width="42" stroke-linecap="round" fill="none" opacity="0.18" />
-  <path d="M 50 125 L 200 125" stroke="url(#freshAirGrad)" stroke-width="8" stroke-linecap="round" fill="none" />
+  <text x="115" y="85" fill="#34d399" font-size="13" font-weight="700" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" letter-spacing="1" text-anchor="middle">ULKOILMA</text>
+  <path d="M 35 125 L 200 125" stroke="#10b981" stroke-width="42" stroke-linecap="round" fill="none" opacity="0.18" />
+  <path d="M 35 125 L 200 125" stroke="url(#freshAirGrad)" stroke-width="8" stroke-linecap="round" fill="none" />
   <!-- Inward Multi-Chevron Arrows >>> -->
-  <path d="M 152 113 L 164 125 L 152 137" fill="none" stroke="#34d399" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
-  <path d="M 168 113 L 180 125 L 168 137" fill="none" stroke="#34d399" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
-  <path d="M 184 113 L 196 125 L 184 137" fill="none" stroke="#ffffff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
+  <path d="M 70 113 L 82 125 L 70 137" fill="none" stroke="#34d399" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
+  <path d="M 110 113 L 122 125 L 110 137" fill="none" stroke="#34d399" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
+  <path d="M 150 113 L 162 125 L 150 137" fill="none" stroke="#34d399" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
+  <path d="M 180 113 L 192 125 L 180 137" fill="none" stroke="#ffffff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
 
   <!-- 2) TOP-RIGHT: POISTOILMA (Exhaust room air in - LVI Yellow) -->
-  <text x="680" y="85" fill="#fbbf24" font-size="13" font-weight="700" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" letter-spacing="1" text-anchor="middle">POISTOILMA</text>
-  <path d="M 750 125 L 600 125" stroke="#fbbf24" stroke-width="42" stroke-linecap="round" fill="none" opacity="0.18" />
-  <path d="M 750 125 L 600 125" stroke="url(#exhaustAirGrad)" stroke-width="8" stroke-linecap="round" fill="none" />
+  <text x="685" y="85" fill="#fbbf24" font-size="13" font-weight="700" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" letter-spacing="1" text-anchor="middle">POISTOILMA</text>
+  <path d="M 765 125 L 600 125" stroke="#fbbf24" stroke-width="42" stroke-linecap="round" fill="none" opacity="0.18" />
+  <path d="M 765 125 L 600 125" stroke="url(#exhaustAirGrad)" stroke-width="8" stroke-linecap="round" fill="none" />
   <!-- Inward Multi-Chevron Arrows <<< -->
-  <path d="M 648 113 L 636 125 L 648 137" fill="none" stroke="#fbbf24" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
-  <path d="M 632 113 L 620 125 L 632 137" fill="none" stroke="#fbbf24" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
-  <path d="M 616 113 L 604 125 L 616 137" fill="none" stroke="#ffffff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
+  <path d="M 730 113 L 718 125 L 730 137" fill="none" stroke="#fbbf24" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
+  <path d="M 690 113 L 678 125 L 690 137" fill="none" stroke="#fbbf24" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
+  <path d="M 650 113 L 638 125 L 650 137" fill="none" stroke="#fbbf24" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
+  <path d="M 620 113 L 608 125 L 620 137" fill="none" stroke="#ffffff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
 
   <!-- 3) BOTTOM-LEFT: JÄTEILMA (Waste air out to outdoors - LVI Blue) -->
-  <text x="120" y="428" fill="#60a5fa" font-size="13" font-weight="700" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" letter-spacing="1" text-anchor="middle">JÄTEILMA</text>
+  <text x="115" y="428" fill="#60a5fa" font-size="13" font-weight="700" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" letter-spacing="1" text-anchor="middle">JÄTEILMA</text>
   <path d="M 200 370 L 35 370" stroke="#3b82f6" stroke-width="42" stroke-linecap="round" fill="none" opacity="0.18" />
   <path d="M 200 370 L 35 370" stroke="url(#wasteAirGrad)" stroke-width="8" stroke-linecap="round" fill="none" />
   <!-- Outward Multi-Chevron Arrows <<< -->
-  <path d="M 72 358 L 60 370 L 72 382" fill="none" stroke="#60a5fa" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
-  <path d="M 58 358 L 46 370 L 58 382" fill="none" stroke="#60a5fa" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
-  <path d="M 44 358 L 32 370 L 44 382" fill="none" stroke="#ffffff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
+  <path d="M 175 358 L 163 370 L 175 382" fill="none" stroke="#60a5fa" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
+  <path d="M 135 358 L 123 370 L 135 382" fill="none" stroke="#60a5fa" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
+  <path d="M 95 358 L 83 370 L 95 382" fill="none" stroke="#60a5fa" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
+  <path d="M 60 358 L 48 370 L 60 382" fill="none" stroke="#ffffff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
 
   <!-- 4) BOTTOM-RIGHT: TULOILMA (Supply warm air out to rooms - LVI Red) -->
-  <text x="680" y="428" fill="#f87171" font-size="13" font-weight="700" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" letter-spacing="1" text-anchor="middle">TULOILMA</text>
+  <text x="685" y="428" fill="#f87171" font-size="13" font-weight="700" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" letter-spacing="1" text-anchor="middle">TULOILMA</text>
   <path d="M 600 370 L 765 370" stroke="#ef4444" stroke-width="42" stroke-linecap="round" fill="none" opacity="0.18" />
   <path d="M 600 370 L 765 370" stroke="url(#supplyAirGrad)" stroke-width="8" stroke-linecap="round" fill="none" />
   <!-- Outward Multi-Chevron Arrows >>> -->
-  <path d="M 724 358 L 736 370 L 724 382" fill="none" stroke="#f87171" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
-  <path d="M 738 358 L 750 370 L 738 382" fill="none" stroke="#f87171" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
-  <path d="M 752 358 L 764 370 L 752 382" fill="none" stroke="#ffffff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
+  <path d="M 625 358 L 637 370 L 625 382" fill="none" stroke="#f87171" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
+  <path d="M 665 358 L 677 370 L 665 382" fill="none" stroke="#f87171" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
+  <path d="M 705 358 L 717 370 L 705 382" fill="none" stroke="#f87171" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
+  <path d="M 740 358 L 752 370 L 740 382" fill="none" stroke="#ffffff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
 
   <!-- ==================== FILTERS ==================== -->
   <!-- Fresh Air Filter F7 / ePM1 (Top-Left) -->

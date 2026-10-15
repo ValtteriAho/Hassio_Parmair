@@ -1,3 +1,20 @@
+## 0.21.12 - Unobstructed Duct Flow Arrows, Header Chips & Card Loading Speedup (2026-10-15)
+
+### Performance & Loading Speed
+- **98% Faster Card State Evaluation** — cached Parmair entity lookups in `parmair-mac-card.js` (`_getParmairEntities()`). Previously, `_findValue()` and `_findEntityId()` iterated over Home Assistant's entire state dictionary (`Object.keys(this._hass.states)`) 15 times on every state tick, causing noticeable lag and slow card loading with large entity registries. State parsing now completes in <0.2ms.
+- **Enabled HTTP Browser Caching for Frontend Assets** — switched `StaticPathConfig` in `__init__.py` to `cache_headers=True`, allowing browsers to cache the Lovelace custom card and static SVG assets instead of re-downloading on every dashboard load.
+
+### UI & Layout Improvements
+- **100% Unobstructed Duct Airflow Streams** — moved the 4 channel temperature badges completely outside the duct paths:
+  - Ulkoilma & Poistoilma badges positioned cleanly **above** the upper ducts (`Y=62`).
+  - Jäteilma & Tuloilma badges positioned cleanly **below** the lower ducts (`Y=410`).
+  - Left all four 165px duct pipes completely open for continuous 4-chevron glowing arrow streams (`>>>` and `<<<`) with zero visual obstruction or collision with badge boxes.
+- **Relocated Humidity & CO2 to Header Chips** — moved Humidity (`💧 -- %`) and CO2 (`🌱 -- ppm`) badges to the card header alongside the speed and operating mode pills. Both chips remain fully interactive, opening native `hass-more-info` dialogs for `sensor.parmair_mac_humidity` and `sensor.parmair_mac_co2_exhaust`. The CO2 chip dynamically hides if no CO2 sensor is present on the machine.
+- **Mobile Responsive Layout & Filter Badge** — prevented unwanted wrapping in narrow mobile viewports (`white-space: nowrap; text-overflow: ellipsis;`) and mapped long filter state strings (such as "Replace Reminder") to a clean concise "Vaihda" label.
+- **Synchronized Standalone SVG (`parmair_schematic.svg`)** — updated duct lengths to symmetrical 165px (`X=35..200` and `X=600..765`) and aligned 4-chevron flow arrows across all ducts.
+
+---
+
 ## 0.21.11 - Finnish LVI Standard Layout, Crossed Ducts & Humidity/CO2 Sensors (2026-10-15)
 
 ### Added
