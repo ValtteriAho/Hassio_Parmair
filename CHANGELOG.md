@@ -1,3 +1,12 @@
+## 0.21.2 - Fix Lovelace Card Auto-Registration & UI Card Discovery (2026-10-15)
+
+### Fixed
+- **Robust Frontend Module Injection (`add_extra_js_url`)** — cards are now injected directly into Home Assistant's frontend browser window (`add_extra_js_url`) during integration setup, ensuring `/parmair/parmair-mac-card.js` loads automatically into the client session without requiring manual resource setup.
+- **Lovelace Storage Collection Pre-loading** — added `await resources.async_load()` check before checking existing resource items, fixing issues where Lovelace resources were not yet loaded into memory when integration initialized.
+- **Compatibility with `async_items()` and `async_get_items()`** — resource listing now accommodates both modern and older Home Assistant Lovelace resource APIs.
+
+---
+
 ## 0.21.1 - Automatic Lovelace Resource Registration & UI Card Picker (2026-10-14)
 
 ### Added

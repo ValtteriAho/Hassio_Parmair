@@ -1,4 +1,4 @@
-# Parmair MAC for Home Assistant (v0.21.1)
+# Parmair MAC for Home Assistant (v0.21.2)
 
 ![Parmair MAC Logo](parmair_logo.jpg)
 
@@ -282,6 +282,7 @@ If auto-detection fails, you can manually select these during setup.
 
 See [CHANGELOG.md](CHANGELOG.md) for complete version history.
 
+- **v0.21.2**: Fix automatic Lovelace card registration using `add_extra_js_url` and resource storage pre-loading so `custom:parmair-mac-card` is immediately available in the visual "Add Card" picker.
 - **v0.21.1**: Add automatic Lovelace resource registration and visual editor support so `Parmair MAC Card` appears directly in the standard graphical **Add Card** dialog.
 - **v0.21.0**: Ship built-in Lovelace custom card (`custom:parmair-mac-card`) served directly by the integration, providing an interactive Scandinavian 2D schematic, live temperatures, LTO recovery, electric heater monitoring, and mode control buttons.
 - **v0.20.1**: Add native `sensor.parmair_mac_total_energy` (kWh) state-restoring sensor for out-of-the-box Home Assistant Energy Dashboard integration, and provide a full Scandinavian 2D schematic card in dashboard examples.

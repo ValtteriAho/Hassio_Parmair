@@ -83,28 +83,44 @@ async def _async_register_frontend(hass: HomeAssistant) -> None:
 
 
 async def _async_register_lovelace_resource(hass: HomeAssistant) -> None:
-    """Automatically add Parmair custom card to Lovelace resources."""
+    """Automatically add Parmair custom card to Lovelace resources and frontend."""
     card_url = "/parmair/parmair-mac-card.js"
 
-    # 1. Try modern lovelace resources collection (storage mode)
-    if hasattr(hass.data, "get") and "lovelace" in hass.data:
+    # Always register via frontend extra_js_url (loads module directly into browser window)
+    try:
+        from homeassistant.components.frontend import add_extra_js_url
+
+        add_extra_js_url(hass, card_url)
+        _LOGGER.debug("Added %s via add_extra_js_url", card_url)
+    except Exception as ex:
+        _LOGGER.debug("Could not call add_extra_js_url: %s", ex)
+        if "frontend_extra_module_url" not in hass.data:
+            hass.data["frontend_extra_module_url"] = set()
+        hass.data["frontend_extra_module_url"].add(card_url)
+
+    # Also register into Lovelace ResourceStorageCollection so it persists in Dashboard Resources
+    if "lovelace" in hass.data:
         ll = hass.data["lovelace"]
         resources = getattr(ll, "resources", None)
-        if resources and hasattr(resources, "async_get_items"):
+        if resources is not None:
             try:
-                items = resources.async_get_items()
-                if not any(item.get("url", "").startswith("/parmair/") for item in items):
+                # If resources are not loaded yet, await loading
+                if not getattr(resources, "loaded", True) and hasattr(resources, "async_load"):
+                    await resources.async_load()
+
+                # Get existing items (handle both async_items and async_get_items)
+                if hasattr(resources, "async_items"):
+                    existing = resources.async_items()
+                elif hasattr(resources, "async_get_items"):
+                    existing = resources.async_get_items()
+                else:
+                    existing = []
+
+                if not any(item.get("url", "").startswith("/parmair/") for item in existing):
                     await resources.async_create_item({"res_type": "module", "url": card_url})
                     _LOGGER.info("Registered Parmair MAC Card in Lovelace resources: %s", card_url)
-                return
             except Exception as ex:
-                _LOGGER.debug("Could not add to Lovelace resources collection: %s", ex)
-
-    # 2. Try frontend_extra_module_url fallback
-    if "frontend_extra_module_url" not in hass.data:
-        hass.data["frontend_extra_module_url"] = set()
-    hass.data["frontend_extra_module_url"].add(card_url)
-    _LOGGER.debug("Registered Parmair card via frontend_extra_module_url: %s", card_url)
+                _LOGGER.debug("Could not register in Lovelace storage collection: %s", ex)
 
 
 async def _async_options_updated(hass: HomeAssistant, entry: ConfigEntry) -> None:
