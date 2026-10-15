@@ -493,4 +493,3 @@ class TestPowerCalculations:
 
         # In fixture MAC120-full-v2.json, heater_type is 0 (Electric on v2)
         assert coordinator.is_electric_heater is True
-
