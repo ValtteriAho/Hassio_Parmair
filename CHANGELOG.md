@@ -1,3 +1,12 @@
+## 0.21.7 - Built-in Lovelace Card Interactive Overhaul & Standard Tapa 1 Architecture (2026-10-15)
+
+### Added
+- **Multi-Chevron Glowing Direction Arrows in Built-in Card (`custom:parmair-mac-card`)** — upgraded the embedded SVG in `parmair-mac-card.js` with prominent 3-chevron airflow direction sequences (`>>>` and `<<<`) featuring glowing white tips, exactly mirroring the standalone SVG schematic.
+- **Native Click-to-Inspect (`hass-more-info`) on Built-in Card** — all SVG temperature badges (Ulkoilma, Poistoilma, Tuloilma, Jäteilma, LTO jälkeen), center recovery core, heater power, metrics row items (power, energy, filter status), and header chips (speed, mode) now feature clickable pointer cursors and dispatch native `hass-more-info` events to immediately open Home Assistant's sensor history graphs and control dialogues.
+- **Architectural Standard: Tapa 1 (Built-in Card First)** — documented official project guideline in `AGENTS.md` and `README.md` establishing `custom:parmair-mac-card` as the official, standard user interface. Because the card is injected directly into Home Assistant's frontend (`add_extra_js_url`), all future visual and functional updates apply 100% automatically via HACS without requiring users to maintain or copy manual YAML.
+
+---
+
 ## 0.21.6 - Enhanced Multi-Chevron Airflow Direction Arrows & Interactive Card (2026-10-15)
 
 ### Added
