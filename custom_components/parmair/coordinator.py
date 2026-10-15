@@ -335,11 +335,6 @@ class ParmairCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             )
         return success
 
-    async def async_shutdown(self) -> None:
-        """Close any open resources on integration unload."""
-        # Polling reads and writes manage their own connection lifecycles per call
-        # with fresh ModbusTcpClient instances and proper try/finally closure.
-
     @property
     def device_info(self) -> dict[str, Any]:
         """Return device information."""

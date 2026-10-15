@@ -1,7 +1,7 @@
 # Local development dependencies for Parmair Home Assistant integration
 
 # Integration runtime dependency (matches manifest.json)
-pymodbus>=3.7.4
+pymodbus>=3.11.2
 
 # Home Assistant (for IDE support, type hints, local testing)
 homeassistant>=2025.1.0

@@ -1,3 +1,14 @@
+## 0.21.3 - Responsive Lovelace Card & Real Counterflow LTO Physics (2026-10-15)
+
+### Fixed
+- **Responsive Inline-SVG Architecture (`custom:parmair-mac-card`)** — replaced separate CSS percentage background overlays with an integrated, vector-locked Inline-SVG (`viewBox="0 0 800 480"`). All sensor badges, channel readings, heat recovery indicators, and heating element coils now scale with 100% mathematical precision across all card widths (mobile, tablet, desktop, and grid/sections views) without any text overlapping or element drift.
+- **Physical Counterflow Heat Recovery Airflow** — corrected internal duct airflow paths and directional arrows in both `parmair-mac-card.js` and `parmair_schematic.svg`. Outdoor fresh air and room exhaust air now correctly travel through the counterflow heat exchanger core plates in authentic thermodynamic directions, and Poistoilma arrow properly points into the machine.
+- **Entity Resolution for Fan Speed & Filter** — updated `parmair-mac-card.js` entity resolution to accurately find `current_speed` and `filter_status` across all device naming conventions (`parmair_mac` and `parmair`), resolving missing `--` values.
+- **Dynamic Heating Element Visualization** — post-heater coil and power badge illuminate with an active thermal glow when heating output is active (> 0 W) and remain discreetly muted when idle.
+- **Ruff Code Formatting Compliance** — formatted all Python files to adhere strictly to the project's Ruff formatting configuration, ensuring automated CI lint and test workflows pass without warnings.
+
+---
+
 ## 0.21.2 - Fix Lovelace Card Auto-Registration & UI Card Discovery (2026-10-15)
 
 ### Fixed

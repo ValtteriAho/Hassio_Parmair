@@ -40,19 +40,45 @@ DEFAULT_MODEL_SPECS = ModelPowerSpecs(
 
 # Specs per VENT_MACHINE register code
 PARMAIR_MODEL_SPECS: dict[int, ModelPowerSpecs] = {
-    107: ModelPowerSpecs(fan_power_max_w=85.0, fan_count=2, heater_power_max_w=1000.0, max_airflow_ls=75.0),  # MAC 70
-    108: ModelPowerSpecs(fan_power_max_w=85.0, fan_count=2, heater_power_max_w=1000.0, max_airflow_ls=95.0),  # MAC 80
-    109: ModelPowerSpecs(fan_power_max_w=118.0, fan_count=2, heater_power_max_w=1000.0, max_airflow_ls=105.0),  # MAC 105
-    110: ModelPowerSpecs(fan_power_max_w=118.0, fan_count=2, heater_power_max_w=1000.0, max_airflow_ls=110.0),  # MAC 100
-    111: ModelPowerSpecs(fan_power_max_w=118.0, fan_count=2, heater_power_max_w=1000.0, max_airflow_ls=105.0),  # MAC 105 SLIM
-    112: ModelPowerSpecs(fan_power_max_w=118.0, fan_count=2, heater_power_max_w=1000.0, max_airflow_ls=120.0),  # MAC 120
-    115: ModelPowerSpecs(fan_power_max_w=165.0, fan_count=2, heater_power_max_w=1000.0, max_airflow_ls=145.0),  # MAC 150
-    117: ModelPowerSpecs(fan_power_max_w=165.0, fan_count=2, heater_power_max_w=1000.0, max_airflow_ls=165.0),  # MAC 170
-    122: ModelPowerSpecs(fan_power_max_w=118.0, fan_count=4, heater_power_max_w=2000.0, max_airflow_ls=220.0),  # MAC 220
-    125: ModelPowerSpecs(fan_power_max_w=500.0, fan_count=2, heater_power_max_w=2000.0, max_airflow_ls=240.0),  # MAC 250
-    212: ModelPowerSpecs(fan_power_max_w=118.0, fan_count=2, heater_power_max_w=1000.0, max_airflow_ls=120.0),  # Rexo 120
-    215: ModelPowerSpecs(fan_power_max_w=165.0, fan_count=2, heater_power_max_w=1000.0, max_airflow_ls=145.0),  # Rexo 150
-    300: ModelPowerSpecs(fan_power_max_w=118.0, fan_count=2, heater_power_max_w=1000.0, max_airflow_ls=115.0),  # Lämpöiivari II
+    107: ModelPowerSpecs(
+        fan_power_max_w=85.0, fan_count=2, heater_power_max_w=1000.0, max_airflow_ls=75.0
+    ),  # MAC 70
+    108: ModelPowerSpecs(
+        fan_power_max_w=85.0, fan_count=2, heater_power_max_w=1000.0, max_airflow_ls=95.0
+    ),  # MAC 80
+    109: ModelPowerSpecs(
+        fan_power_max_w=118.0, fan_count=2, heater_power_max_w=1000.0, max_airflow_ls=105.0
+    ),  # MAC 105
+    110: ModelPowerSpecs(
+        fan_power_max_w=118.0, fan_count=2, heater_power_max_w=1000.0, max_airflow_ls=110.0
+    ),  # MAC 100
+    111: ModelPowerSpecs(
+        fan_power_max_w=118.0, fan_count=2, heater_power_max_w=1000.0, max_airflow_ls=105.0
+    ),  # MAC 105 SLIM
+    112: ModelPowerSpecs(
+        fan_power_max_w=118.0, fan_count=2, heater_power_max_w=1000.0, max_airflow_ls=120.0
+    ),  # MAC 120
+    115: ModelPowerSpecs(
+        fan_power_max_w=165.0, fan_count=2, heater_power_max_w=1000.0, max_airflow_ls=145.0
+    ),  # MAC 150
+    117: ModelPowerSpecs(
+        fan_power_max_w=165.0, fan_count=2, heater_power_max_w=1000.0, max_airflow_ls=165.0
+    ),  # MAC 170
+    122: ModelPowerSpecs(
+        fan_power_max_w=118.0, fan_count=4, heater_power_max_w=2000.0, max_airflow_ls=220.0
+    ),  # MAC 220
+    125: ModelPowerSpecs(
+        fan_power_max_w=500.0, fan_count=2, heater_power_max_w=2000.0, max_airflow_ls=240.0
+    ),  # MAC 250
+    212: ModelPowerSpecs(
+        fan_power_max_w=118.0, fan_count=2, heater_power_max_w=1000.0, max_airflow_ls=120.0
+    ),  # Rexo 120
+    215: ModelPowerSpecs(
+        fan_power_max_w=165.0, fan_count=2, heater_power_max_w=1000.0, max_airflow_ls=145.0
+    ),  # Rexo 150
+    300: ModelPowerSpecs(
+        fan_power_max_w=118.0, fan_count=2, heater_power_max_w=1000.0, max_airflow_ls=115.0
+    ),  # Lämpöiivari II
 }
 
 # Software versions
@@ -333,9 +359,7 @@ def _build_registers_v2() -> dict[str, RegisterDefinition]:
             REG_CONTROL_STATE, 1181, "USERSTATECONTROL_FO", writable=True
         ),
         REG_ACTUAL_SPEED: RegisterDefinition(REG_ACTUAL_SPEED, 1187, "IV01_SPEED_FO"),
-        REG_SPEED_CONTROL: RegisterDefinition(
-            REG_SPEED_CONTROL, 1187, "IV01_SPEED_FO"
-        ),
+        REG_SPEED_CONTROL: RegisterDefinition(REG_SPEED_CONTROL, 1187, "IV01_SPEED_FO"),
         # Temperature sensors (×0.1°C scaling)
         REG_FRESH_AIR_TEMP: RegisterDefinition(REG_FRESH_AIR_TEMP, 1020, "TE01_M", scale=0.1),
         REG_SUPPLY_AFTER_RECOVERY_TEMP: RegisterDefinition(
@@ -614,10 +638,10 @@ CONTROL_STATE_MAP_V1: dict[int, str] = {
     MODE_HOME: "Home",
     MODE_BOOST: "Boost",
     MODE_OVERPRESSURE: "Overpressure",
-    5: "Away Timer",
-    6: "Home Timer",
-    7: "Boost Timer",
-    8: "Overpressure Timer",
+    MODE_AWAY_TIMER: "Away Timer",
+    MODE_HOME_TIMER: "Home Timer",
+    MODE_BOOST_TIMER: "Boost Timer",
+    MODE_OVERPRESSURE_TIMER: "Overpressure Timer",
     MODE_MANUAL: "Manual",
 }
 CONTROL_STATE_MAP_V2: dict[int, str] = {
@@ -628,15 +652,6 @@ CONTROL_STATE_MAP_V2: dict[int, str] = {
     4: "Sauna",
     5: "Fireplace",
 }
-
-# Speed control values for IV01_SPEED
-SPEED_AUTO = 0
-SPEED_STOP = 1
-SPEED_1 = 2
-SPEED_2 = 3
-SPEED_3 = 4
-SPEED_4 = 5
-SPEED_5 = 6
 
 # POWER_BTN states (V1: POWER_BTN_FI = Off/Shutting Down/Starting/Running)
 POWER_OFF = 0

@@ -44,7 +44,6 @@ PARMAIR_MODEL_SPECS = _const.PARMAIR_MODEL_SPECS
 DEFAULT_MODEL_SPECS = _const.DEFAULT_MODEL_SPECS
 
 
-
 @dataclass
 class MockDeviceInfo:
     """Mock device info matching HA's device_info structure."""

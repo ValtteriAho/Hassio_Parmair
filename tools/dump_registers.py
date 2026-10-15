@@ -145,7 +145,7 @@ def read_register_with_retry(
 def dump_device(
     host: str,
     port: int = 502,
-    slave_id: int = 1,
+    slave_id: int = 0,
     software_version: str = SOFTWARE_VERSION_1,
     verbose: bool = False,
 ) -> DeviceDump:
@@ -282,7 +282,7 @@ Examples:
         "--port", "-p", type=int, default=502, help="Modbus TCP port (default: 502)"
     )
     parser.add_argument(
-        "--slave-id", "-s", type=int, default=1, help="Modbus slave ID (default: 1)"
+        "--slave-id", "-s", type=int, default=0, help="Modbus slave ID (default: 0)"
     )
     parser.add_argument(
         "--version",

@@ -441,11 +441,15 @@ class TestPowerCalculations:
     def test_all_known_models_have_power_specs(self) -> None:
         """Every hardware model code in HARDWARE_TYPE_MAP must have defined power specs."""
         for code, model_name in HARDWARE_TYPE_MAP.items():
-            assert code in PARMAIR_MODEL_SPECS, f"Model {code} ({model_name}) missing from PARMAIR_MODEL_SPECS"
+            assert code in PARMAIR_MODEL_SPECS, (
+                f"Model {code} ({model_name}) missing from PARMAIR_MODEL_SPECS"
+            )
             specs = PARMAIR_MODEL_SPECS[code]
             assert specs.fan_power_max_w > 0, f"Fan power must be positive for {model_name}"
             assert specs.fan_count in (2, 4), f"Fan count must be 2 or 4 for {model_name}"
-            assert specs.heater_power_max_w in (1000.0, 2000.0), f"Heater power must be 1kW or 2kW for {model_name}"
+            assert specs.heater_power_max_w in (1000.0, 2000.0), (
+                f"Heater power must be 1kW or 2kW for {model_name}"
+            )
             assert specs.max_airflow_ls > 50, f"Airflow must be realistic for {model_name}"
 
     def test_model_power_specs_lookup(self, coordinator: MockCoordinator) -> None:
@@ -455,4 +459,3 @@ class TestPowerCalculations:
             pytest.skip("Hardware type not present")
         specs = PARMAIR_MODEL_SPECS.get(int(hw_type))
         assert specs is not None, f"Specs should exist for hardware type {hw_type}"
-

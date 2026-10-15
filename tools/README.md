@@ -8,6 +8,7 @@ without requiring Home Assistant.
 ```
 tools/
 ├── dump_registers.py      # Dump device registers to JSON
+├── discover_registers.py  # Scan and discover reachable Modbus registers
 ├── mock_coordinator.py    # Mock coordinator for testing
 ├── test_interpretation.py # Test data interpretation
 ├── dumps/                 # Your device dumps (gitignored)
@@ -21,11 +22,11 @@ tools/
 Connect to your Parmair ventilation unit and dump all register values:
 
 ```bash
-# Basic usage
+# Basic usage (defaults to slave ID 0)
 python dump_registers.py 192.168.1.100
 
 # With options
-python dump_registers.py 192.168.1.100 --port 502 --slave-id 1 --version 1.x
+python dump_registers.py 192.168.1.100 --port 502 --slave-id 0 --version 2.x
 
 # Save to specific file
 python dump_registers.py 192.168.1.100 --output my_device.json
@@ -86,10 +87,28 @@ Arguments:
 
 Options:
   --port, -p          Modbus TCP port (default: 502)
-  --slave-id, -s      Modbus slave ID (default: 1)
+  --slave-id, -s      Modbus slave ID (default: 0)
   --version, -V       Register map version: 1.x or 2.x (default: 1.x)
   --output, -o        Output file path
   --verbose, -v       Show detailed output
+```
+
+### discover_registers.py
+
+Scans an address range (e.g. 1000–1300) to discover reachable registers on the Parmair controller.
+
+```
+Usage: discover_registers.py <host> [options]
+
+Arguments:
+  host                IP address of the Parmair device
+
+Options:
+  --port              Modbus TCP port (default: 502)
+  --slave             Modbus slave ID (default: 0)
+  --start             Start holding register address (default: 1000)
+  --end               End holding register address (default: 1300)
+  --output            Output JSON file path
 ```
 
 ### test_interpretation.py

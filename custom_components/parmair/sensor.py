@@ -378,27 +378,6 @@ class ParmairCO2Sensor(ParmairRegisterEntity, SensorEntity):
         return self.coordinator.data.get(self._data_key)
 
 
-class ParmairStateSensor(ParmairRegisterEntity, SensorEntity):
-    """Representation of a Parmair state sensor."""
-
-    _attr_has_entity_name = True
-
-    def __init__(
-        self,
-        coordinator: ParmairCoordinator,
-        entry: ConfigEntry,
-        data_key: str,
-        name: str,
-    ) -> None:
-        """Initialize the sensor."""
-        super().__init__(coordinator, entry, data_key, name)
-
-    @property
-    def native_value(self) -> int | None:
-        """Return the sensor value."""
-        return self.coordinator.data.get(self._data_key)
-
-
 class ParmairAlarmSensor(ParmairRegisterEntity, SensorEntity):
     """Representation of a Parmair alarm sensor."""
 
@@ -909,14 +888,20 @@ class _ParmairPowerSensorBase(CoordinatorEntity[ParmairCoordinator], SensorEntit
     def _get_model_specs(self):
         """Retrieve model power specs, considering options overrides if configured."""
         hw_type = self.coordinator.data.get(REG_HARDWARE_TYPE)
-        specs = PARMAIR_MODEL_SPECS.get(int(hw_type), DEFAULT_MODEL_SPECS) if hw_type is not None else DEFAULT_MODEL_SPECS
+        specs = (
+            PARMAIR_MODEL_SPECS.get(int(hw_type), DEFAULT_MODEL_SPECS)
+            if hw_type is not None
+            else DEFAULT_MODEL_SPECS
+        )
 
         options = self._entry.options or {}
         custom_heater = options.get(CONF_CUSTOM_HEATER_RATING)
         custom_fan = options.get(CONF_CUSTOM_FAN_RATING)
 
         fan_rating = float(custom_fan) if custom_fan is not None else specs.fan_power_max_w
-        heater_rating = float(custom_heater) if custom_heater is not None else specs.heater_power_max_w
+        heater_rating = (
+            float(custom_heater) if custom_heater is not None else specs.heater_power_max_w
+        )
 
         return specs, fan_rating, heater_rating
 
@@ -1094,14 +1079,20 @@ class ParmairTotalEnergySensor(CoordinatorEntity[ParmairCoordinator], RestoreEnt
 
         # Calculate current total power
         specs_hw = self.coordinator.data.get(REG_HARDWARE_TYPE)
-        specs = PARMAIR_MODEL_SPECS.get(int(specs_hw), DEFAULT_MODEL_SPECS) if specs_hw is not None else DEFAULT_MODEL_SPECS
+        specs = (
+            PARMAIR_MODEL_SPECS.get(int(specs_hw), DEFAULT_MODEL_SPECS)
+            if specs_hw is not None
+            else DEFAULT_MODEL_SPECS
+        )
 
         options = self._entry.options or {}
         custom_heater = options.get(CONF_CUSTOM_HEATER_RATING)
         custom_fan = options.get(CONF_CUSTOM_FAN_RATING)
 
         fan_rating = float(custom_fan) if custom_fan is not None else specs.fan_power_max_w
-        heater_rating = float(custom_heater) if custom_heater is not None else specs.heater_power_max_w
+        heater_rating = (
+            float(custom_heater) if custom_heater is not None else specs.heater_power_max_w
+        )
 
         supply_speed = self.coordinator.data.get(REG_SUPPLY_FAN_SPEED)
         exhaust_speed = self.coordinator.data.get(REG_EXHAUST_FAN_SPEED)

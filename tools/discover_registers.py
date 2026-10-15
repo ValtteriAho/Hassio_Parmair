@@ -157,7 +157,7 @@ def main():
     parser = argparse.ArgumentParser(description="Discover Modbus registers on Parmair device")
     parser.add_argument("host", help="Device IP address")
     parser.add_argument("--port", type=int, default=502, help="Modbus port (default: 502)")
-    parser.add_argument("--slave", type=int, default=1, help="Slave ID (default: 1)")
+    parser.add_argument("--slave", type=int, default=0, help="Slave ID (default: 0)")
     parser.add_argument("--start", type=int, default=1000, help="Start address (default: 1000)")
     parser.add_argument("--end", type=int, default=1300, help="End address (default: 1300)")
     parser.add_argument("--output", type=str, help="Output JSON file")

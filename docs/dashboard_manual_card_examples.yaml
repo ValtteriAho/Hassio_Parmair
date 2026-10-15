@@ -1,8 +1,7 @@
 # 0) Parmair MAC Scandinavian Schematic Card (with Heating Element & Flow)
 # -------------------------------------------------------------------------
 # Kopioi tämä koodi Home Assistantin "Lisää kortti -> Manuaalinen (Manual)" -kohtaan.
-# Varmista, että tiedosto 'parmair_schematic.svg' on kopioitu kansioon 'www/'
-# jotta kuva löytyy polusta '/local/parmair_schematic.svg'.
+# Kuva löytyy automaattisesti integraation rekisteröimästä polusta '/parmair/parmair_schematic.svg'.
 type: vertical-stack
 cards:
   - type: custom:mushroom-chips-card
@@ -23,11 +22,11 @@ cards:
         entity: sensor.parmair_mac_total_energy
         icon: mdi:counter
       - type: entity
-        entity: sensor.parmair_mac_filter_state
+        entity: sensor.parmair_mac_filter_status
         icon: mdi:air-filter
 
   - type: picture-elements
-    image: /local/parmair_schematic.svg
+    image: /parmair/parmair_schematic.svg
     elements:
       # --- LÄMPÖTILAT KANAVISSA ---
       # 1) Ulkoilma (Fresh air in) - Ylävasen

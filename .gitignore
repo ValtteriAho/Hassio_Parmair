@@ -45,3 +45,4 @@ tools/dumps/
 # AI Agent instructions (local only)
 agents.md
 AGENTS.md
+uv.lock
