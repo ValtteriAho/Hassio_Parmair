@@ -23,9 +23,18 @@ PLATFORMS: list[Platform] = [
 ]
 
 
+async def async_setup(hass: HomeAssistant, _config: dict) -> bool:
+    """Set up the Parmair component."""
+    await _async_register_frontend(hass)
+    return True
+
+
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up Parmair from a config entry."""
     _LOGGER.debug("Setting up Parmair integration for %s", entry.data.get("host"))
+
+    # Register frontend static path immediately so Lovelace cards load without waiting for Modbus
+    await _async_register_frontend(hass)
 
     coordinator = ParmairCoordinator(hass, entry)
 
@@ -38,9 +47,6 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     hass.data.setdefault(DOMAIN, {})
     hass.data[DOMAIN][entry.entry_id] = coordinator
-
-    # Register frontend static path for the Parmair Lovelace card and SVG schematic
-    await _async_register_frontend(hass)
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
 
@@ -73,7 +79,7 @@ async def _async_register_frontend(hass: HomeAssistant) -> None:
                 )
             ]
         )
-        hass.data[DOMAIN]["parmair_frontend_registered"] = True
+        hass.data.setdefault(DOMAIN, {})["parmair_frontend_registered"] = True
         _LOGGER.debug("Registered Parmair frontend at /parmair")
 
         # Automatically register as Lovelace resource so it appears in UI Add Card picker
@@ -84,7 +90,8 @@ async def _async_register_frontend(hass: HomeAssistant) -> None:
 
 async def _async_register_lovelace_resource(hass: HomeAssistant) -> None:
     """Automatically add Parmair custom card to Lovelace resources and frontend."""
-    card_url = "/parmair/parmair-mac-card.js"
+    version = "0.30.1"
+    card_url = f"/parmair/parmair-mac-card.js?v={version}"
 
     # Always register via frontend extra_js_url (loads module directly into browser window)
     try:
@@ -116,9 +123,20 @@ async def _async_register_lovelace_resource(hass: HomeAssistant) -> None:
                 else:
                     existing = []
 
-                if not any(item.get("url", "").startswith("/parmair/") for item in existing):
+                existing_item = next(
+                    (item for item in existing if item.get("url", "").startswith("/parmair/")),
+                    None,
+                )
+                if existing_item is None:
                     await resources.async_create_item({"res_type": "module", "url": card_url})
                     _LOGGER.info("Registered Parmair MAC Card in Lovelace resources: %s", card_url)
+                elif existing_item.get("url") != card_url and hasattr(resources, "async_update_item"):
+                    await resources.async_update_item(
+                        existing_item["id"], {"res_type": "module", "url": card_url}
+                    )
+                    _LOGGER.info(
+                        "Updated Parmair MAC Card in Lovelace resources to %s", card_url
+                    )
             except Exception as ex:
                 _LOGGER.debug("Could not register in Lovelace storage collection: %s", ex)
 

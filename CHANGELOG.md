@@ -1,3 +1,13 @@
+## 0.30.1 - Instant Lovelace Card Registration, Zero-Wait Startup & Cache-Busting (2026-10-15)
+
+### Fixed
+- **Instant Frontend Static Path Registration (`async_setup`)** — resolved the root cause of the "Configuration error: Custom element doesn't exist: custom:parmair-mac-card" and infinite loading spinner in the dashboard card picker after Home Assistant restarts or updates. Previously, `_async_register_frontend()` was deferred until after `coordinator.async_config_entry_first_refresh()` finished its Modbus TCP handshake and register reads. If the Parmair unit was slow to respond, the `/parmair` route returned HTTP 404 to the browser. Frontend routes are now registered immediately during component setup (`async_setup` and top of `async_setup_entry`) before any Modbus connections are initiated.
+- **Card Preview & Lifecycle Initialization** — initialized the card shadowRoot and SVG structure directly in `setConfig()` and `connectedCallback()`. Ensures the card renders immediately in Home Assistant's dashboard card picker (`hui-card-preview`) without hanging in a loading spinner while waiting for entity states.
+- **Automated Cache-Busting Lovelace Resource Management** — versioned Lovelace resource URLs (`/parmair/parmair-mac-card.js?v=0.30.1`) and added automatic resource updates to ensure browsers instantly fetch updated cards upon restart without relying on manual hard refreshes.
+- **Prevented Duplicate `window.customCards` Registration** — ensured custom card registration checks for existing definitions before appending.
+
+---
+
 ## 0.21.12 - Unobstructed Duct Flow Arrows, Header Chips & Card Loading Speedup (2026-10-15)
 
 ### Performance & Loading Speed
