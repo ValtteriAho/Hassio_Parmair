@@ -124,9 +124,7 @@ async def async_setup_entry(
         ),
         ParmairTemperatureSensor(coordinator, entry, "supply_temp", "Supply Air Temperature"),
         ParmairTemperatureSensor(coordinator, entry, "exhaust_temp", "Exhaust Air Temperature"),
-        ParmairTemperatureSensor(
-            coordinator, entry, "waste_temp", "Waste Air Temperature", EntityCategory.DIAGNOSTIC
-        ),
+        ParmairTemperatureSensor(coordinator, entry, "waste_temp", "Waste Air Temperature"),
         ParmairTemperatureSensor(
             coordinator,
             entry,
@@ -165,13 +163,21 @@ async def async_setup_entry(
         ),
         # Performance sensors
         ParmairPercentageSensor(
-            coordinator, entry, "heat_recovery_efficiency", "Heat Recovery Efficiency"
+            coordinator,
+            entry,
+            "heat_recovery_efficiency",
+            "Heat Recovery Efficiency",
+            entity_category=None,
         ),
         ParmairPercentageSensor(
             coordinator, entry, "lto_heat_recovery_control", "LTO Heat Recovery Control"
         ),
-        ParmairPercentageSensor(coordinator, entry, "supply_fan_speed", "Supply Fan Speed"),
-        ParmairPercentageSensor(coordinator, entry, "exhaust_fan_speed", "Exhaust Fan Speed"),
+        ParmairPercentageSensor(
+            coordinator, entry, "supply_fan_speed", "Supply Fan Speed", entity_category=None
+        ),
+        ParmairPercentageSensor(
+            coordinator, entry, "exhaust_fan_speed", "Exhaust Fan Speed", entity_category=None
+        ),
         ParmairPercentageSensor(coordinator, entry, "pre_heater_output", "Pre-heater Output"),
         ParmairPercentageSensor(coordinator, entry, "post_heater_output", "Post-heater Output"),
         # Optional sensors (will show unavailable if hardware not present)
@@ -407,7 +413,6 @@ class ParmairPercentageSensor(ParmairRegisterEntity, SensorEntity):
     _attr_state_class = SensorStateClass.MEASUREMENT
     _attr_native_unit_of_measurement = PERCENTAGE
     _attr_icon = "mdi:gauge"
-    _attr_entity_category = EntityCategory.DIAGNOSTIC
 
     def __init__(
         self,
@@ -415,9 +420,12 @@ class ParmairPercentageSensor(ParmairRegisterEntity, SensorEntity):
         entry: ConfigEntry,
         data_key: str,
         name: str,
+        entity_category: EntityCategory | None = EntityCategory.DIAGNOSTIC,
     ) -> None:
         """Initialize the sensor."""
         super().__init__(coordinator, entry, data_key, name)
+        if entity_category is not None:
+            self._attr_entity_category = entity_category
 
     @property
     def native_value(self) -> float | None:

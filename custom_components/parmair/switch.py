@@ -70,6 +70,7 @@ async def async_setup_entry(
                 "Post Heater",
                 "mdi:radiator",
                 "Enables post-heating element",
+                entity_category=None,
             ),
         ]
     )
@@ -119,7 +120,6 @@ class ParmairSwitch(CoordinatorEntity[ParmairCoordinator], SwitchEntity):
     """Representation of a Parmair switch."""
 
     _attr_has_entity_name = True
-    _attr_entity_category = EntityCategory.CONFIG
 
     def __init__(
         self,
@@ -129,12 +129,15 @@ class ParmairSwitch(CoordinatorEntity[ParmairCoordinator], SwitchEntity):
         name: str,
         icon: str,
         description: str,
+        entity_category: EntityCategory | None = EntityCategory.CONFIG,
     ) -> None:
         """Initialize the switch."""
         super().__init__(coordinator)
         self._data_key = data_key
         self._attr_name = name
         self._attr_icon = icon
+        if entity_category is not None:
+            self._attr_entity_category = entity_category
         self._attr_unique_id = f"{entry.entry_id}_{data_key}"
         self._attr_device_info = coordinator.device_info
         self._attr_device_class = SwitchDeviceClass.SWITCH

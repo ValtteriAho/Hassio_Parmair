@@ -1,3 +1,13 @@
+## 0.21.10 - Optimize Home Assistant Entity Categories (2026-10-15)
+
+### Changed
+- **Moved Waste Air Temperature (`waste_temp`) to Primary Sensors** — promoted `sensor.parmair_mac_waste_temp` from `DIAGNOSTIC` to the primary Sensors category, ensuring all 4 main ventilation ducts (Ulkoilma, Tuloilma, Poistoilma, and Jäteilma) appear together on the device dashboard.
+- **Moved Heat Recovery Efficiency (`heat_recovery_efficiency`) to Primary Sensors** — promoted `sensor.parmair_mac_heat_recovery_efficiency` from `DIAGNOSTIC` to primary Sensors alongside heat recovery thermal power.
+- **Moved Fan Speeds (`supply_fan_speed`, `exhaust_fan_speed`) to Primary Sensors** — promoted running fan speed percentage sensors from `DIAGNOSTIC` to primary Sensors for immediate visibility on the device page.
+- **Moved Post Heater Switch (`switch.parmair_mac_post_heater`) to Controls** — promoted post-heating on/off switch from `CONFIG` to the primary Controls card alongside the control state selector.
+
+---
+
 ## 0.21.9 - Calibrate Fan Power Affinity Law Model (2026-10-15)
 
 ### Changed

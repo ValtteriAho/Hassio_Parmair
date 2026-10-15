@@ -1,4 +1,4 @@
-# Parmair MAC for Home Assistant (v0.21.9)
+# Parmair MAC for Home Assistant (v0.21.10)
 
 ![Parmair MAC Logo](parmair_logo.jpg)
 
@@ -352,6 +352,7 @@ If auto-detection fails, you can manually select these during setup.
 
 See [CHANGELOG.md](CHANGELOG.md) for complete version history.
 
+- **v0.21.10**: Optimize Home Assistant entity categories: promote waste air temperature, heat recovery efficiency, and fan speeds to primary Sensors, and move post-heater switch to Controls.
 - **v0.21.9**: Calibrate EC fan power calculation exponent from 2.2 to 2.55 based on real-world Shelly energy meter measurements on Parmair MAC 150 across all 5 speeds, achieving 1–2 W precision.
 - **v0.21.8**: Fix card element spacing and add real-time fan speed percentages directly beneath fan icons on the built-in card.
 - **v0.21.7**: Built-in card overhaul (`custom:parmair-mac-card` / Tapa 1) with glowing multi-chevron airflow direction arrows and native click-to-inspect (`hass-more-info`) popup interaction across all sensors and metrics, establishing automatic zero-YAML HACS updates.
