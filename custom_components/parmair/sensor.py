@@ -34,7 +34,6 @@ from .const import (
     DOMAIN,
     FILTER_STATE_MAP_V1,
     FILTER_STATE_MAP_V2,
-    HEATER_TYPE_ELECTRIC,
     HEATER_TYPE_MAP_V1,
     HEATER_TYPE_MAP_V2,
     HEATER_TYPE_UNKNOWN,
@@ -951,8 +950,7 @@ class ParmairHeaterPowerSensor(_ParmairPowerSensorBase):
     def native_value(self) -> float | None:
         """Calculate electric heater power in Watts based on heating output percentage."""
         # Check heater type: only electric post-heaters draw electrical power
-        heater_type = self.coordinator.heater_type
-        if heater_type != HEATER_TYPE_ELECTRIC:
+        if not self.coordinator.is_electric_heater:
             # Water or None draws 0 W of electrical power
             return 0.0
 
@@ -995,7 +993,7 @@ class ParmairTotalPowerSensor(_ParmairPowerSensorBase):
         total += fan_power
 
         # Electric heater power (if applicable)
-        if self.coordinator.heater_type == HEATER_TYPE_ELECTRIC:
+        if self.coordinator.is_electric_heater:
             heater_output = self.coordinator.data.get(REG_POST_HEATER_OUTPUT)
             if heater_output is not None and heater_output > 0:
                 total += heater_rating * (heater_output / 100.0)
@@ -1105,7 +1103,7 @@ class ParmairTotalEnergySensor(CoordinatorEntity[ParmairCoordinator], RestoreEnt
         if specs.fan_count == 4:
             power *= 2.0
 
-        if self.coordinator.heater_type == HEATER_TYPE_ELECTRIC:
+        if self.coordinator.is_electric_heater:
             heater_output = self.coordinator.data.get(REG_POST_HEATER_OUTPUT)
             if heater_output is not None and heater_output > 0:
                 power += heater_rating * (heater_output / 100.0)

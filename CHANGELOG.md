@@ -1,3 +1,12 @@
+## 0.21.5 - Fix Post-Heater Power & Energy on Firmware v2.xx (2026-10-15)
+
+### Fixed
+- **Post-Heater Electric Power Calculation on Firmware v2.xx (`sensor.parmair_mac_post_heater_power`)** — fixed a firmware version enum mismatch where `is_electric_heater` check compared v2 holding register values against the legacy v1 enum constant. Because heater type codes are reversed between firmware versions (`0 = Electric` on v2.xx vs `1 = Electric` on v1.xx), post-heater power was previously reporting 0.0 W even when the heating element was actively running.
+- **Electric Heater Inclusion in Total Power & Total Energy** — `sensor.parmair_mac_total_power` and `sensor.parmair_mac_total_energy` now accurately accumulate electric post-heater power and kilowatt-hour energy on v2.xx machines whenever heating output (`TV45_Y` / register 1044) is active.
+- **Centralized `is_electric_heater` Property** — added a robust version-aware `is_electric_heater` property on `ParmairCoordinator` and `MockCoordinator` that inspects live Modbus data and correctly handles firmware version differences.
+
+---
+
 ## 0.21.4 - Crisp Channel Labels & Aligned Picture-Elements Overlay (2026-10-15)
 
 ### Fixed

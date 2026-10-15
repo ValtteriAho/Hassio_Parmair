@@ -459,3 +459,38 @@ class TestPowerCalculations:
             pytest.skip("Hardware type not present")
         specs = PARMAIR_MODEL_SPECS.get(int(hw_type))
         assert specs is not None, f"Specs should exist for hardware type {hw_type}"
+
+    def test_is_electric_heater_detection_v1_and_v2(self) -> None:
+        """Verify is_electric_heater correctly handles reversed values between v1 and v2."""
+        # v1: 0=Water, 1=Electric, 2=None
+        coord_v1_electric = MockCoordinator.from_dict(
+            {"heater_type": 1, "software_version": 1.87}, software_version="1.x"
+        )
+        assert coord_v1_electric.is_electric_heater is True
+
+        coord_v1_water = MockCoordinator.from_dict(
+            {"heater_type": 0, "software_version": 1.87}, software_version="1.x"
+        )
+        assert coord_v1_water.is_electric_heater is False
+
+        # v2: 0=Electric, 1=Water, 2=None
+        coord_v2_electric = MockCoordinator.from_dict(
+            {"heater_type": 0, "software_version": 2.28}, software_version="2.x"
+        )
+        assert coord_v2_electric.is_electric_heater is True
+
+        coord_v2_water = MockCoordinator.from_dict(
+            {"heater_type": 1, "software_version": 2.28}, software_version="2.x"
+        )
+        assert coord_v2_water.is_electric_heater is False
+
+    def test_electric_heater_power_on_v2_device(
+        self, coordinator: MockCoordinator, is_v2_device: bool
+    ) -> None:
+        """Verify electric heater power calculation for v2 devices when heater is active."""
+        if not is_v2_device:
+            pytest.skip("Not a V2 device")
+
+        # In fixture MAC120-full-v2.json, heater_type is 0 (Electric on v2)
+        assert coordinator.is_electric_heater is True
+

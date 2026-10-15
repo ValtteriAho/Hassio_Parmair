@@ -42,6 +42,10 @@ FILTER_STATE_MAP_V1 = _const.FILTER_STATE_MAP_V1
 FILTER_STATE_MAP_V2 = _const.FILTER_STATE_MAP_V2
 PARMAIR_MODEL_SPECS = _const.PARMAIR_MODEL_SPECS
 DEFAULT_MODEL_SPECS = _const.DEFAULT_MODEL_SPECS
+HEATER_TYPE_ELECTRIC_V1 = _const.HEATER_TYPE_ELECTRIC_V1
+HEATER_TYPE_ELECTRIC_V2 = _const.HEATER_TYPE_ELECTRIC_V2
+HEATER_TYPE_UNKNOWN = _const.HEATER_TYPE_UNKNOWN
+REG_HEATER_TYPE = _const.REG_HEATER_TYPE
 
 
 @dataclass
@@ -129,6 +133,33 @@ class MockCoordinator:
                 device_info["sw_version"] = str(sw_version)
 
         return device_info
+
+    @property
+    def heater_type(self) -> int:
+        """Return heater type."""
+        raw = self.get_raw_value(REG_HEATER_TYPE)
+        if raw is not None:
+            return raw
+        return self._data.get(REG_HEATER_TYPE, HEATER_TYPE_UNKNOWN)
+
+    @property
+    def is_electric_heater(self) -> bool:
+        """Return True if unit has an electric post-heater (handles v1 vs v2 inversion)."""
+        raw = self.get_raw_value(REG_HEATER_TYPE)
+        if raw is None:
+            raw = self._data.get(REG_HEATER_TYPE)
+        if raw is None or raw == HEATER_TYPE_UNKNOWN:
+            return False
+
+        sw_data = self._data.get("software_version")
+        is_v2 = (
+            self._software_version == SOFTWARE_VERSION_2
+            or str(self._software_version).startswith("2.")
+            or (sw_data is not None and sw_data >= 2.0)
+        )
+        if is_v2:
+            return raw == HEATER_TYPE_ELECTRIC_V2
+        return raw == HEATER_TYPE_ELECTRIC_V1
 
     def get_register_definition(self, key: str) -> RegisterDefinition:
         """Get register definition for a key."""

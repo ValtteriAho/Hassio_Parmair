@@ -30,8 +30,11 @@ from .const import (
     DEFAULT_SLAVE_ID,
     DOMAIN,
     HARDWARE_TYPE_MAP,
+    HEATER_TYPE_ELECTRIC_V1,
+    HEATER_TYPE_ELECTRIC_V2,
     HEATER_TYPE_UNKNOWN,
     POLLING_REGISTER_KEYS,
+    REG_HEATER_TYPE,
     SOFTWARE_VERSION_1,
     SOFTWARE_VERSION_2,
     STATIC_REGISTER_KEYS,
@@ -363,6 +366,25 @@ class ParmairCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                 device_info["sw_version"] = str(sw_version)
 
         return device_info
+
+    @property
+    def is_electric_heater(self) -> bool:
+        """Return True if unit has an electric post-heater (handles v1 vs v2 inversion)."""
+        raw = self.data.get(REG_HEATER_TYPE)
+        if raw is None:
+            raw = self.heater_type
+        if raw is None or raw == HEATER_TYPE_UNKNOWN:
+            return False
+
+        sw_data = self.data.get("software_version")
+        is_v2 = (
+            self.software_version == SOFTWARE_VERSION_2
+            or str(self.software_version).startswith("2.")
+            or (sw_data is not None and sw_data >= 2.0)
+        )
+        if is_v2:
+            return raw == HEATER_TYPE_ELECTRIC_V2
+        return raw == HEATER_TYPE_ELECTRIC_V1
 
     def get_register_definition(self, key: str) -> RegisterDefinition:
         """Expose register metadata for other components."""
