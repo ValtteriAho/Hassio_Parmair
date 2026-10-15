@@ -1,3 +1,22 @@
+## 0.21.11 - Finnish LVI Standard Layout, Crossed Ducts & Humidity/CO2 Sensors (2026-10-15)
+
+### Added
+- **Humidity & CO2 Sensor Badges on Lovelace Card (`custom:parmair-mac-card`)** — added live sensor readouts for Humidity (`💧 -- %`) and CO2 (`🌱 -- ppm`) located in the exhaust air stream (Poistoilma). Both badges are interactive and open native `hass-more-info` dialogs for `sensor.parmair_mac_humidity` and `sensor.parmair_mac_co2_exhaust`.
+- **Finnish HVAC (LVI) Standard Color Palette** — aligned all visual duct and badge colors with the official Finnish building HVAC code (SFS LVI-standardi):
+  - **Ulkoilma (Fresh outdoor air):** Clean Green (`#10b981` / `#34d399`)
+  - **Poistoilma (Exhaust room air):** Warm Amber / Yellow (`#fbbf24` / `#d97706`)
+  - **Jäteilma (Waste air to outdoors):** Cool Blue / Slate (`#3b82f6` / `#60a5fa`)
+  - **Tuloilma (Supply heated air to rooms):** Warm Red / Coral (`#ef4444` / `#f87171`)
+
+### Changed
+- **Swapped Supply and Waste Air Duct Positions (Crossed Airflow Architecture)**:
+  - **Bottom-Right is now Tuloilma (Supply Air):** Airflow blows into the apartment ductwork to the right (`>>>`). Sited along this supply path: LTO intermediate temperature (`LTO: -- °C`), Supply Fan (`Tulopuhallin -- %`), Post-Heater coil & active thermal element, Post-Heater Power (`Lämmitin -- W`), and Supply Air temperature badge (`Tuloilma -- °C`).
+  - **Bottom-Left is now Jäteilma (Waste Air):** Airflow exhausts outside to the left (`<<<`). Sited along this waste path: Exhaust Fan (`Poistopuhallin -- %`) and Waste Air temperature badge (`Jäteilma -- °C`).
+  - **Crossed Internal Airflow Paths:** Visualized counterflow streams through the center heat recovery core (Ulkoilma -> Tuloilma across to bottom-right, Poistoilma -> Jäteilma across to bottom-left).
+- **Synchronized Standalone SVG (`parmair_schematic.svg`)** with the new Finnish LVI color palette, swapped duct orientations, and crossed airflow streams.
+
+---
+
 ## 0.21.10 - Optimize Home Assistant Entity Categories (2026-10-15)
 
 ### Changed

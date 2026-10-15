@@ -513,4 +513,3 @@ class TestPowerCalculations:
         # At 97% speed (speed 5 preset on MAC 150), fans draw ~306W, total with 5W standby = ~311W (matching field data)
         speed_5_power = 2 * fan_rating * ((97 / 100.0) ** FAN_POWER_AFFINITY_EXPONENT)
         assert 300.0 < speed_5_power + 5.0 < 315.0
-

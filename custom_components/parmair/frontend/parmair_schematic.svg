@@ -2,33 +2,33 @@
   <defs>
     <!-- Background Gradient -->
     <linearGradient id="bgGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#1e242c" />
-      <stop offset="100%" stop-color="#14181d" />
+      <stop offset="0%" stop-color="#18202c" />
+      <stop offset="100%" stop-color="#10151e" />
     </linearGradient>
 
-    <!-- Duct Flow Gradients -->
-    <!-- Fresh Air: Cold ice blue -->
+    <!-- Duct Flow Gradients (Finnish HVAC / LVI Standard Colors) -->
+    <!-- Fresh Air: Finnish LVI Green -->
     <linearGradient id="freshAirGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.9" />
-      <stop offset="100%" stop-color="#0284c7" stop-opacity="0.9" />
+      <stop offset="0%" stop-color="#10b981" stop-opacity="0.9" />
+      <stop offset="100%" stop-color="#059669" stop-opacity="0.9" />
     </linearGradient>
 
-    <!-- Supply Air: Warm orange -->
-    <linearGradient id="supplyAirGrad" x1="100%" y1="0%" x2="0%" y2="0%">
-      <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.9" />
-      <stop offset="100%" stop-color="#ea580c" stop-opacity="0.9" />
-    </linearGradient>
-
-    <!-- Exhaust Air: Room warm coral -->
+    <!-- Exhaust Air: Finnish LVI Yellow / Amber -->
     <linearGradient id="exhaustAirGrad" x1="100%" y1="0%" x2="0%" y2="0%">
-      <stop offset="0%" stop-color="#f87171" stop-opacity="0.9" />
-      <stop offset="100%" stop-color="#ef4444" stop-opacity="0.9" />
+      <stop offset="0%" stop-color="#fbbf24" stop-opacity="0.9" />
+      <stop offset="100%" stop-color="#d97706" stop-opacity="0.9" />
     </linearGradient>
 
-    <!-- Waste Air: Chilled exhaust grey-blue -->
-    <linearGradient id="wasteAirGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#64748b" stop-opacity="0.9" />
-      <stop offset="100%" stop-color="#475569" stop-opacity="0.9" />
+    <!-- Waste Air: Finnish LVI Blue / Cool Slate -->
+    <linearGradient id="wasteAirGrad" x1="100%" y1="0%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.9" />
+      <stop offset="100%" stop-color="#2563eb" stop-opacity="0.9" />
+    </linearGradient>
+
+    <!-- Supply Air: Finnish LVI Warm Red / Coral -->
+    <linearGradient id="supplyAirGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ef4444" stop-opacity="0.9" />
+      <stop offset="100%" stop-color="#dc2626" stop-opacity="0.9" />
     </linearGradient>
 
     <!-- Core Exchanger Gradient -->
@@ -38,16 +38,18 @@
       <stop offset="100%" stop-color="#1e293b" />
     </linearGradient>
 
-    <!-- Counterflow internal flow stream gradients -->
-    <linearGradient id="freshCoreFlow" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#0284c7" />
-      <stop offset="50%" stop-color="#38bdf8" />
-      <stop offset="100%" stop-color="#f59e0b" />
+    <!-- Crossing internal flow streams through LTO core -->
+    <!-- Fresh (Top-Left) -> Supply (Bottom-Right) -->
+    <linearGradient id="freshCoreFlow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10b981" />
+      <stop offset="50%" stop-color="#fbbf24" />
+      <stop offset="100%" stop-color="#ef4444" />
     </linearGradient>
-    <linearGradient id="exhaustCoreFlow" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#ef4444" />
-      <stop offset="50%" stop-color="#f87171" />
-      <stop offset="100%" stop-color="#64748b" />
+    <!-- Exhaust (Top-Right) -> Waste (Bottom-Left) -->
+    <linearGradient id="exhaustCoreFlow" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fbbf24" />
+      <stop offset="50%" stop-color="#60a5fa" />
+      <stop offset="100%" stop-color="#3b82f6" />
     </linearGradient>
 
     <!-- Glow Filter for Active Heater -->
@@ -77,71 +79,71 @@
 
   <!-- ==================== DUCTS & DIRECTION ARROWS ==================== -->
 
-  <!-- 1) TOP-LEFT: ULKOILMA (Fresh outdoor air in) -->
-  <text x="120" y="85" fill="#38bdf8" font-size="13" font-weight="700" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" letter-spacing="1" text-anchor="middle">ULKOILMA</text>
-  <path d="M 50 125 L 200 125" stroke="#0284c7" stroke-width="42" stroke-linecap="round" fill="none" opacity="0.18" />
+  <!-- 1) TOP-LEFT: ULKOILMA (Fresh outdoor air in - LVI Green) -->
+  <text x="120" y="85" fill="#34d399" font-size="13" font-weight="700" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" letter-spacing="1" text-anchor="middle">ULKOILMA</text>
+  <path d="M 50 125 L 200 125" stroke="#10b981" stroke-width="42" stroke-linecap="round" fill="none" opacity="0.18" />
   <path d="M 50 125 L 200 125" stroke="url(#freshAirGrad)" stroke-width="8" stroke-linecap="round" fill="none" />
   <!-- Inward Multi-Chevron Arrows >>> -->
-  <path d="M 152 113 L 164 125 L 152 137" fill="none" stroke="#38bdf8" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
-  <path d="M 168 113 L 180 125 L 168 137" fill="none" stroke="#38bdf8" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
+  <path d="M 152 113 L 164 125 L 152 137" fill="none" stroke="#34d399" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
+  <path d="M 168 113 L 180 125 L 168 137" fill="none" stroke="#34d399" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
   <path d="M 184 113 L 196 125 L 184 137" fill="none" stroke="#ffffff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
 
-  <!-- 2) TOP-RIGHT: POISTOILMA (Exhaust room air in) -->
-  <text x="680" y="85" fill="#f87171" font-size="13" font-weight="700" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" letter-spacing="1" text-anchor="middle">POISTOILMA</text>
-  <path d="M 750 125 L 600 125" stroke="#ef4444" stroke-width="42" stroke-linecap="round" fill="none" opacity="0.18" />
+  <!-- 2) TOP-RIGHT: POISTOILMA (Exhaust room air in - LVI Yellow) -->
+  <text x="680" y="85" fill="#fbbf24" font-size="13" font-weight="700" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" letter-spacing="1" text-anchor="middle">POISTOILMA</text>
+  <path d="M 750 125 L 600 125" stroke="#fbbf24" stroke-width="42" stroke-linecap="round" fill="none" opacity="0.18" />
   <path d="M 750 125 L 600 125" stroke="url(#exhaustAirGrad)" stroke-width="8" stroke-linecap="round" fill="none" />
   <!-- Inward Multi-Chevron Arrows <<< -->
-  <path d="M 648 113 L 636 125 L 648 137" fill="none" stroke="#f87171" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
-  <path d="M 632 113 L 620 125 L 632 137" fill="none" stroke="#f87171" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
+  <path d="M 648 113 L 636 125 L 648 137" fill="none" stroke="#fbbf24" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
+  <path d="M 632 113 L 620 125 L 632 137" fill="none" stroke="#fbbf24" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
   <path d="M 616 113 L 604 125 L 616 137" fill="none" stroke="#ffffff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
 
-  <!-- 3) BOTTOM-LEFT: TULOILMA (Supply warm air out to rooms) -->
-  <text x="120" y="428" fill="#f59e0b" font-size="13" font-weight="700" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" letter-spacing="1" text-anchor="middle">TULOILMA</text>
-  <path d="M 200 370 L 35 370" stroke="#f59e0b" stroke-width="42" stroke-linecap="round" fill="none" opacity="0.18" />
-  <path d="M 200 370 L 35 370" stroke="url(#supplyAirGrad)" stroke-width="8" stroke-linecap="round" fill="none" />
+  <!-- 3) BOTTOM-LEFT: JÄTEILMA (Waste air out to outdoors - LVI Blue) -->
+  <text x="120" y="428" fill="#60a5fa" font-size="13" font-weight="700" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" letter-spacing="1" text-anchor="middle">JÄTEILMA</text>
+  <path d="M 200 370 L 35 370" stroke="#3b82f6" stroke-width="42" stroke-linecap="round" fill="none" opacity="0.18" />
+  <path d="M 200 370 L 35 370" stroke="url(#wasteAirGrad)" stroke-width="8" stroke-linecap="round" fill="none" />
   <!-- Outward Multi-Chevron Arrows <<< -->
-  <path d="M 72 358 L 60 370 L 72 382" fill="none" stroke="#f59e0b" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
-  <path d="M 58 358 L 46 370 L 58 382" fill="none" stroke="#f59e0b" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
+  <path d="M 72 358 L 60 370 L 72 382" fill="none" stroke="#60a5fa" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
+  <path d="M 58 358 L 46 370 L 58 382" fill="none" stroke="#60a5fa" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
   <path d="M 44 358 L 32 370 L 44 382" fill="none" stroke="#ffffff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
 
-  <!-- 4) BOTTOM-RIGHT: JÄTEILMA (Waste air out to outdoors) -->
-  <text x="680" y="428" fill="#94a3b8" font-size="13" font-weight="700" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" letter-spacing="1" text-anchor="middle">JÄTEILMA</text>
-  <path d="M 600 370 L 765 370" stroke="#64748b" stroke-width="42" stroke-linecap="round" fill="none" opacity="0.18" />
-  <path d="M 600 370 L 765 370" stroke="url(#wasteAirGrad)" stroke-width="8" stroke-linecap="round" fill="none" />
+  <!-- 4) BOTTOM-RIGHT: TULOILMA (Supply warm air out to rooms - LVI Red) -->
+  <text x="680" y="428" fill="#f87171" font-size="13" font-weight="700" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" letter-spacing="1" text-anchor="middle">TULOILMA</text>
+  <path d="M 600 370 L 765 370" stroke="#ef4444" stroke-width="42" stroke-linecap="round" fill="none" opacity="0.18" />
+  <path d="M 600 370 L 765 370" stroke="url(#supplyAirGrad)" stroke-width="8" stroke-linecap="round" fill="none" />
   <!-- Outward Multi-Chevron Arrows >>> -->
-  <path d="M 720 358 L 732 370 L 720 382" fill="none" stroke="#94a3b8" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
-  <path d="M 734 358 L 746 370 L 734 382" fill="none" stroke="#94a3b8" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
-  <path d="M 748 358 L 760 370 L 748 382" fill="none" stroke="#ffffff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
+  <path d="M 724 358 L 736 370 L 724 382" fill="none" stroke="#f87171" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
+  <path d="M 738 358 L 750 370 L 738 382" fill="none" stroke="#f87171" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
+  <path d="M 752 358 L 764 370 L 752 382" fill="none" stroke="#ffffff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
 
   <!-- ==================== FILTERS ==================== -->
   <!-- Fresh Air Filter F7 / ePM1 (Top-Left) -->
   <g transform="translate(230, 98)">
-    <rect x="0" y="0" width="10" height="54" rx="2" fill="#0284c7" opacity="0.75" />
-    <line x1="2" y1="5" x2="8" y2="49" stroke="#38bdf8" stroke-width="1.5" />
-    <line x1="8" y1="5" x2="2" y2="49" stroke="#38bdf8" stroke-width="1.5" />
+    <rect x="0" y="0" width="10" height="54" rx="2" fill="#059669" opacity="0.8" />
+    <line x1="2" y1="5" x2="8" y2="49" stroke="#34d399" stroke-width="1.5" />
+    <line x1="8" y1="5" x2="2" y2="49" stroke="#34d399" stroke-width="1.5" />
     <text x="5" y="67" fill="#94a3b8" font-size="9" font-family="sans-serif" text-anchor="middle">F7</text>
   </g>
 
   <!-- Exhaust Air Filter G4 (Top-Right) -->
   <g transform="translate(560, 98)">
-    <rect x="0" y="0" width="10" height="54" rx="2" fill="#ef4444" opacity="0.75" />
-    <line x1="2" y1="5" x2="8" y2="49" stroke="#f87171" stroke-width="1.5" />
-    <line x1="8" y1="5" x2="2" y2="49" stroke="#f87171" stroke-width="1.5" />
+    <rect x="0" y="0" width="10" height="54" rx="2" fill="#d97706" opacity="0.8" />
+    <line x1="2" y1="5" x2="8" y2="49" stroke="#fbbf24" stroke-width="1.5" />
+    <line x1="8" y1="5" x2="2" y2="49" stroke="#fbbf24" stroke-width="1.5" />
     <text x="5" y="67" fill="#94a3b8" font-size="9" font-family="sans-serif" text-anchor="middle">G4</text>
   </g>
 
   <!-- ==================== INTERNAL AIRFLOW THROUGH LTO ==================== -->
-  <!-- Fresh stream: (200,125) -> curves through LTO core -> exits (200,370) -->
-  <path d="M 200 125 C 270 125, 310 155, 360 210 C 390 245, 370 285, 320 305 C 270 325, 240 350, 200 370"
+  <!-- Fresh stream: (200,125) -> curves through LTO core -> exits (600,370) -->
+  <path d="M 200 125 C 270 125, 320 155, 400 248 C 470 315, 520 370, 600 370"
         stroke="url(#freshCoreFlow)" stroke-width="5" stroke-dasharray="8,5" fill="none" opacity="0.85" />
 
-  <!-- Exhaust stream: (600,125) -> curves through LTO core -> exits (600,370) -->
-  <path d="M 600 125 C 530 125, 490 155, 440 210 C 410 245, 430 285, 480 305 C 530 325, 560 350, 600 370"
+  <!-- Exhaust stream: (600,125) -> curves through LTO core -> exits (200,370) -->
+  <path d="M 600 125 C 530 125, 480 155, 400 248 C 330 315, 280 370, 200 370"
         stroke="url(#exhaustCoreFlow)" stroke-width="5" stroke-dasharray="8,5" fill="none" opacity="0.85" />
 
   <!-- ==================== CENTER HEAT EXCHANGER CORE (LTO) ==================== -->
   <g transform="translate(400, 248)">
-    <polygon points="0,-100 100,0 0,100 -100,0" fill="url(#coreGrad)" stroke="#38bdf8" stroke-width="2" />
+    <polygon points="0,-100 100,0 0,100 -100,0" fill="url(#coreGrad)" stroke="#009fe3" stroke-width="2" />
     <!-- Lamellas -->
     <line x1="-60" y1="-40" x2="60" y2="40" stroke="#334155" stroke-width="1.5" />
     <line x1="-40" y1="-60" x2="40" y2="60" stroke="#334155" stroke-width="1.5" />
@@ -153,30 +155,30 @@
   </g>
 
   <!-- ==================== FANS & HEATER ==================== -->
-  <!-- Tulopuhallin (Bottom-Left Bay) -->
+  <!-- Poistopuhallin (Bottom-Left Bay - on waste air path) -->
   <g transform="translate(290, 370)">
-    <circle cx="0" cy="0" r="20" fill="#1e293b" stroke="#475569" stroke-width="1.5" />
-    <circle cx="0" cy="0" r="4" fill="#38bdf8" />
-    <path d="M 0,-14 Q 4,-6 0,0 Q -4,-6 0,-14" fill="#38bdf8" opacity="0.8" />
-    <path d="M 14,0 Q 6,4 0,0 Q 6,-4 14,0" fill="#38bdf8" opacity="0.8" />
-    <path d="M 0,14 Q -4,6 0,0 Q 4,6 0,14" fill="#38bdf8" opacity="0.8" />
-    <path d="M -14,0 Q -6,-4 0,0 Q -6,4 -14,0" fill="#38bdf8" opacity="0.8" />
-    <text x="0" y="30" fill="#94a3b8" font-size="9" font-family="sans-serif" text-anchor="middle">Tulopuhallin</text>
+    <circle cx="0" cy="0" r="20" fill="#1e293b" stroke="#3b82f6" stroke-width="1.5" />
+    <circle cx="0" cy="0" r="4" fill="#60a5fa" />
+    <path d="M 0,-14 Q 4,-6 0,0 Q -4,-6 0,-14" fill="#60a5fa" opacity="0.8" />
+    <path d="M 14,0 Q 6,4 0,0 Q 6,-4 14,0" fill="#60a5fa" opacity="0.8" />
+    <path d="M 0,14 Q -4,6 0,0 Q 4,6 0,14" fill="#60a5fa" opacity="0.8" />
+    <path d="M -14,0 Q -6,-4 0,0 Q -6,4 -14,0" fill="#60a5fa" opacity="0.8" />
+    <text x="0" y="30" fill="#94a3b8" font-size="9" font-family="sans-serif" text-anchor="middle">Poistopuhallin</text>
   </g>
 
-  <!-- Poistopuhallin (Bottom-Right Bay) -->
-  <g transform="translate(510, 370)">
-    <circle cx="0" cy="0" r="20" fill="#1e293b" stroke="#475569" stroke-width="1.5" />
+  <!-- Tulopuhallin (Bottom-Right Bay - on supply air path) -->
+  <g transform="translate(490, 370)">
+    <circle cx="0" cy="0" r="20" fill="#1e293b" stroke="#ef4444" stroke-width="1.5" />
     <circle cx="0" cy="0" r="4" fill="#f87171" />
     <path d="M 0,-14 Q 4,-6 0,0 Q -4,-6 0,-14" fill="#f87171" opacity="0.8" />
     <path d="M 14,0 Q 6,4 0,0 Q 6,-4 14,0" fill="#f87171" opacity="0.8" />
     <path d="M 0,14 Q -4,6 0,0 Q 4,6 0,14" fill="#f87171" opacity="0.8" />
     <path d="M -14,0 Q -6,-4 0,0 Q -6,4 -14,0" fill="#f87171" opacity="0.8" />
-    <text x="0" y="30" fill="#94a3b8" font-size="9" font-family="sans-serif" text-anchor="middle">Poistopuhallin</text>
+    <text x="0" y="30" fill="#94a3b8" font-size="9" font-family="sans-serif" text-anchor="middle">Tulopuhallin</text>
   </g>
 
-  <!-- Jälkilämmitin (Post-Heater Element) -->
-  <g transform="translate(216, 370)" id="heater_coil">
+  <!-- Jälkilämmitin (Post-Heater Element - on supply air path, Bottom-Right) -->
+  <g transform="translate(575, 370)" id="heater_coil">
     <rect x="-10" y="-24" width="20" height="48" rx="4" fill="#181512" stroke="#ea580c" stroke-width="1.5" />
     <path d="M -5,-16 L 5,-10 L -5,-4 L 5,2 L -5,8 L 5,14" fill="none" stroke="#ea580c" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" id="heater_path" />
   </g>

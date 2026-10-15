@@ -1,4 +1,4 @@
-# Parmair MAC for Home Assistant (v0.21.10)
+# Parmair MAC for Home Assistant (v0.21.11)
 
 ![Parmair MAC Logo](parmair_logo.jpg)
 
@@ -352,6 +352,7 @@ If auto-detection fails, you can manually select these during setup.
 
 See [CHANGELOG.md](CHANGELOG.md) for complete version history.
 
+- **v0.21.11**: Finnish LVI standard color palette, swapped supply/waste duct layout (crossed airflow architecture: Tuloilma on bottom-right, Jäteilma on bottom-left), and added interactive Humidity and CO2 sensor badges in the exhaust stream.
 - **v0.21.10**: Optimize Home Assistant entity categories: promote waste air temperature, heat recovery efficiency, and fan speeds to primary Sensors, and move post-heater switch to Controls.
 - **v0.21.9**: Calibrate EC fan power calculation exponent from 2.2 to 2.55 based on real-world Shelly energy meter measurements on Parmair MAC 150 across all 5 speeds, achieving 1–2 W precision.
 - **v0.21.8**: Fix card element spacing and add real-time fan speed percentages directly beneath fan icons on the built-in card.

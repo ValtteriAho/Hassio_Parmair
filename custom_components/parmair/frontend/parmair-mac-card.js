@@ -215,26 +215,30 @@ class ParmairMacCard extends HTMLElement {
           <svg class="schematic-svg" viewBox="0 0 800 480" preserveAspectRatio="xMidYMid meet">
             <defs>
               <linearGradient id="cardBgGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stop-color="#1e242c" />
-                <stop offset="100%" stop-color="#14181d" />
+                <stop offset="0%" stop-color="#18202c" />
+                <stop offset="100%" stop-color="#10151e" />
               </linearGradient>
 
-              <!-- Flow Gradients -->
+              <!-- Flow Gradients (Finnish HVAC / LVI Standard Colors) -->
+              <!-- 1) Ulkoilma / Fresh Air: Finnish LVI Green -->
               <linearGradient id="freshAirGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.9" />
-                <stop offset="100%" stop-color="#0284c7" stop-opacity="0.9" />
+                <stop offset="0%" stop-color="#10b981" stop-opacity="0.9" />
+                <stop offset="100%" stop-color="#059669" stop-opacity="0.9" />
               </linearGradient>
-              <linearGradient id="supplyAirGrad" x1="100%" y1="0%" x2="0%" y2="0%">
-                <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.9" />
-                <stop offset="100%" stop-color="#ea580c" stop-opacity="0.9" />
-              </linearGradient>
+              <!-- 2) Poistoilma / Exhaust Air: Finnish LVI Yellow / Amber -->
               <linearGradient id="exhaustAirGrad" x1="100%" y1="0%" x2="0%" y2="0%">
-                <stop offset="0%" stop-color="#f87171" stop-opacity="0.9" />
-                <stop offset="100%" stop-color="#ef4444" stop-opacity="0.9" />
+                <stop offset="0%" stop-color="#fbbf24" stop-opacity="0.9" />
+                <stop offset="100%" stop-color="#d97706" stop-opacity="0.9" />
               </linearGradient>
-              <linearGradient id="wasteAirGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stop-color="#64748b" stop-opacity="0.9" />
-                <stop offset="100%" stop-color="#475569" stop-opacity="0.9" />
+              <!-- 3) Jäteilma / Waste Air: Finnish LVI Blue / Cool Slate -->
+              <linearGradient id="wasteAirGrad" x1="100%" y1="0%" x2="0%" y2="0%">
+                <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.9" />
+                <stop offset="100%" stop-color="#2563eb" stop-opacity="0.9" />
+              </linearGradient>
+              <!-- 4) Tuloilma / Supply Air: Finnish LVI Warm Red / Coral -->
+              <linearGradient id="supplyAirGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#ef4444" stop-opacity="0.9" />
+                <stop offset="100%" stop-color="#dc2626" stop-opacity="0.9" />
               </linearGradient>
 
               <linearGradient id="coreGrad" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -243,16 +247,18 @@ class ParmairMacCard extends HTMLElement {
                 <stop offset="100%" stop-color="#1e293b" />
               </linearGradient>
 
-              <!-- Counterflow internal gradients -->
-              <linearGradient id="freshCoreFlow" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stop-color="#0284c7" />
-                <stop offset="50%" stop-color="#38bdf8" />
-                <stop offset="100%" stop-color="#f59e0b" />
+              <!-- Crossing internal flow streams through LTO core -->
+              <!-- Fresh (Top-Left) -> Supply (Bottom-Right) -->
+              <linearGradient id="freshCoreFlow" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#10b981" />
+                <stop offset="50%" stop-color="#fbbf24" />
+                <stop offset="100%" stop-color="#ef4444" />
               </linearGradient>
-              <linearGradient id="exhaustCoreFlow" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stop-color="#ef4444" />
-                <stop offset="50%" stop-color="#f87171" />
-                <stop offset="100%" stop-color="#64748b" />
+              <!-- Exhaust (Top-Right) -> Waste (Bottom-Left) -->
+              <linearGradient id="exhaustCoreFlow" x1="100%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#fbbf24" />
+                <stop offset="50%" stop-color="#60a5fa" />
+                <stop offset="100%" stop-color="#3b82f6" />
               </linearGradient>
 
               <!-- Glow filter for post-heater -->
@@ -281,67 +287,67 @@ class ParmairMacCard extends HTMLElement {
             <rect x="214" y="74" width="372" height="322" rx="10" fill="#131922" stroke="#1e293b" stroke-width="1.5" />
 
             <!-- DUCTS WITH REAL-WORLD DIRECTION ARROWS (MULTI-CHEVRON WITH GLOW) -->
-            <!-- 1) Top-Left: Ulkoilma (Fresh outdoor air in) -->
-            <path d="M 50 120 L 200 120" stroke="#0284c7" stroke-width="36" stroke-linecap="round" fill="none" opacity="0.15" />
+            <!-- 1) Top-Left: Ulkoilma (Fresh outdoor air in - LVI Green) -->
+            <path d="M 50 120 L 200 120" stroke="#10b981" stroke-width="36" stroke-linecap="round" fill="none" opacity="0.15" />
             <path d="M 50 120 L 200 120" stroke="url(#freshAirGrad)" stroke-width="7" stroke-linecap="round" fill="none" />
             <!-- Inward Multi-Chevron Arrows >>> -->
-            <path d="M 152 108 L 164 120 L 152 132" fill="none" stroke="#38bdf8" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
-            <path d="M 168 108 L 180 120 L 168 132" fill="none" stroke="#38bdf8" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
+            <path d="M 152 108 L 164 120 L 152 132" fill="none" stroke="#34d399" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
+            <path d="M 168 108 L 180 120 L 168 132" fill="none" stroke="#34d399" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
             <path d="M 184 108 L 196 120 L 184 132" fill="none" stroke="#ffffff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
 
-            <!-- 2) Top-Right: Poistoilma (Exhaust room air in) -->
-            <path d="M 750 120 L 600 120" stroke="#ef4444" stroke-width="36" stroke-linecap="round" fill="none" opacity="0.15" />
+            <!-- 2) Top-Right: Poistoilma (Exhaust room air in - LVI Yellow/Amber) -->
+            <path d="M 750 120 L 600 120" stroke="#fbbf24" stroke-width="36" stroke-linecap="round" fill="none" opacity="0.15" />
             <path d="M 750 120 L 600 120" stroke="url(#exhaustAirGrad)" stroke-width="7" stroke-linecap="round" fill="none" />
             <!-- Inward Multi-Chevron Arrows <<< -->
-            <path d="M 648 108 L 636 120 L 648 132" fill="none" stroke="#f87171" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
-            <path d="M 632 108 L 620 120 L 632 132" fill="none" stroke="#f87171" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
+            <path d="M 648 108 L 636 120 L 648 132" fill="none" stroke="#fbbf24" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
+            <path d="M 632 108 L 620 120 L 632 132" fill="none" stroke="#fbbf24" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
             <path d="M 616 108 L 604 120 L 616 132" fill="none" stroke="#ffffff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
 
-            <!-- 3) Bottom-Right: Jäteilma (Waste air out to outdoors) -->
-            <path d="M 600 350 L 765 350" stroke="#64748b" stroke-width="36" stroke-linecap="round" fill="none" opacity="0.15" />
-            <path d="M 600 350 L 765 350" stroke="url(#wasteAirGrad)" stroke-width="7" stroke-linecap="round" fill="none" />
-            <!-- Outward Multi-Chevron Arrows >>> -->
-            <path d="M 720 338 L 732 350 L 720 362" fill="none" stroke="#94a3b8" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
-            <path d="M 734 338 L 746 350 L 734 362" fill="none" stroke="#94a3b8" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
-            <path d="M 748 338 L 760 350 L 748 362" fill="none" stroke="#ffffff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
-
-            <!-- 4) Bottom-Left: Tuloilma (Supply warm air out to home) -->
-            <path d="M 200 350 L 35 350" stroke="#f59e0b" stroke-width="36" stroke-linecap="round" fill="none" opacity="0.15" />
-            <path d="M 200 350 L 35 350" stroke="url(#supplyAirGrad)" stroke-width="7" stroke-linecap="round" fill="none" />
+            <!-- 3) Bottom-Left: Jäteilma (Waste air out to outdoors - LVI Blue/Slate) -->
+            <path d="M 200 350 L 35 350" stroke="#3b82f6" stroke-width="36" stroke-linecap="round" fill="none" opacity="0.15" />
+            <path d="M 200 350 L 35 350" stroke="url(#wasteAirGrad)" stroke-width="7" stroke-linecap="round" fill="none" />
             <!-- Outward Multi-Chevron Arrows <<< -->
-            <path d="M 72 338 L 60 350 L 72 362" fill="none" stroke="#f59e0b" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
-            <path d="M 58 338 L 46 350 L 58 362" fill="none" stroke="#f59e0b" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
+            <path d="M 72 338 L 60 350 L 72 362" fill="none" stroke="#60a5fa" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
+            <path d="M 58 338 L 46 350 L 58 362" fill="none" stroke="#60a5fa" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
             <path d="M 44 338 L 32 350 L 44 362" fill="none" stroke="#ffffff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
+
+            <!-- 4) Bottom-Right: Tuloilma (Supply warm air out to home - LVI Red/Coral) -->
+            <path d="M 600 350 L 765 350" stroke="#ef4444" stroke-width="36" stroke-linecap="round" fill="none" opacity="0.15" />
+            <path d="M 600 350 L 765 350" stroke="url(#supplyAirGrad)" stroke-width="7" stroke-linecap="round" fill="none" />
+            <!-- Outward Multi-Chevron Arrows >>> -->
+            <path d="M 724 338 L 736 350 L 724 362" fill="none" stroke="#f87171" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
+            <path d="M 738 338 L 750 350 L 738 362" fill="none" stroke="#f87171" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
+            <path d="M 752 338 L 764 350 L 752 362" fill="none" stroke="#ffffff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
 
             <!-- Filters -->
             <!-- F7 Fresh Air Filter (Top-Left) -->
             <g transform="translate(230, 95)">
-              <rect x="0" y="0" width="10" height="50" rx="2" fill="#0284c7" opacity="0.75" />
-              <line x1="2" y1="5" x2="8" y2="45" stroke="#38bdf8" stroke-width="1.5" />
-              <line x1="8" y1="5" x2="2" y2="45" stroke="#38bdf8" stroke-width="1.5" />
+              <rect x="0" y="0" width="10" height="50" rx="2" fill="#059669" opacity="0.8" />
+              <line x1="2" y1="5" x2="8" y2="45" stroke="#34d399" stroke-width="1.5" />
+              <line x1="8" y1="5" x2="2" y2="45" stroke="#34d399" stroke-width="1.5" />
               <text x="5" y="62" fill="#94a3b8" font-size="9" font-family="sans-serif" text-anchor="middle">F7</text>
             </g>
 
             <!-- G4 Exhaust Filter (Top-Right) -->
             <g transform="translate(560, 95)">
-              <rect x="0" y="0" width="10" height="50" rx="2" fill="#ef4444" opacity="0.75" />
-              <line x1="2" y1="5" x2="8" y2="45" stroke="#f87171" stroke-width="1.5" />
-              <line x1="8" y1="5" x2="2" y2="45" stroke="#f87171" stroke-width="1.5" />
+              <rect x="0" y="0" width="10" height="50" rx="2" fill="#d97706" opacity="0.8" />
+              <line x1="2" y1="5" x2="8" y2="45" stroke="#fbbf24" stroke-width="1.5" />
+              <line x1="8" y1="5" x2="2" y2="45" stroke="#fbbf24" stroke-width="1.5" />
               <text x="5" y="62" fill="#94a3b8" font-size="9" font-family="sans-serif" text-anchor="middle">G4</text>
             </g>
 
-            <!-- AIRFLOW PATHS PASSING THROUGH HEAT EXCHANGER CORE -->
-            <!-- Fresh stream: (200,120) -> curves through LTO core -> (200,350) -->
-            <path d="M 200 120 C 270 120, 310 150, 360 200 C 390 230, 370 270, 320 290 C 270 310, 240 330, 200 350"
+            <!-- AIRFLOW PATHS CROSSING THROUGH HEAT EXCHANGER CORE -->
+            <!-- Fresh stream: (200,120) -> curves through LTO core -> (600,350) -->
+            <path d="M 200 120 C 270 120, 320 150, 400 235 C 470 300, 520 350, 600 350"
                   stroke="url(#freshCoreFlow)" stroke-width="5" stroke-dasharray="8,5" fill="none" opacity="0.85" />
 
-            <!-- Exhaust stream: (600,120) -> curves through LTO core -> (600,350) -->
-            <path d="M 600 120 C 530 120, 490 150, 440 200 C 410 230, 430 270, 480 290 C 530 310, 560 330, 600 350"
+            <!-- Exhaust stream: (600,120) -> curves through LTO core -> (200,350) -->
+            <path d="M 600 120 C 530 120, 480 150, 400 235 C 330 300, 280 350, 200 350"
                   stroke="url(#exhaustCoreFlow)" stroke-width="5" stroke-dasharray="8,5" fill="none" opacity="0.85" />
 
             <!-- CENTER: Heat Recovery Exchanger Core (Diamond) -->
             <g transform="translate(400, 235)" id="badge_lto_center" class="clickable-badge">
-              <polygon points="0,-95 95,0 0,95 -95,0" fill="url(#coreGrad)" stroke="#38bdf8" stroke-width="2" />
+              <polygon points="0,-95 95,0 0,95 -95,0" fill="url(#coreGrad)" stroke="#009fe3" stroke-width="2" />
               <!-- Heat transfer lamellas -->
               <line x1="-55" y1="-40" x2="55" y2="40" stroke="#334155" stroke-width="1.5" />
               <line x1="-40" y1="-55" x2="40" y2="55" stroke="#334155" stroke-width="1.5" />
@@ -354,32 +360,32 @@ class ParmairMacCard extends HTMLElement {
               <text x="0" y="16" fill="#38bdf8" font-size="12" font-weight="600" font-family="sans-serif" text-anchor="middle" id="svg_recovery_power">Talteenotto: -- W</text>
             </g>
 
-            <!-- Tulopuhallin (Bottom-Left Bay) -->
-            <g transform="translate(290, 350)" id="badge_supply_fan" class="clickable-badge" title="Klikkaa avataksesi tulopuhaltimen tiedot">
-              <circle cx="0" cy="0" r="20" fill="#1e293b" stroke="#475569" stroke-width="1.5" />
-              <circle cx="0" cy="0" r="4" fill="#38bdf8" />
-              <path d="M 0,-14 Q 4,-6 0,0 Q -4,-6 0,-14" fill="#38bdf8" opacity="0.8" />
-              <path d="M 14,0 Q 6,4 0,0 Q 6,-4 14,0" fill="#38bdf8" opacity="0.8" />
-              <path d="M 0,14 Q -4,6 0,0 Q 4,6 0,14" fill="#38bdf8" opacity="0.8" />
-              <path d="M -14,0 Q -6,-4 0,0 Q -6,4 -14,0" fill="#38bdf8" opacity="0.8" />
-              <text x="0" y="28" fill="#94a3b8" font-size="9" font-family="sans-serif" text-anchor="middle">Tulopuhallin</text>
-              <text x="0" y="42" fill="#38bdf8" font-size="11" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_supply_fan">-- %</text>
+            <!-- Poistopuhallin (Bottom-Left Bay - on waste air path) -->
+            <g transform="translate(290, 350)" id="badge_exhaust_fan" class="clickable-badge" title="Klikkaa avataksesi poistopuhaltimen tiedot">
+              <circle cx="0" cy="0" r="20" fill="#1e293b" stroke="#3b82f6" stroke-width="1.5" />
+              <circle cx="0" cy="0" r="4" fill="#60a5fa" />
+              <path d="M 0,-14 Q 4,-6 0,0 Q -4,-6 0,-14" fill="#60a5fa" opacity="0.8" />
+              <path d="M 14,0 Q 6,4 0,0 Q 6,-4 14,0" fill="#60a5fa" opacity="0.8" />
+              <path d="M 0,14 Q -4,6 0,0 Q 4,6 0,14" fill="#60a5fa" opacity="0.8" />
+              <path d="M -14,0 Q -6,-4 0,0 Q -6,4 -14,0" fill="#60a5fa" opacity="0.8" />
+              <text x="0" y="28" fill="#94a3b8" font-size="9" font-family="sans-serif" text-anchor="middle">Poistopuhallin</text>
+              <text x="0" y="42" fill="#60a5fa" font-size="11" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_exhaust_fan">-- %</text>
             </g>
 
-            <!-- Poistopuhallin (Bottom-Right Bay) -->
-            <g transform="translate(510, 350)" id="badge_exhaust_fan" class="clickable-badge" title="Klikkaa avataksesi poistopuhaltimen tiedot">
-              <circle cx="0" cy="0" r="20" fill="#1e293b" stroke="#475569" stroke-width="1.5" />
+            <!-- Tulopuhallin (Bottom-Right Bay - on supply air path) -->
+            <g transform="translate(490, 350)" id="badge_supply_fan" class="clickable-badge" title="Klikkaa avataksesi tulopuhaltimen tiedot">
+              <circle cx="0" cy="0" r="20" fill="#1e293b" stroke="#ef4444" stroke-width="1.5" />
               <circle cx="0" cy="0" r="4" fill="#f87171" />
               <path d="M 0,-14 Q 4,-6 0,0 Q -4,-6 0,-14" fill="#f87171" opacity="0.8" />
               <path d="M 14,0 Q 6,4 0,0 Q 6,-4 14,0" fill="#f87171" opacity="0.8" />
               <path d="M 0,14 Q -4,6 0,0 Q 4,6 0,14" fill="#f87171" opacity="0.8" />
               <path d="M -14,0 Q -6,-4 0,0 Q -6,4 -14,0" fill="#f87171" opacity="0.8" />
-              <text x="0" y="28" fill="#94a3b8" font-size="9" font-family="sans-serif" text-anchor="middle">Poistopuhallin</text>
-              <text x="0" y="42" fill="#f87171" font-size="11" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_exhaust_fan">-- %</text>
+              <text x="0" y="28" fill="#94a3b8" font-size="9" font-family="sans-serif" text-anchor="middle">Tulopuhallin</text>
+              <text x="0" y="42" fill="#f87171" font-size="11" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_supply_fan">-- %</text>
             </g>
 
-            <!-- Post-Heater Coil Component (Active thermal element) -->
-            <g transform="translate(216, 350)" id="heater_coil">
+            <!-- Post-Heater Coil Component (Active thermal element on supply path, Bottom-Right) -->
+            <g transform="translate(575, 350)" id="heater_coil">
               <rect x="-10" y="-24" width="20" height="48" rx="4" fill="#181512" stroke="#ea580c" stroke-width="1.5" />
               <path d="M -5,-16 L 5,-10 L -5,-4 L 5,2 L -5,8 L 5,14" fill="none" stroke="#ea580c" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" id="heater_path" />
             </g>
@@ -387,42 +393,52 @@ class ParmairMacCard extends HTMLElement {
             <!-- VECTOR-LOCKED SENSOR BADGES (CANNOT COLLIDE OR DRIFT) -->
             <!-- 1) Ulkoilma Badge (Top-Left) -->
             <g transform="translate(90, 120)" id="badge_fresh" class="clickable-badge">
-              <rect x="-55" y="-22" width="110" height="44" rx="8" fill="rgba(15, 23, 42, 0.9)" stroke="#0284c7" stroke-width="1.5" filter="url(#badgeShadow)" />
+              <rect x="-55" y="-22" width="110" height="44" rx="8" fill="rgba(15, 23, 42, 0.92)" stroke="#10b981" stroke-width="1.5" filter="url(#badgeShadow)" />
               <text x="0" y="-4" fill="#94a3b8" font-size="11" font-weight="600" font-family="sans-serif" text-anchor="middle">Ulkoilma</text>
-              <text x="0" y="14" fill="#38bdf8" font-size="14" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_fresh">-- °C</text>
+              <text x="0" y="14" fill="#34d399" font-size="14" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_fresh">-- °C</text>
             </g>
 
             <!-- 2) Poistoilma Badge (Top-Right) -->
-            <g transform="translate(710, 120)" id="badge_exhaust" class="clickable-badge">
-              <rect x="-55" y="-22" width="110" height="44" rx="8" fill="rgba(15, 23, 42, 0.9)" stroke="#ef4444" stroke-width="1.5" filter="url(#badgeShadow)" />
+            <g transform="translate(710, 105)" id="badge_exhaust" class="clickable-badge">
+              <rect x="-55" y="-20" width="110" height="40" rx="8" fill="rgba(15, 23, 42, 0.92)" stroke="#f59e0b" stroke-width="1.5" filter="url(#badgeShadow)" />
               <text x="0" y="-4" fill="#94a3b8" font-size="11" font-weight="600" font-family="sans-serif" text-anchor="middle">Poistoilma</text>
-              <text x="0" y="14" fill="#f87171" font-size="14" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_exhaust">-- °C</text>
+              <text x="0" y="13" fill="#fbbf24" font-size="14" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_exhaust">-- °C</text>
             </g>
 
-            <!-- 3) LTO Intermediate Temp Badge (After Recovery Core) -->
-            <g transform="translate(290, 285)" id="badge_lto_temp" class="clickable-badge">
-              <rect x="-40" y="-12" width="80" height="24" rx="5" fill="rgba(15, 23, 42, 0.95)" stroke="#0284c7" stroke-width="1.2" filter="url(#badgeShadow)" />
-              <text x="0" y="5" fill="#38bdf8" font-size="11" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_lto_temp">LTO: -- °C</text>
+            <!-- 2b) Kosteus & CO2 Badges (in Poistoilma duct stream, Top-Right) -->
+            <g transform="translate(670, 150)" id="badge_humidity" class="clickable-badge" title="Klikkaa avataksesi kosteusanturin tiedot">
+              <rect x="-34" y="-11" width="68" height="22" rx="5" fill="rgba(15, 23, 42, 0.95)" stroke="#06b6d4" stroke-width="1.2" filter="url(#badgeShadow)" />
+              <text x="0" y="4" fill="#22d3ee" font-size="10" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_humidity">💧 -- %</text>
+            </g>
+            <g transform="translate(748, 150)" id="badge_co2" class="clickable-badge" title="Klikkaa avataksesi CO2-anturin tiedot">
+              <rect x="-38" y="-11" width="76" height="22" rx="5" fill="rgba(15, 23, 42, 0.95)" stroke="#10b981" stroke-width="1.2" filter="url(#badgeShadow)" />
+              <text x="0" y="4" fill="#34d399" font-size="10" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_co2">🌱 -- ppm</text>
             </g>
 
-            <!-- 4) Post-Heater Power Badge (Above heating coil) -->
-            <g transform="translate(210, 285)" id="badge_heater" class="clickable-badge">
-              <rect x="-40" y="-12" width="80" height="24" rx="5" fill="rgba(24, 21, 18, 0.95)" stroke="#ea580c" stroke-width="1.2" id="svg_heater_badge" filter="url(#badgeShadow)" />
+            <!-- 3) Jäteilma Badge (Bottom-Left) -->
+            <g transform="translate(132, 350)" id="badge_waste" class="clickable-badge">
+              <rect x="-46" y="-22" width="92" height="44" rx="8" fill="rgba(15, 23, 42, 0.92)" stroke="#3b82f6" stroke-width="1.5" filter="url(#badgeShadow)" />
+              <text x="0" y="-4" fill="#94a3b8" font-size="11" font-weight="600" font-family="sans-serif" text-anchor="middle">Jäteilma</text>
+              <text x="0" y="14" fill="#60a5fa" font-size="14" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_waste">-- °C</text>
+            </g>
+
+            <!-- 4) LTO Intermediate Temp Badge (After Recovery Core on Supply Path, Bottom-Right) -->
+            <g transform="translate(490, 285)" id="badge_lto_temp" class="clickable-badge">
+              <rect x="-38" y="-12" width="76" height="24" rx="5" fill="rgba(15, 23, 42, 0.95)" stroke="#10b981" stroke-width="1.2" filter="url(#badgeShadow)" />
+              <text x="0" y="5" fill="#34d399" font-size="11" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_lto_temp">LTO: -- °C</text>
+            </g>
+
+            <!-- 5) Post-Heater Power Badge (Above heating coil, Bottom-Right) -->
+            <g transform="translate(575, 285)" id="badge_heater" class="clickable-badge">
+              <rect x="-38" y="-12" width="76" height="24" rx="5" fill="rgba(24, 21, 18, 0.95)" stroke="#ea580c" stroke-width="1.2" id="svg_heater_badge" filter="url(#badgeShadow)" />
               <text x="0" y="5" fill="#fb923c" font-size="10" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_heater_power">Lämmitin: 0 W</text>
             </g>
 
-            <!-- 5) Tuloilma Badge (Bottom-Left) -->
-            <g transform="translate(132, 350)" id="badge_supply" class="clickable-badge">
-              <rect x="-46" y="-22" width="92" height="44" rx="8" fill="rgba(15, 23, 42, 0.9)" stroke="#ea580c" stroke-width="1.5" filter="url(#badgeShadow)" />
+            <!-- 6) Tuloilma Badge (Bottom-Right) -->
+            <g transform="translate(668, 350)" id="badge_supply" class="clickable-badge">
+              <rect x="-46" y="-22" width="92" height="44" rx="8" fill="rgba(15, 23, 42, 0.92)" stroke="#ef4444" stroke-width="1.5" filter="url(#badgeShadow)" />
               <text x="0" y="-4" fill="#94a3b8" font-size="11" font-weight="600" font-family="sans-serif" text-anchor="middle">Tuloilma</text>
-              <text x="0" y="14" fill="#f59e0b" font-size="15" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_supply">-- °C</text>
-            </g>
-
-            <!-- 6) Jäteilma Badge (Bottom-Right) -->
-            <g transform="translate(660, 350)" id="badge_waste" class="clickable-badge">
-              <rect x="-46" y="-22" width="92" height="44" rx="8" fill="rgba(15, 23, 42, 0.9)" stroke="#475569" stroke-width="1.5" filter="url(#badgeShadow)" />
-              <text x="0" y="-4" fill="#94a3b8" font-size="11" font-weight="600" font-family="sans-serif" text-anchor="middle">Jäteilma</text>
-              <text x="0" y="14" fill="#94a3b8" font-size="14" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_waste">-- °C</text>
+              <text x="0" y="14" fill="#f87171" font-size="15" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_supply">-- °C</text>
             </g>
           </svg>
         </div>
@@ -500,6 +516,8 @@ class ParmairMacCard extends HTMLElement {
     this._attachMoreInfo("speed", ["current_speed", "actual_speed", "actual_fan_speed"]);
     this._attachMoreInfo("badge_supply_fan", ["supply_fan_speed"]);
     this._attachMoreInfo("badge_exhaust_fan", ["exhaust_fan_speed"]);
+    this._attachMoreInfo("badge_humidity", ["humidity", "exhaust_humidity"]);
+    this._attachMoreInfo("badge_co2", ["co2_exhaust", "co2_exhaust_air", "co2"]);
 
     this.content = true;
   }
@@ -676,6 +694,21 @@ class ParmairMacCard extends HTMLElement {
     if (elTotalPower && totalPower !== null) elTotalPower.textContent = `${totalPower} W`;
     if (elTotalEnergy && totalEnergy !== null) elTotalEnergy.textContent = `${totalEnergy} kWh`;
     if (elFilterDays && filterState !== null) elFilterDays.textContent = filterState;
+
+    // 7) Environmental Sensors in Exhaust (Humidity & CO2)
+    const humidity = this._findValue(["humidity", "exhaust_humidity"]);
+    const co2 = this._findValue(["co2_exhaust", "co2_exhaust_air", "co2"]);
+
+    const elHumidity = this.shadowRoot.getElementById("svg_humidity");
+    const elCo2 = this.shadowRoot.getElementById("svg_co2");
+
+    if (elHumidity && humidity !== null) {
+      elHumidity.textContent = `💧 ${humidity} %`;
+    }
+    if (elCo2 && co2 !== null) {
+      const co2Val = Math.round(parseFloat(co2));
+      elCo2.textContent = isNaN(co2Val) ? `🌱 ${co2} ppm` : `🌱 ${co2Val} ppm`;
+    }
   }
 
   _setMode(mode) {
