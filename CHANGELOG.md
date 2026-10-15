@@ -1,3 +1,16 @@
+## 0.21.8 - Fix Card Element Spacing & Add Fan Speed Percentages (2026-10-15)
+
+### Added
+- **Fan Speed Percentages on Built-in Card (`custom:parmair-mac-card`)** — displayed real-time control percentage speeds directly beneath each fan icon (`Tulopuhallin -- %` and `Poistopuhallin -- %`), with click-to-inspect opening `sensor.parmair_mac_supply_fan_speed` and `sensor.parmair_mac_exhaust_fan_speed`.
+
+### Fixed
+- **Zero-Overlap Vector Layout** — eliminated all visual collisions in the lower deck:
+  - Repositioned Tuloilma channel badge (`translate(132, 350)`) and shifted outward chevrons (`X=44..72`), eliminating overlap with both the chevron and the heating coil element (`X=216`).
+  - Separated Post-Heater Power badge (`X=210, Y=285`) and LTO Intermediate Temp badge (`X=290, Y=285`), establishing clear margins between the heater, LTO sensor, and center diamond heat exchanger core.
+  - Aligned Jäteilma channel badge (`X=660`) and outward chevrons (`X=720..748`) with ample clearance from the exhaust fan.
+
+---
+
 ## 0.21.7 - Built-in Lovelace Card Interactive Overhaul & Standard Tapa 1 Architecture (2026-10-15)
 
 ### Added
