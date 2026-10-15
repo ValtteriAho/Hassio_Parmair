@@ -51,6 +51,17 @@ Perfect for creating smart automations, monitoring air quality, and managing you
 
 ---
 
+## ⚙️ Configuration Options
+
+You can adjust runtime settings anytime via **Settings → Devices & Services → Parmair MAC → Configure**:
+
+- **Update Interval (`scan_interval`):** Polling frequency between 5 and 300 seconds (default: `60` seconds).
+- **Custom Fan Rating (`custom_fan_rating`):** Override the default nominal fan power (W per fan) to calibrate power calculations with your own energy meter (e.g. Shelly).
+- **Custom Heater Rating (`custom_heater_rating`):** Override electric post-heater wattage (e.g. 1000 W or 2000 W).
+- **Connection Details:** Update Host IP or device name without needing to remove and re-add the integration.
+
+---
+
 ## Troubleshooting
 
 ### Can't Connect?
@@ -82,9 +93,10 @@ Perfect for creating smart automations, monitoring air quality, and managing you
 ### Need More Help?
 
 [Open an issue on GitHub](https://github.com/ValtteriAho/Hassio_Parmair/issues) with:
-- Your device model (MAC80/100/150)
-- Software version (visible in Home Assistant after setup)
-- What's not working
+- **Diagnostic download:** In Home Assistant, go to *Settings → Devices & Services → Parmair MAC*, click the three dots (**⋮**) and select **Download diagnostics** (IP addresses and personal identifiers are automatically redacted).
+- Your device model (MAC 70, 80, 100, 105, 120, 150, 170, 220, 250, Rexo, Lämpöiivari II)
+- Software version (visible on device page, e.g. `2.28` or `1.87`)
+- What's not working or error logs from Home Assistant
 
 ---
 
@@ -94,18 +106,27 @@ Once installed, you'll have control over:
 
 ### Main Controls
 - **Control State** - Dedicated mode selector (`select.parmair_mac_control_state`) to switch between Away, Home, Boost (plus Sauna and Fireplace on v2.x) with no awkward on/off toggles
-- **Manual Speed Control** - Override fan speeds directly or keep on Auto
-- **Speed Presets** - Configure preset fan speeds for each mode (Home, Away, Boost)
+- **Speed Presets** - Configure preset fan speeds for each mode (Home Speed, Away Speed, Boost Speed)
+- **Manual Speed Control** - Direct fan speed override *(v1.x only; on v2.x speed is managed via mode presets)*
 - **Temperature Targets** - Adjust supply and exhaust temperature setpoints with 0.5 °C precision
 - **Timers** - Control how long Boost and Overpressure modes run
 
+### Power & Energy (Energy Dashboard Ready)
+- **Total Energy (`kWh`)** - State-restoring cumulative electrical energy (`sensor.parmair_mac_total_energy`). Adds directly to the official **Home Assistant Energy Dashboard** (*Individual Devices*) with zero manual helpers.
+- **Total Power (`W`)** - Real-time electrical power consumption of the entire ventilation unit (fans + active electric heating + 5 W standby electronics).
+- **Fan Power (`W`)** - Active electrical power drawn by EC supply and exhaust fans, calculated via a calibrated empirical affinity law model ($P = P_{\text{max}} \times (\text{speed}/100)^{2.55}$).
+- **Post-Heater Power (`W`)** - Active electrical power consumed by electric post-heating (0 W for water-heated or unequipped systems).
+- **Heat Recovery Thermal Power (`W`)** - Live thermal power recovered from exhaust air by the rotary heat exchanger (LTO).
+- **Heat Recovery Efficiency (`%`)** - Real-time thermal efficiency percentage of heat recovery.
+
 ### Monitoring
-- **Temperatures** - Fresh air, supply, exhaust, and waste air
+- **Temperatures** - Fresh air (*ulkoilma*), supply air (*tuloilma*), exhaust air (*poistoilma*), waste air (*jäteilma*), and supply after recovery (*LTO jälkeen*)
+- **Fan Speeds** - Running fan speed percentages for supply and exhaust fans
 - **Humidity** - Current level and 24-hour average (if equipped)
 - **CO2 Levels** - Exhaust air quality monitoring (if equipped)
 - **Operating Status** - Current mode, speed, and power state
 - **Heater Type** - Detected heater hardware (Electric, Water, or None)
-- **Alarms** - Active warnings and filter status
+- **Alarms** - Active warnings, defrost status, and filter replacement counter
 
 ### Smart Features
 - **Operational Mode** - See exactly what the unit is doing and why (Home, Away, Boost, CO2 Boost, Humidity Boost, Summer Cooling, etc.) *(v2.x)*
@@ -233,12 +254,16 @@ automation:
 
 ## Supported Devices
 
-This integration supports Parmair MAC units by firmware generation:
+The integration automatically detects your hardware model and software generation, loading the appropriate register mapping and power profiles:
 
-- **Software v2.x**: Supported across MAC product variants.
-- **Software v1.x**: Supported when the Parmair IoT package is installed and Modbus TCP is available.
+### Hardware Models Supported
+- **MAC Series:** MAC 70, MAC 80, MAC 100, MAC 105, MAC 105 SLIM, MAC 120, MAC 150, MAC 170, MAC 220, MAC 250
+- **Rexo Series:** MAC Rexo 120, MAC Rexo 150
+- **Lämpöiivari Series:** MAC Lämpöiivari II
 
-The integration automatically detects your software version and uses the correct register map.
+### Firmware Generations
+- **Software v2.x (Modbus 2.28+)**: Newer Parmair units with unified control state register (Away, Home, Boost, Sauna, Fireplace) and automatic boost logic.
+- **Software v1.x (Modbus 1.87)**: Earlier units with IoT module (Away, Home, Boost).
 
 ---
 
@@ -248,11 +273,9 @@ The integration automatically detects your software version and uses the correct
 <summary>Complete Entity List (Click to expand)</summary>
 
 ### Controls
-- Control State: Ventilation mode selector (Away, Home, Boost; plus Sauna & Fireplace on v2.x)
-- Manual Speed: Manual fan speed or auto
-- Home Speed: Fan speed preset when in Home mode (v1: Speed 1–4, v2: Speed 1–5)
-- Away Speed: Fan speed preset when in Away mode (v1: Speed 1–4, v2: Speed 1–5)
-- Boost Speed: Fan speed preset for Boost mode (v1: Speed 3–4, v2: Speed 3–5)
+- Control State: Ventilation mode selector (`select.parmair_mac_control_state`: Away, Home, Boost; plus Sauna & Fireplace on v2.x)
+- Speed Presets: Fan speed preset per mode (Home Speed, Away Speed, Boost Speed)
+- Manual Speed: Direct fan speed selector *(v1.x only)*
 - Boost Duration: How long Boost mode runs (30–180 min)
 - Overpressure Duration: How long Overpressure mode runs (15–120 min)
 - Exhaust Temperature: Target temperature for exhaust air (18–26 °C, 0.5 °C steps)
@@ -278,11 +301,20 @@ The integration automatically detects your software version and uses the correct
 - Filter Replaced: Reset filter change counter
 
 ### Sensors
-- **Operational Mode**: Derived status showing effective mode and automation trigger (Off / Away / Home / Boost / CO2 Boost / Humidity Boost / Summer Cooling / Sauna / Fireplace) *(v2.x — Summer Cooling only applies when in Home mode)*
+- **Total Energy**: Cumulative electrical energy consumption in `kWh` (`SensorDeviceClass.ENERGY`, Energy Dashboard ready)
+- **Total Power**: Real-time electrical power consumption in `W` (fans + post-heater + standby electronics)
+- **Fan Power**: Active electrical power drawn by EC supply and exhaust fans in `W`
+- **Post Heater Power**: Active electrical power consumed by electric heating in `W`
+- **Heat Recovery Thermal Power**: Heat power transferred to supply air by rotary heat exchanger in `W`
+- **Heat Recovery Efficiency**: Thermal recovery efficiency percentage (%)
+- **Operational Mode**: Derived status showing effective mode and automation trigger (Off / Away / Home / Boost / CO2 Boost / Humidity Boost / Summer Cooling / Sauna / Fireplace) *(v2.x)*
 - **Heat Pump Output**: Whether the heat pump module is currently active *(v2.x, if installed)*
 - **Heat Pump Mode**: Automation mode for the heat pump module (Off / On / Auto) *(v2.x, if installed)*
 - **Heater Type**: Detected heater hardware (Electric / Water / None)
-- All temperature sensors, humidity, CO2, fan speeds, operating states, timers, alarms, and diagnostic information
+- **Temperatures**: Fresh air, supply air, exhaust air, waste air, supply after heat recovery
+- **Fan Speeds**: Running fan speeds in % (Supply and Exhaust)
+- **Humidity & CO2**: Current relative humidity, 24h average humidity, and exhaust CO2 levels (if equipped)
+- **Alarms & Diagnostics**: Active alarms, filter days counter, software version, hardware model
 
 </details>
 
@@ -293,7 +325,7 @@ The integration automatically detects your software version and uses the correct
 - Protocol: Modbus TCP
 - Default Port: 502
 - Slave ID: 0 (changed from 1 in v0.9.0.5)
-- Polling: Every 60 seconds by default (configurable 5-300s)
+- Polling: Every 60 seconds by default (configurable 5–300s in options)
 
 ### Requirements
 - Home Assistant 2023.1 or newer
@@ -305,9 +337,9 @@ The integration batches register reads into optimized contiguous blocks with del
 
 ### Version Detection
 The integration automatically reads:
-- Hardware model (MAC80/100/150)
+- Hardware model (MAC 70, 80, 100, 105, 120, 150, 170, 220, 250, Rexo 120/150, Lämpöiivari II)
 - Software version (1.x or 2.x)
-- Heater type (Water/Electric/None)
+- Heater type (Water / Electric / None)
 - Available sensors (humidity, CO2)
 
 If auto-detection fails, you can manually select these during setup.
