@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 480" width="100%" height="100%">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="100%" height="100%">
   <defs>
     <!-- Background Gradient -->
     <linearGradient id="bgGrad" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -38,13 +38,12 @@
       <stop offset="100%" stop-color="#1e293b" />
     </linearGradient>
 
-    <!-- Flow stream gradients through LTO core -->
-    <linearGradient id="supplyCoreFlow" x1="0%" y1="0%" x2="0%" y2="100%">
+    <!-- Counterflow internal flow stream gradients -->
+    <linearGradient id="freshCoreFlow" x1="0%" y1="0%" x2="0%" y2="100%">
       <stop offset="0%" stop-color="#0284c7" />
       <stop offset="50%" stop-color="#38bdf8" />
       <stop offset="100%" stop-color="#f59e0b" />
     </linearGradient>
-
     <linearGradient id="exhaustCoreFlow" x1="0%" y1="0%" x2="0%" y2="100%">
       <stop offset="0%" stop-color="#ef4444" />
       <stop offset="50%" stop-color="#f87171" />
@@ -57,111 +56,113 @@
       <feComposite in="SourceGraphic" in2="blur" operator="over" />
     </filter>
 
-    <!-- Drop Shadow for Badges -->
-    <filter id="badgeShadow" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000000" flood-opacity="0.5" />
+    <!-- Drop Shadow for Plates -->
+    <filter id="plateShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#000000" flood-opacity="0.6" />
     </filter>
   </defs>
 
   <!-- Card Background -->
-  <rect width="800" height="480" rx="16" fill="url(#bgGrad)" stroke="#334155" stroke-width="1.5" />
+  <rect width="800" height="500" rx="16" fill="url(#bgGrad)" stroke="#334155" stroke-width="1.5" />
 
-  <!-- Outer Machine Casing (Chassis) -->
-  <rect x="200" y="60" width="400" height="350" rx="14" fill="#0b0f14" stroke="#475569" stroke-width="2.5" />
+  <!-- Outer Machine Chassis -->
+  <rect x="200" y="65" width="400" height="370" rx="14" fill="#0b0f14" stroke="#475569" stroke-width="2.5" />
+  <rect x="214" y="79" width="372" height="342" rx="10" fill="#131922" stroke="#1e293b" stroke-width="1.5" />
 
-  <!-- Inner Insulation Chamber -->
-  <rect x="214" y="74" width="372" height="322" rx="10" fill="#131922" stroke="#1e293b" stroke-width="1.5" />
+  <!-- ==================== DUCTS & DIRECTION ARROWS ==================== -->
 
-  <!-- DUCT 1: Top-Left -> Ulkoilma (Fresh outdoor air in) -->
-  <path d="M 50 120 L 200 120" stroke="#0284c7" stroke-width="36" stroke-linecap="round" fill="none" opacity="0.15" />
-  <path d="M 50 120 L 200 120" stroke="url(#freshAirGrad)" stroke-width="7" stroke-linecap="round" fill="none" />
+  <!-- 1) TOP-LEFT: ULKOILMA (Fresh outdoor air in) -->
+  <text x="120" y="85" fill="#38bdf8" font-size="13" font-weight="700" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" letter-spacing="1" text-anchor="middle">ULKOILMA</text>
+  <path d="M 50 125 L 200 125" stroke="#0284c7" stroke-width="42" stroke-linecap="round" fill="none" opacity="0.18" />
+  <path d="M 50 125 L 200 125" stroke="url(#freshAirGrad)" stroke-width="8" stroke-linecap="round" fill="none" />
   <!-- Inward Arrow -->
-  <polygon points="190,113 205,120 190,127" fill="#38bdf8" />
+  <polygon points="190,117 205,125 190,133" fill="#38bdf8" />
 
-  <!-- DUCT 2: Top-Right -> Poistoilma (Exhaust room air in from home) -->
-  <path d="M 750 120 L 600 120" stroke="#ef4444" stroke-width="36" stroke-linecap="round" fill="none" opacity="0.15" />
-  <path d="M 750 120 L 600 120" stroke="url(#exhaustAirGrad)" stroke-width="7" stroke-linecap="round" fill="none" />
-  <!-- Inward Arrow (pointing into machine to the left!) -->
-  <polygon points="610,113 595,120 610,127" fill="#f87171" />
+  <!-- 2) TOP-RIGHT: POISTOILMA (Exhaust room air in) -->
+  <text x="680" y="85" fill="#f87171" font-size="13" font-weight="700" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" letter-spacing="1" text-anchor="middle">POISTOILMA</text>
+  <path d="M 750 125 L 600 125" stroke="#ef4444" stroke-width="42" stroke-linecap="round" fill="none" opacity="0.18" />
+  <path d="M 750 125 L 600 125" stroke="url(#exhaustAirGrad)" stroke-width="8" stroke-linecap="round" fill="none" />
+  <!-- Inward Arrow (points INTO machine to the left!) -->
+  <polygon points="610,117 595,125 610,133" fill="#f87171" />
 
-  <!-- DUCT 3: Bottom-Right -> Jäteilma (Waste air out to outdoors) -->
-  <path d="M 600 350 L 750 350" stroke="#64748b" stroke-width="36" stroke-linecap="round" fill="none" opacity="0.15" />
-  <path d="M 600 350 L 750 350" stroke="url(#wasteAirGrad)" stroke-width="7" stroke-linecap="round" fill="none" />
-  <!-- Outward Arrow (pointing out of machine to the right!) -->
-  <polygon points="735,343 750,350 735,357" fill="#94a3b8" />
+  <!-- 3) BOTTOM-LEFT: TULOILMA (Supply warm air out to rooms) -->
+  <text x="120" y="428" fill="#f59e0b" font-size="13" font-weight="700" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" letter-spacing="1" text-anchor="middle">TULOILMA</text>
+  <path d="M 200 370 L 50 370" stroke="#f59e0b" stroke-width="42" stroke-linecap="round" fill="none" opacity="0.18" />
+  <path d="M 200 370 L 50 370" stroke="url(#supplyAirGrad)" stroke-width="8" stroke-linecap="round" fill="none" />
+  <!-- Outward Arrow (points OUT of machine to the left!) -->
+  <polygon points="65,362 50,370 65,378" fill="#f59e0b" />
 
-  <!-- DUCT 4: Bottom-Left -> Tuloilma (Supply warm air out to home) -->
-  <path d="M 200 350 L 50 350" stroke="#f59e0b" stroke-width="36" stroke-linecap="round" fill="none" opacity="0.15" />
-  <path d="M 200 350 L 50 350" stroke="url(#supplyAirGrad)" stroke-width="7" stroke-linecap="round" fill="none" />
-  <!-- Outward Arrow (pointing out of machine to the left!) -->
-  <polygon points="65,343 50,350 65,357" fill="#f59e0b" />
+  <!-- 4) BOTTOM-RIGHT: JÄTEILMA (Waste air out to outdoors) -->
+  <text x="680" y="428" fill="#94a3b8" font-size="13" font-weight="700" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" letter-spacing="1" text-anchor="middle">JÄTEILMA</text>
+  <path d="M 600 370 L 750 370" stroke="#64748b" stroke-width="42" stroke-linecap="round" fill="none" opacity="0.18" />
+  <path d="M 600 370 L 750 370" stroke="url(#wasteAirGrad)" stroke-width="8" stroke-linecap="round" fill="none" />
+  <!-- Outward Arrow (points OUT of machine to the right!) -->
+  <polygon points="735,362 750,370 735,378" fill="#94a3b8" />
 
-  <!-- Filters -->
+  <!-- ==================== FILTERS ==================== -->
   <!-- Fresh Air Filter F7 / ePM1 (Top-Left) -->
-  <g transform="translate(230, 95)">
-    <rect x="0" y="0" width="10" height="50" rx="2" fill="#0284c7" opacity="0.7" />
-    <line x1="2" y1="5" x2="8" y2="45" stroke="#38bdf8" stroke-width="1.5" />
-    <line x1="8" y1="5" x2="2" y2="45" stroke="#38bdf8" stroke-width="1.5" />
-    <text x="5" y="62" fill="#94a3b8" font-size="9" font-family="sans-serif" text-anchor="middle">F7</text>
+  <g transform="translate(230, 98)">
+    <rect x="0" y="0" width="10" height="54" rx="2" fill="#0284c7" opacity="0.75" />
+    <line x1="2" y1="5" x2="8" y2="49" stroke="#38bdf8" stroke-width="1.5" />
+    <line x1="8" y1="5" x2="2" y2="49" stroke="#38bdf8" stroke-width="1.5" />
+    <text x="5" y="67" fill="#94a3b8" font-size="9" font-family="sans-serif" text-anchor="middle">F7</text>
   </g>
 
   <!-- Exhaust Air Filter G4 (Top-Right) -->
-  <g transform="translate(560, 95)">
-    <rect x="0" y="0" width="10" height="50" rx="2" fill="#ef4444" opacity="0.7" />
-    <line x1="2" y1="5" x2="8" y2="45" stroke="#f87171" stroke-width="1.5" />
-    <line x1="8" y1="5" x2="2" y2="45" stroke="#f87171" stroke-width="1.5" />
-    <text x="5" y="62" fill="#94a3b8" font-size="9" font-family="sans-serif" text-anchor="middle">G4</text>
+  <g transform="translate(560, 98)">
+    <rect x="0" y="0" width="10" height="54" rx="2" fill="#ef4444" opacity="0.75" />
+    <line x1="2" y1="5" x2="8" y2="49" stroke="#f87171" stroke-width="1.5" />
+    <line x1="8" y1="5" x2="2" y2="49" stroke="#f87171" stroke-width="1.5" />
+    <text x="5" y="67" fill="#94a3b8" font-size="9" font-family="sans-serif" text-anchor="middle">G4</text>
   </g>
 
-  <!-- INTERNAL REAL-FLOW AIR PATHS THROUGH HEAT EXCHANGER -->
-  <!-- Fresh air stream: enters top-left -> curves through LTO core -> warms up -> exits to bottom-left -->
-  <path d="M 200 120 C 270 120, 310 150, 360 200 C 390 230, 370 270, 320 290 C 270 310, 240 330, 200 350"
-        stroke="url(#supplyCoreFlow)" stroke-width="5" stroke-dasharray="8,5" fill="none" opacity="0.85" />
+  <!-- ==================== INTERNAL AIRFLOW THROUGH LTO ==================== -->
+  <!-- Fresh stream: (200,125) -> curves through LTO core -> exits (200,370) -->
+  <path d="M 200 125 C 270 125, 310 155, 360 210 C 390 245, 370 285, 320 305 C 270 325, 240 350, 200 370"
+        stroke="url(#freshCoreFlow)" stroke-width="5" stroke-dasharray="8,5" fill="none" opacity="0.85" />
 
-  <!-- Exhaust air stream: enters top-right -> curves through LTO core -> cools down -> exits to bottom-right -->
-  <path d="M 600 120 C 530 120, 490 150, 440 200 C 410 230, 430 270, 480 290 C 530 310, 560 330, 600 350"
+  <!-- Exhaust stream: (600,125) -> curves through LTO core -> exits (600,370) -->
+  <path d="M 600 125 C 530 125, 490 155, 440 210 C 410 245, 430 285, 480 305 C 530 325, 560 350, 600 370"
         stroke="url(#exhaustCoreFlow)" stroke-width="5" stroke-dasharray="8,5" fill="none" opacity="0.85" />
 
-  <!-- CENTER: Heat Recovery Exchanger Core (Diamond) -->
-  <g transform="translate(400, 235)">
-    <polygon points="0,-95 95,0 0,95 -95,0" fill="url(#coreGrad)" stroke="#38bdf8" stroke-width="2" />
-    <!-- Exchanger Core Plates / Lamellas -->
-    <line x1="-55" y1="-40" x2="55" y2="40" stroke="#334155" stroke-width="1.5" />
-    <line x1="-40" y1="-55" x2="40" y2="55" stroke="#334155" stroke-width="1.5" />
-    <line x1="-20" y1="-75" x2="75" y2="20" stroke="#334155" stroke-width="1.5" />
-    <line x1="-75" y1="-20" x2="20" y2="75" stroke="#334155" stroke-width="1.5" />
-    <line x1="0" y1="-90" x2="0" y2="90" stroke="#1e293b" stroke-width="1" stroke-dasharray="4,3" />
+  <!-- ==================== CENTER HEAT EXCHANGER CORE (LTO) ==================== -->
+  <g transform="translate(400, 248)">
+    <polygon points="0,-100 100,0 0,100 -100,0" fill="url(#coreGrad)" stroke="#38bdf8" stroke-width="2" />
+    <!-- Lamellas -->
+    <line x1="-60" y1="-40" x2="60" y2="40" stroke="#334155" stroke-width="1.5" />
+    <line x1="-40" y1="-60" x2="40" y2="60" stroke="#334155" stroke-width="1.5" />
+    <line x1="-20" y1="-80" x2="80" y2="20" stroke="#334155" stroke-width="1.5" />
+    <line x1="-80" y1="-20" x2="20" y2="80" stroke="#334155" stroke-width="1.5" />
 
-    <!-- Center Clean Plate for Recovery Metrics -->
-    <rect x="-70" y="-30" width="140" height="60" rx="10" fill="#090d12" stroke="#009fe3" stroke-width="1.5" filter="url(#badgeShadow)" />
-    <text x="0" y="-8" fill="#ffffff" font-size="13" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_rec_eff">LTO: -- %</text>
-    <text x="0" y="15" fill="#38bdf8" font-size="12" font-weight="600" font-family="sans-serif" text-anchor="middle" id="svg_rec_power">Talteenotto: -- W</text>
+    <!-- CLEAN EMPTY BACKDROP PLATE FOR HA RECOVERY METRICS (NO DUPLICATE TEXT) -->
+    <rect x="-80" y="-36" width="160" height="72" rx="10" fill="#090d12" stroke="#009fe3" stroke-width="1.5" filter="url(#plateShadow)" />
   </g>
 
-  <!-- Supply Fan (Bottom-Left Bay) -->
-  <g transform="translate(260, 350)" id="fan_supply">
+  <!-- ==================== FANS & HEATER ==================== -->
+  <!-- Tulopuhallin (Bottom-Left Bay) -->
+  <g transform="translate(265, 370)">
     <circle cx="0" cy="0" r="22" fill="#1e293b" stroke="#475569" stroke-width="1.5" />
     <circle cx="0" cy="0" r="4" fill="#38bdf8" />
     <path d="M 0,-15 Q 5,-7 0,0 Q -5,-7 0,-15" fill="#38bdf8" opacity="0.8" />
     <path d="M 15,0 Q 7,5 0,0 Q 7,-5 15,0" fill="#38bdf8" opacity="0.8" />
     <path d="M 0,15 Q -5,7 0,0 Q 5,7 0,15" fill="#38bdf8" opacity="0.8" />
     <path d="M -15,0 Q -7,-5 0,0 Q -7,5 -15,0" fill="#38bdf8" opacity="0.8" />
-    <text x="0" y="32" fill="#94a3b8" font-size="9" font-family="sans-serif" text-anchor="middle">Tulopuhallin</text>
+    <text x="0" y="34" fill="#94a3b8" font-size="9" font-family="sans-serif" text-anchor="middle">Tulopuhallin</text>
   </g>
 
-  <!-- Exhaust Fan (Bottom-Right Bay) -->
-  <g transform="translate(540, 350)" id="fan_exhaust">
+  <!-- Poistopuhallin (Bottom-Right Bay) -->
+  <g transform="translate(535, 370)">
     <circle cx="0" cy="0" r="22" fill="#1e293b" stroke="#475569" stroke-width="1.5" />
     <circle cx="0" cy="0" r="4" fill="#f87171" />
     <path d="M 0,-15 Q 5,-7 0,0 Q -5,-7 0,-15" fill="#f87171" opacity="0.8" />
     <path d="M 15,0 Q 7,5 0,0 Q 7,-5 15,0" fill="#f87171" opacity="0.8" />
     <path d="M 0,15 Q -5,7 0,0 Q 5,7 0,15" fill="#f87171" opacity="0.8" />
     <path d="M -15,0 Q -7,-5 0,0 Q -7,5 -15,0" fill="#f87171" opacity="0.8" />
-    <text x="0" y="32" fill="#94a3b8" font-size="9" font-family="sans-serif" text-anchor="middle">Poistopuhallin</text>
+    <text x="0" y="34" fill="#94a3b8" font-size="9" font-family="sans-serif" text-anchor="middle">Poistopuhallin</text>
   </g>
 
-  <!-- Post-Heater Element (Between LTO exit & supply outlet) -->
-  <g transform="translate(195, 350)" id="heater_coil">
+  <!-- Jälkilämmitin (Post-Heater Element) -->
+  <g transform="translate(195, 370)" id="heater_coil">
     <rect x="-14" y="-24" width="28" height="48" rx="4" fill="#181512" stroke="#ea580c" stroke-width="1.5" />
     <path d="M -6,-16 L 6,-10 L -6,-4 L 6,2 L -6,8 L 6,14" fill="none" stroke="#ea580c" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" id="heater_path" />
   </g>

@@ -1,4 +1,4 @@
-# Parmair MAC for Home Assistant (v0.21.3)
+# Parmair MAC for Home Assistant (v0.21.4)
 
 ![Parmair MAC Logo](parmair_logo.jpg)
 
@@ -288,6 +288,7 @@ If auto-detection fails, you can manually select these during setup.
 
 See [CHANGELOG.md](CHANGELOG.md) for complete version history.
 
+- **v0.21.4**: Add crisp vector channel titles (**ULKOILMA**, **POISTOILMA**, **TULOILMA**, **JÄTEILMA**) to schematic SVG, clear center LTO backdrop plate to prevent double-text overlapping in `picture-elements` cards, and align coordinate templates in dashboard examples.
 - **v0.21.3**: Fully responsive Inline-SVG card architecture (`custom:parmair-mac-card`) with 100% vector-locked coordinates across all card sizes, physically accurate counterflow heat recovery airflow, fan speed and filter entity detection fixes, dynamic heater element illumination, and Ruff code formatting.
 - **v0.21.2**: Fix automatic Lovelace card registration using `add_extra_js_url` and resource storage pre-loading so `custom:parmair-mac-card` is immediately available in the visual "Add Card" picker.
 - **v0.21.1**: Add automatic Lovelace resource registration and visual editor support so `Parmair MAC Card` appears directly in the standard graphical **Add Card** dialog.

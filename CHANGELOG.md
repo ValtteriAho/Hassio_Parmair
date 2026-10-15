@@ -1,3 +1,12 @@
+## 0.21.4 - Crisp Channel Labels & Aligned Picture-Elements Overlay (2026-10-15)
+
+### Fixed
+- **Clean Center LTO Backdrop Plate in `parmair_schematic.svg`** — removed hardcoded static text (`LTO: -- %` and `Talteenotto: -- W`) from the SVG vector graphic, providing a clean, elegant dark backdrop so Home Assistant's `picture-elements` `state-label` live values render without any ghost text or double-layer overlapping.
+- **Crisp Vector Duct Titles** — added high-contrast, authentic Scandinavian uppercase channel labels (**ULKOILMA**, **POISTOILMA**, **TULOILMA**, **JÄTEILMA**) directly into `parmair_schematic.svg` above and below the respective duct collars.
+- **Aligned Coordinates in Dashboard Examples** — perfectly aligned `top` and `left` coordinates in `docs/dashboard_manual_card_examples.yaml` so channel temperature badges sit cleanly inside duct streams.
+
+---
+
 ## 0.21.3 - Responsive Lovelace Card & Real Counterflow LTO Physics (2026-10-15)
 
 ### Fixed
