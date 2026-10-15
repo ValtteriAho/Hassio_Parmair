@@ -32,9 +32,14 @@ cards:
       # 1) Ulkoilma (Fresh air in) - Ylävasen kanava
       - type: state-label
         entity: sensor.parmair_mac_fresh_air_temperature
+        tap_action:
+          action: more-info
+        hold_action:
+          action: more-info
         style:
           top: 25%
-          left: 15%
+          left: 12%
+          cursor: pointer
           font-weight: bold
           font-size: 15px
           color: "#38bdf8"
@@ -46,9 +51,14 @@ cards:
       # 2) Poistoilma (Exhaust from rooms) - Yläoikea kanava
       - type: state-label
         entity: sensor.parmair_mac_exhaust_air_temperature
+        tap_action:
+          action: more-info
+        hold_action:
+          action: more-info
         style:
           top: 25%
-          left: 85%
+          left: 88%
+          cursor: pointer
           font-weight: bold
           font-size: 15px
           color: "#f87171"
@@ -61,9 +71,14 @@ cards:
       - type: state-label
         entity: sensor.parmair_mac_supply_air_temperature_after_recovery
         prefix: "LTO: "
+        tap_action:
+          action: more-info
+        hold_action:
+          action: more-info
         style:
           top: 61%
           left: 38%
+          cursor: pointer
           font-size: 12px
           font-weight: 600
           color: "#38bdf8"
@@ -75,9 +90,14 @@ cards:
       # 4) Tuloilma huoneisiin (Supply out to home) - Alavasen kanava
       - type: state-label
         entity: sensor.parmair_mac_supply_air_temperature
+        tap_action:
+          action: more-info
+        hold_action:
+          action: more-info
         style:
           top: 74%
-          left: 15%
+          left: 17%
+          cursor: pointer
           font-weight: bold
           font-size: 15px
           color: "#f59e0b"
@@ -89,9 +109,14 @@ cards:
       # 5) Jäteilma ulos (Waste air out) - Alaoikea kanava
       - type: state-label
         entity: sensor.parmair_mac_waste_air_temperature
+        tap_action:
+          action: more-info
+        hold_action:
+          action: more-info
         style:
           top: 74%
-          left: 85%
+          left: 82%
+          cursor: pointer
           font-weight: bold
           font-size: 15px
           color: "#94a3b8"
@@ -104,9 +129,14 @@ cards:
       - type: state-label
         entity: sensor.parmair_mac_heat_recovery_efficiency
         prefix: "LTO: "
+        tap_action:
+          action: more-info
+        hold_action:
+          action: more-info
         style:
           top: 47%
           left: 50%
+          cursor: pointer
           font-weight: bold
           font-size: 14px
           color: "#ffffff"
@@ -114,9 +144,14 @@ cards:
       - type: state-label
         entity: sensor.parmair_mac_heat_recovery_power
         prefix: "Talteenotto: "
+        tap_action:
+          action: more-info
+        hold_action:
+          action: more-info
         style:
           top: 53%
           left: 50%
+          cursor: pointer
           font-size: 13px
           font-weight: 600
           color: "#38bdf8"
@@ -125,9 +160,14 @@ cards:
       - type: state-label
         entity: sensor.parmair_mac_post_heater_power
         prefix: "Lämmitin: "
+        tap_action:
+          action: more-info
+        hold_action:
+          action: more-info
         style:
           top: 64%
           left: 24.5%
+          cursor: pointer
           font-size: 11px
           font-weight: bold
           color: "#fb923c"

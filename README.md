@@ -1,4 +1,4 @@
-# Parmair MAC for Home Assistant (v0.21.5)
+# Parmair MAC for Home Assistant (v0.21.6)
 
 ![Parmair MAC Logo](parmair_logo.jpg)
 
@@ -288,6 +288,7 @@ If auto-detection fails, you can manually select these during setup.
 
 See [CHANGELOG.md](CHANGELOG.md) for complete version history.
 
+- **v0.21.6**: Add prominent multi-chevron airflow direction arrows with soft glowing tips in schematic SVG, make all card values interactive with `more-info` tap actions, and optimize channel coordinate alignment.
 - **v0.21.5**: Fix post-heater electric power and energy estimation on firmware v2.xx units by correctly handling heater type enum inversion.
 - **v0.21.4**: Add crisp vector channel titles (**ULKOILMA**, **POISTOILMA**, **TULOILMA**, **JÄTEILMA**) to schematic SVG, clear center LTO backdrop plate to prevent double-text overlapping in `picture-elements` cards, and align coordinate templates in dashboard examples.
 - **v0.21.3**: Fully responsive Inline-SVG card architecture (`custom:parmair-mac-card`) with 100% vector-locked coordinates across all card sizes, physically accurate counterflow heat recovery airflow, fan speed and filter entity detection fixes, dynamic heater element illumination, and Ruff code formatting.

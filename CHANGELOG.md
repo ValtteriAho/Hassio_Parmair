@@ -1,3 +1,12 @@
+## 0.21.6 - Enhanced Multi-Chevron Airflow Direction Arrows & Interactive Card (2026-10-15)
+
+### Added
+- **Multi-Chevron Airflow Direction Arrows in `parmair_schematic.svg`** — replaced single small polygons in the 4 ventilation ducts with prominent 3-chevron arrow sequences (`>>>` and `<<<`). Leading arrows feature glowing white `#ffffff` tips with Gaussian soft-blur glow (`#arrowGlow`), making outdoor intake, room exhaust, supply air, and outdoor waste air directions unmistakably clear and visible even on dark themes and small screens.
+- **Interactive `more-info` Tap Actions in Picture-Elements Card** — added `tap_action: action: more-info`, `hold_action: action: more-info`, and `cursor: pointer` to all temperature badges, heat recovery efficiency/power badges, and post-heater power badges in `docs/dashboard_manual_card_examples.yaml`, allowing users to tap any channel value to immediately inspect historical graphs and entity details.
+- **Optimized Channel Badge Coordinates** — fine-tuned percentage alignments (`left: 12%`, `17%`, `82%`, `88%`) so temperature badges and chevron flow indicators sit comfortably apart without overlapping.
+
+---
+
 ## 0.21.5 - Fix Post-Heater Power & Energy on Firmware v2.xx (2026-10-15)
 
 ### Fixed
