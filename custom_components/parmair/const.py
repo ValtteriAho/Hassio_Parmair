@@ -38,6 +38,10 @@ DEFAULT_MODEL_SPECS = ModelPowerSpecs(
     max_airflow_ls=120.0,
 )
 
+# Affinity law exponent for EC fan power calculation: P = P_max * (speed/100)^exponent
+# Calibrated against physical field measurements on Parmair MAC 150
+FAN_POWER_AFFINITY_EXPONENT = 2.55
+
 # Specs per VENT_MACHINE register code
 PARMAIR_MODEL_SPECS: dict[int, ModelPowerSpecs] = {
     107: ModelPowerSpecs(

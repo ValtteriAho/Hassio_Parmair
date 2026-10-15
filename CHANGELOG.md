@@ -1,3 +1,11 @@
+## 0.21.9 - Calibrate Fan Power Affinity Law Model (2026-10-15)
+
+### Changed
+- **Calibrated EC Fan Power Affinity Law Exponent (`2.55`)** — updated the fan power calculation exponent from `2.2` to `2.55` based on empirical field measurements using a Shelly energy meter across all 5 speeds on a Parmair MAC 150 unit. The updated formula ($P = P_{\text{max}} \times (\text{speed}/100)^{2.55}$) dramatically improves power accuracy across the entire curve, matching measured consumption within 1–2 W at all operating speeds.
+- **Unified Constant `FAN_POWER_AFFINITY_EXPONENT`** — centralized the affinity exponent in `const.py` used consistently across `sensor.parmair_mac_fan_power`, `sensor.parmair_mac_total_power`, and `sensor.parmair_mac_total_energy`.
+
+---
+
 ## 0.21.8 - Fix Card Element Spacing & Add Fan Speed Percentages (2026-10-15)
 
 ### Added

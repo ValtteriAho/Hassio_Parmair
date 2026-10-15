@@ -32,6 +32,7 @@ from .const import (
     CONTROL_STATE_MAP_V2,
     DEFAULT_MODEL_SPECS,
     DOMAIN,
+    FAN_POWER_AFFINITY_EXPONENT,
     FILTER_STATE_MAP_V1,
     FILTER_STATE_MAP_V2,
     HEATER_TYPE_MAP_V1,
@@ -924,12 +925,12 @@ class ParmairFanPowerSensor(_ParmairPowerSensorBase):
 
         specs, fan_rating, _ = self._get_model_specs()
 
-        # Affinity law model: P ~ (speed_pct / 100) ^ 2.2 for EC motors
+        # Affinity law model: P ~ (speed_pct / 100) ^ exponent for EC motors
         power = 0.0
         if supply_speed is not None and supply_speed > 0:
-            power += fan_rating * ((supply_speed / 100.0) ** 2.2)
+            power += fan_rating * ((supply_speed / 100.0) ** FAN_POWER_AFFINITY_EXPONENT)
         if exhaust_speed is not None and exhaust_speed > 0:
-            power += fan_rating * ((exhaust_speed / 100.0) ** 2.2)
+            power += fan_rating * ((exhaust_speed / 100.0) ** FAN_POWER_AFFINITY_EXPONENT)
 
         # Scale if machine has 4 fans (e.g., MAC 220 has 2 supply + 2 exhaust)
         if specs.fan_count == 4:
@@ -984,9 +985,9 @@ class ParmairTotalPowerSensor(_ParmairPowerSensorBase):
 
         fan_power = 0.0
         if supply_speed is not None and supply_speed > 0:
-            fan_power += fan_rating * ((supply_speed / 100.0) ** 2.2)
+            fan_power += fan_rating * ((supply_speed / 100.0) ** FAN_POWER_AFFINITY_EXPONENT)
         if exhaust_speed is not None and exhaust_speed > 0:
-            fan_power += fan_rating * ((exhaust_speed / 100.0) ** 2.2)
+            fan_power += fan_rating * ((exhaust_speed / 100.0) ** FAN_POWER_AFFINITY_EXPONENT)
         if specs.fan_count == 4:
             fan_power *= 2.0
 
@@ -1097,9 +1098,9 @@ class ParmairTotalEnergySensor(CoordinatorEntity[ParmairCoordinator], RestoreEnt
 
         power = 5.0  # Standby electronics
         if supply_speed is not None and supply_speed > 0:
-            power += fan_rating * ((supply_speed / 100.0) ** 2.2)
+            power += fan_rating * ((supply_speed / 100.0) ** FAN_POWER_AFFINITY_EXPONENT)
         if exhaust_speed is not None and exhaust_speed > 0:
-            power += fan_rating * ((exhaust_speed / 100.0) ** 2.2)
+            power += fan_rating * ((exhaust_speed / 100.0) ** FAN_POWER_AFFINITY_EXPONENT)
         if specs.fan_count == 4:
             power *= 2.0
 

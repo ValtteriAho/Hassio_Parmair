@@ -20,6 +20,7 @@ sys.path.insert(0, str(PROJECT_ROOT))
 sys.path.insert(0, str(PROJECT_ROOT / "tools"))
 
 from tools.mock_coordinator import (  # noqa: E402
+    FAN_POWER_AFFINITY_EXPONENT,
     FILTER_STATE_MAP_V1,
     FILTER_STATE_MAP_V2,
     HARDWARE_TYPE_MAP,
@@ -493,3 +494,23 @@ class TestPowerCalculations:
 
         # In fixture MAC120-full-v2.json, heater_type is 0 (Electric on v2)
         assert coordinator.is_electric_heater is True
+
+    def test_fan_power_affinity_model(self) -> None:
+        """Verify fan power affinity law calculation with calibrated exponent."""
+        assert FAN_POWER_AFFINITY_EXPONENT == 2.55
+
+        # Test MAC 150 (code 115: 165W max per fan, 2 fans)
+        mac150_specs = PARMAIR_MODEL_SPECS[115]
+        fan_rating = mac150_specs.fan_power_max_w
+        fan_count = mac150_specs.fan_count
+        assert fan_rating == 165.0
+        assert fan_count == 2
+
+        # At full speed 100%, fans draw 2 * 165 = 330W
+        full_power = 2 * fan_rating * ((100 / 100.0) ** FAN_POWER_AFFINITY_EXPONENT)
+        assert round(full_power, 1) == 330.0
+
+        # At 97% speed (speed 5 preset on MAC 150), fans draw ~306W, total with 5W standby = ~311W (matching field data)
+        speed_5_power = 2 * fan_rating * ((97 / 100.0) ** FAN_POWER_AFFINITY_EXPONENT)
+        assert 300.0 < speed_5_power + 5.0 < 315.0
+
