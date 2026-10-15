@@ -129,20 +129,52 @@ Once installed, you'll have control over:
 ## Dashboard & Lovelace Custom Card
 
 ### Built-in Parmair MAC Card (`custom:parmair-mac-card`)
-The integration ships with a built-in Lovelace card featuring an authentic Scandinavian 2D schematic, live air duct temperatures, LTO recovery power, heating element status, and one-touch mode buttons (Kotona, Poissa, Tehostus, Sauna, Takka).
 
-**Add directly from the User Interface:**
-1. Open your dashboard → Click **Edit Dashboard** → **Add Card**.
-2. Search or select **Parmair MAC Card** from the list!
-3. Alternatively, add via **Manual** card:
-   ```yaml
-   type: custom:parmair-mac-card
-   ```
+The integration ships with a built-in Lovelace card featuring an authentic Scandinavian 2D schematic, animated airflow arrows, live air duct temperatures, rotating heat recovery exchanger (LTO), heating element glow effects, real-time power metrics, and one-touch mode buttons.
 
-*(No manual resource registration, downloads, or complex YAML required — works completely out of the box!)*
+#### ✨ Key Features
+- **Interactive 2D HVAC Schematic:**
+  - **4 Air Duct Badges:** Fresh air (*Ulkoilma*), Supply air (*Tuloilma*), Exhaust air (*Poistoilma*), and Waste air (*Jäteilma*) with live temperatures.
+  - **Animated Airflow Arrows:** Directional glowing chevron arrows representing physical air circulation.
+  - **Rotary Heat Exchanger (LTO):** Animated rotating rotor showing thermal recovery efficiency (%) and recovered heat power (W).
+  - **Electric / Water Post-Heater:** Visual heater glow with active heating output (%) and real-time heating power (W).
+  - **Interactive Tap Actions:** Clicking any temperature badge or metric opens Home Assistant's detailed `more-info` dialog with history graphs.
+- **Power & Energy Metrics:**
+  - Live EC fan power (W) and speed percentages (*Tulo / Poisto*).
+  - Post-heater electric power (W) and total ventilation unit electrical power (W).
+- **One-Touch Mode Selector:**
+  - Direct touch controls matching the Parmair physical controller: **Poissa** (*Away*), **Kotona** (*Home*), **Tehostus** (*Boost*), **Sauna**, and **Takka** (*Fireplace*).
+- **Maintenance & Diagnostics:**
+  - Filter replacement countdown bar (days remaining).
+  - Active alarms and defrost protection status.
+
+#### 🚀 How to Add the Card to Your Dashboard
+
+##### Method 1: Graphical Card Picker (Recommended)
+1. In Home Assistant, open any Dashboard.
+2. Click the three dots (**⋮**) in the top right corner → **Edit Dashboard**.
+3. Click **Add Card** (at the bottom).
+4. Search for or select **Parmair MAC Card**.
+5. The visual card editor will preview your ventilation unit immediately. Click **Save**!
+
+##### Method 2: Manual YAML Card
+If editing in YAML or using a manual card:
+```yaml
+type: custom:parmair-mac-card
+```
+
+*(Optional customization parameters)*:
+```yaml
+type: custom:parmair-mac-card
+title: "Ilmanvaihto" # Custom card title (defaults to Parmair MAC)
+```
+
+> [!TIP]
+> **Browser Cache Notice (Ctrl + F5):**  
+> When installing for the first time or updating via HACS, your browser may cache older frontend assets. If the card does not immediately appear in the "Add Card" picker, perform a hard refresh in your browser (**Ctrl + F5** / **Cmd + Shift + R**) or clear the cache in the Home Assistant Companion App (*Settings → Companion App → Debugging → Clear Cache*).
 
 ### Alternative YAML Cards
-- **[docs/dashboard_manual_card_examples.yaml](docs/dashboard_manual_card_examples.yaml)**: Native YAML cards (Mushroom chips, picture-elements, entities).
+- **[docs/dashboard_manual_card_examples.yaml](docs/dashboard_manual_card_examples.yaml)**: Manual YAML cards (Mushroom chips, picture-elements, entities).
 - **[docs/dashboard_example.yaml](docs/dashboard_example.yaml)**: Full multi-section dashboard view configuration.
 
 ## Example Automations
