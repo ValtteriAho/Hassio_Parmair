@@ -6,6 +6,12 @@
 
 Perfect for creating smart automations, monitoring air quality, and managing your home's ventilation from anywhere.
 
+[![hacs_badge](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://github.com/hacs/default)
+[![GitHub release](https://img.shields.io/github/v/release/ValtteriAho/Hassio_Parmair?include_prereleases)](https://github.com/ValtteriAho/Hassio_Parmair/releases)
+[![License](https://img.shields.io/github/license/ValtteriAho/Hassio_Parmair)](LICENSE)
+[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-yellow.svg?logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/valtteriah0)
+[![Donate PayPal](https://img.shields.io/badge/Donate-PayPal-00457C.svg?logo=paypal&logoColor=white)](https://paypal.me/valtteriah0)
+
 ---
 
 ## What You Can Do
@@ -292,6 +298,17 @@ See [CHANGELOG.md](CHANGELOG.md) for complete version history.
 - **v0.18.3**: Fix decimal temperature setpoint truncation (0.5 °C steps), heater type auto-detection on firmware 2.xx, and options schema.
 - **v0.18.2**: Ensure reliable Modbus write persistence with fresh connection per write; surface proper Home Assistant errors on write failures.
 - **v0.18.1**: Fix Operational Mode automation detection (Humidity & CO2 Boost) in Home state.
+
+## ☕ Support Ongoing Development
+
+This integration is completely free and open source. Developing and maintaining a hardware-level HVAC integration requires continuous effort: reverse-engineering Parmair MAC Modbus registers across hardware generations (v1.x & v2.x), implementing safe thermal & fan control algorithms, modeling energy and power consumption, developing the built-in Lovelace card, and keeping up with monthly Home Assistant Core updates.
+
+If this integration keeps your indoor air fresh, helps optimize your home heating, or brings value to your smart home, consider supporting its continued development:
+
+[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-yellow?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/valtteriah0)
+[![Donate with PayPal](https://img.shields.io/badge/Donate-PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/valtteriah0)
+
+*Every coffee or donation is deeply appreciated and directly helps support ongoing maintenance, testing, and new features!*
 
 ---
 
