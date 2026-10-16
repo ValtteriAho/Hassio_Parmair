@@ -1,4 +1,4 @@
-# Parmair MAC for Home Assistant (v0.80.0)
+# Parmair MAC for Home Assistant (v0.90.0)
 
 ![Parmair MAC Logo](parmair_logo.jpg)
 
@@ -352,6 +352,8 @@ If auto-detection fails, you can manually select these during setup.
 
 See [CHANGELOG.md](CHANGELOG.md) for complete version history.
 
+- **v0.90.0**: Constant heat recovery (LTO) counterflow visualization subtly visible in the background through a modern translucent frosted metrics badge (`rgba(8, 12, 18, 0.76)`), with diamond base and lamella layering precision.
+- **v0.80.0**: Full canonical English foundation, dynamic bilingual card localization (English & Finnish), Home Assistant native `_attr_translation_key` architecture, and automated Lovelace cache-busting.
 - **v0.51.0**: Symmetrical 16px chevron arrow gaps with zero badge collision across all 4 ducts, two-line stacked post-heater badge (`Lämmitin` / `0.0 W`) preventing text overflow, comprehensive typography enlargement for mobile dashboards, and balanced 750px viewBox.
 - **v0.50.1**: Compact two-line duct badges embedded inside pipes (`Ulkoilma`, `Poistoilma`, `Jäteilma`, `Tuloilma`), narrowed SVG viewBox (`68 15 664 438`) for better aspect ratio, unified central LTO diamond badge combining efficiency, intermediate temperature, and recovery power, physically accurate G4/G4/F7 filter placements, symmetric fan elevations, and mobile typography boost.
 - **v0.30.1**: Instant Lovelace card static path registration during early component startup (`async_setup`), immediate card shadowRoot initialization for zero-wait dashboard card picker previews, and automated cache-busting Lovelace resource URL management.

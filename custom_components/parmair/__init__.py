@@ -93,7 +93,7 @@ async def _async_register_frontend(hass: HomeAssistant) -> None:
 
 async def _async_register_lovelace_resource(hass: HomeAssistant) -> None:
     """Automatically add Parmair custom card to Lovelace resources and frontend."""
-    version = "0.80.0"
+    version = "0.90.0"
     card_url = f"/parmair/parmair-mac-card.js?v={version}"
 
     # Always register via frontend extra_js_url (loads module directly into browser window)

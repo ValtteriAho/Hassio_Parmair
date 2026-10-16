@@ -1,3 +1,14 @@
+## 0.90.0 - Constant LTO Airflow Visualization & Translucent Frosted Core (2026-10-16)
+
+### UI & Heat Exchanger Visualization
+- **Constant LTO Airflow Visualization** — crossing counterflow heat recovery streams (fresh incoming air warming up and warm extract air cooling down) are now constantly visible exchanging heat across the internal diamond lamellas in the background, rather than only revealing on cursor hover.
+- **Translucent Frosted Metrics Badge (`rgba(8, 12, 18, 0.76)`)** — modern frosted acrylic backdrop behind the central LTO metrics (`LTO: -- %`, `Lämpötila: -- °C`, `Talteenotto: -- W`), allowing the intersecting thermal flow curves and lamella lines to subtly shine through while maintaining 100% crisp typography and contrast.
+- **Layering & Core Geometry Precision** — placed the diamond base polygon and heat transfer lamellas beneath the animated flow paths, ensuring proper SVG depth and zero visual occlusion.
+- **Synchronized Standalone SVG (`parmair_schematic.svg`)** — matched identical SVG layer order and translucent frosted center plate styling in the standalone schematic reference.
+- **Resource Cache-Busting Version Bump** — updated automated Lovelace resource injection to version `0.90.0` ensuring browsers instantly pick up updated frontend components.
+
+---
+
 ## 0.80.0 - Full English Foundation & Dynamic Multi-Language Support (2026-10-16)
 
 ### Internationalization & Architecture

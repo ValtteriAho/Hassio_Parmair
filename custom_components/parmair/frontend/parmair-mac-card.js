@@ -431,23 +431,26 @@ class ParmairMacCard extends HTMLElement {
             <rect x="200" y="52" width="400" height="366" rx="14" fill="#0b0f14" stroke="#475569" stroke-width="2.5" />
             <rect x="214" y="66" width="372" height="338" rx="10" fill="#131922" stroke="#1e293b" stroke-width="1.5" />
 
-            <!-- Internal flow curves -->
-            <path d="M 200 120 C 270 120, 320 150, 400 235 C 470 300, 520 348, 600 348"
-                  stroke="url(#freshCoreFlow)" stroke-width="5.5" stroke-dasharray="8,5" fill="none" opacity="0.85" />
-            <path d="M 600 120 C 530 120, 480 150, 400 235 C 330 300, 280 348, 200 348"
-                  stroke="url(#exhaustCoreFlow)" stroke-width="5.5" stroke-dasharray="8,5" fill="none" opacity="0.85" />
-
-            <!-- CENTER: Heat Recovery Exchanger Core (Diamond) with Unified Metrics Badge -->
-            <g transform="translate(400, 235)" id="badge_lto_center" class="clickable-badge">
+            <!-- CENTER: LTO Exchanger Core Diamond Base & Lamellas -->
+            <g transform="translate(400, 235)">
               <polygon points="0,-106 106,0 0,106 -106,0" fill="#0f172a" stroke="#009fe3" stroke-width="2" />
               <!-- Heat transfer lamellas -->
-              <line x1="-62" y1="-44" x2="62" y2="44" stroke="#334155" stroke-width="1.5" />
-              <line x1="-44" y1="-62" x2="44" y2="62" stroke="#334155" stroke-width="1.5" />
-              <line x1="-24" y1="-82" x2="82" y2="24" stroke="#334155" stroke-width="1.5" />
-              <line x1="-82" y1="-24" x2="24" y2="82" stroke="#334155" stroke-width="1.5" />
+              <line x1="-70" y1="-50" x2="70" y2="50" stroke="#334155" stroke-width="1.6" opacity="0.65" />
+              <line x1="-50" y1="-70" x2="50" y2="70" stroke="#334155" stroke-width="1.6" opacity="0.65" />
+              <line x1="-30" y1="-90" x2="90" y2="30" stroke="#334155" stroke-width="1.6" opacity="0.65" />
+              <line x1="-90" y1="-30" x2="30" y2="90" stroke="#334155" stroke-width="1.6" opacity="0.65" />
+            </g>
 
+            <!-- Internal flow curves crossing through the core -->
+            <path d="M 200 120 C 270 120, 320 150, 400 235 C 470 300, 520 348, 600 348"
+                  stroke="url(#freshCoreFlow)" stroke-width="5.5" stroke-dasharray="8,5" fill="none" opacity="0.95" />
+            <path d="M 600 120 C 530 120, 480 150, 400 235 C 330 300, 280 348, 200 348"
+                  stroke="url(#exhaustCoreFlow)" stroke-width="5.5" stroke-dasharray="8,5" fill="none" opacity="0.95" />
+
+            <!-- CENTER: Heat Recovery Exchanger Core Unified Metrics Badge (translucent frosted plate) -->
+            <g transform="translate(400, 235)" id="badge_lto_center" class="clickable-badge">
               <!-- Unified Center Badge: Width 176px, Height 92px -->
-              <rect x="-88" y="-46" width="176" height="92" rx="12" fill="#090d12" stroke="#009fe3" stroke-width="1.8" filter="url(#badgeShadow)" />
+              <rect x="-88" y="-46" width="176" height="92" rx="12" fill="rgba(8, 12, 18, 0.76)" stroke="#009fe3" stroke-width="1.8" filter="url(#badgeShadow)" />
               <text x="0" y="-18" fill="#ffffff" font-size="16.5" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_recovery_eff">HR: -- %</text>
               <text x="0" y="7" text-anchor="middle" font-family="sans-serif" id="badge_lto_temp">
                 <tspan fill="#94a3b8" font-size="13.5" font-weight="600" id="lbl_lto_temp">Temperature: </tspan>
