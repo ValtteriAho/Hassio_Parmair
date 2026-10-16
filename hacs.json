@@ -3,6 +3,5 @@
   "content_in_root": false,
   "render_readme": true,
   "country": "FI",
-  "domains": ["button", "number", "select", "sensor", "switch"],
   "homeassistant": "2025.1.0"
 }
