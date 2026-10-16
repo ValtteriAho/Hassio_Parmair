@@ -1,3 +1,19 @@
+## 0.50.1 - Compact Stacked Badges, Symmetrical Fans & Mobile Typography Boost (2026-10-16)
+
+### UI & Layout Improvements
+- **Two-Line Stacked Duct Badges Embedded Inside Pipes** — replaced floating external badge boxes with compact two-line badges (`Ulkoilma / 14.0 °C`, `Poistoilma / 22.4 °C`, `Jäteilma / 16.9 °C`, `Tuloilma / 19.7 °C`) nestled directly within the 46px wide duct channels, eliminating lateral margin waste.
+- **Narrowed, High-Proportion SVG ViewBox (`68 15 664 438`)** — cropped ~136px of empty horizontal margins, maximizing card scale and content visibility across both desktop and mobile dashboards.
+- **Unified Central LTO Diamond Badge** — grouped all three heat recovery metrics cleanly inside a single high-contrast center box:
+  - Heat recovery efficiency (`LTO: 65.5 %`)
+  - Intermediate temperature after recovery (`Lämpötila: 19.3 °C`)
+  - Thermal recovery power (`Talteenotto: 402 W`)
+- **Physically Accurate HVAC Filter Placement** — aligned coarse **G4** filters at both top inlets (Ulkoilma & Poistoilma) and positioned fine **F7 (ePM1)** filter on the supply path before the post-heating element.
+- **Horizontal & Vertical Fan Symmetry** — balanced both supply and exhaust blowers at identical vertical elevations (`Y = 348`) mirrored equidistant from center (`X = 315` and `X = 485`).
+- **Mobile-Friendly Typography Boost** — enlarged channel temperatures to **14.5px bold**, fan speed readouts to **13.5px**, LTO recovery metrics to **13–14.5px**, and channel titles to **11.5px** for crystal-clear readability on smartphones.
+- **Synchronized Standalone SVG (`parmair_schematic.svg`)** — matched the vector layout, filter placements, and typography in the standalone reference SVG.
+
+---
+
 ## 0.30.1 - Instant Lovelace Card Registration, Zero-Wait Startup & Cache-Busting (2026-10-15)
 
 ### Fixed

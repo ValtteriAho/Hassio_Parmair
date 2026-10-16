@@ -258,7 +258,7 @@ class ParmairMacCard extends HTMLElement {
         </div>
 
         <div class="schematic-box">
-          <svg class="schematic-svg" viewBox="0 0 800 480" preserveAspectRatio="xMidYMid meet">
+          <svg class="schematic-svg" viewBox="68 15 664 438" preserveAspectRatio="xMidYMid meet">
             <defs>
               <linearGradient id="cardBgGrad" x1="0%" y1="0%" x2="0%" y2="100%">
                 <stop offset="0%" stop-color="#18202c" />
@@ -307,182 +307,165 @@ class ParmairMacCard extends HTMLElement {
                 <stop offset="100%" stop-color="#3b82f6" />
               </linearGradient>
 
-              <!-- Glow filter for post-heater -->
+              <!-- Glow filter for post-heater and direction arrows -->
               <filter id="heaterGlow" x="-30%" y="-30%" width="160%" height="160%">
                 <feGaussianBlur stdDeviation="3.5" result="blur" />
                 <feComposite in="SourceGraphic" in2="blur" operator="over" />
               </filter>
-
-              <!-- Glow filter for direction arrows -->
+              <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="2.5" result="blur" />
+                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+              </filter>
               <filter id="arrowGlow" x="-20%" y="-20%" width="140%" height="140%">
                 <feGaussianBlur stdDeviation="2.5" result="blur" />
                 <feComposite in="SourceGraphic" in2="blur" operator="over" />
               </filter>
-
-              <!-- Drop shadow for vector badges -->
               <filter id="badgeShadow" x="-20%" y="-20%" width="140%" height="140%">
-                <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000000" flood-opacity="0.6" />
+                <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000000" flood-opacity="0.65" />
               </filter>
             </defs>
 
-            <!-- Card Background -->
-            <rect width="800" height="480" rx="14" fill="url(#cardBgGrad)" stroke="#334155" stroke-width="1.5" />
+            <!-- Machine Chassis -->
+            <rect x="200" y="52" width="400" height="366" rx="14" fill="#0b0f14" stroke="#475569" stroke-width="2.5" />
+            <rect x="214" y="66" width="372" height="338" rx="10" fill="#131922" stroke="#1e293b" stroke-width="1.5" />
 
-            <!-- Chassis Frame -->
-            <rect x="200" y="60" width="400" height="350" rx="14" fill="#0b0f14" stroke="#475569" stroke-width="2.5" />
-            <rect x="214" y="74" width="372" height="322" rx="10" fill="#131922" stroke="#1e293b" stroke-width="1.5" />
+            <!-- Internal flow curves -->
+            <path d="M 200 120 C 270 120, 320 150, 400 235 C 470 300, 520 348, 600 348"
+                  stroke="url(#freshCoreFlow)" stroke-width="5.5" stroke-dasharray="8,5" fill="none" opacity="0.85" />
+            <path d="M 600 120 C 530 120, 480 150, 400 235 C 330 300, 280 348, 200 348"
+                  stroke="url(#exhaustCoreFlow)" stroke-width="5.5" stroke-dasharray="8,5" fill="none" opacity="0.85" />
 
-            <!-- DUCTS WITH 100% UNOBSTRUCTED FLOW ARROWS (MULTI-CHEVRON WITH GLOW) -->
-            <!-- 1) Top-Left: Ulkoilma (Fresh outdoor air in - LVI Green) -->
-            <!-- Channel Badge placed cleanly ABOVE duct (Y: 62) -->
-            <g transform="translate(115, 62)" id="badge_fresh" class="clickable-badge">
-              <rect x="-55" y="-16" width="110" height="32" rx="8" fill="rgba(15, 23, 42, 0.92)" stroke="#10b981" stroke-width="1.5" filter="url(#badgeShadow)" />
-              <text x="0" y="4" text-anchor="middle" font-family="sans-serif">
-                <tspan fill="#94a3b8" font-size="11" font-weight="600">Ulkoilma </tspan>
-                <tspan fill="#34d399" font-size="12" font-weight="bold" id="svg_fresh">-- °C</tspan>
-              </text>
-            </g>
-            <!-- Fully visible duct & continuous flow arrows (Y: 120, length 165) -->
-            <path d="M 35 120 L 200 120" stroke="#10b981" stroke-width="36" stroke-linecap="round" fill="none" opacity="0.15" />
-            <path d="M 35 120 L 200 120" stroke="url(#freshAirGrad)" stroke-width="7" stroke-linecap="round" fill="none" />
-            <path d="M 70 108 L 82 120 L 70 132" fill="none" stroke="#34d399" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
-            <path d="M 110 108 L 122 120 L 110 132" fill="none" stroke="#34d399" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
-            <path d="M 150 108 L 162 120 L 150 132" fill="none" stroke="#34d399" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
-            <path d="M 180 108 L 192 120 L 180 132" fill="none" stroke="#ffffff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
-
-            <!-- 2) Top-Right: Poistoilma (Exhaust room air in - LVI Yellow/Amber) -->
-            <!-- Channel Badge placed cleanly ABOVE duct (Y: 62) -->
-            <g transform="translate(685, 62)" id="badge_exhaust" class="clickable-badge">
-              <rect x="-55" y="-16" width="110" height="32" rx="8" fill="rgba(15, 23, 42, 0.92)" stroke="#f59e0b" stroke-width="1.5" filter="url(#badgeShadow)" />
-              <text x="0" y="4" text-anchor="middle" font-family="sans-serif">
-                <tspan fill="#94a3b8" font-size="11" font-weight="600">Poistoilma </tspan>
-                <tspan fill="#fbbf24" font-size="12" font-weight="bold" id="svg_exhaust">-- °C</tspan>
-              </text>
-            </g>
-            <!-- Fully visible duct & continuous flow arrows (Y: 120, length 165) -->
-            <path d="M 765 120 L 600 120" stroke="#fbbf24" stroke-width="36" stroke-linecap="round" fill="none" opacity="0.15" />
-            <path d="M 765 120 L 600 120" stroke="url(#exhaustAirGrad)" stroke-width="7" stroke-linecap="round" fill="none" />
-            <path d="M 730 108 L 718 120 L 730 132" fill="none" stroke="#fbbf24" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
-            <path d="M 690 108 L 678 120 L 690 132" fill="none" stroke="#fbbf24" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
-            <path d="M 650 108 L 638 120 L 650 132" fill="none" stroke="#fbbf24" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
-            <path d="M 620 108 L 608 120 L 620 132" fill="none" stroke="#ffffff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
-
-            <!-- Filters -->
-            <!-- F7 Fresh Air Filter (Top-Left) -->
-            <g transform="translate(230, 95)">
-              <rect x="0" y="0" width="10" height="50" rx="2" fill="#059669" opacity="0.8" />
-              <line x1="2" y1="5" x2="8" y2="45" stroke="#34d399" stroke-width="1.5" />
-              <line x1="8" y1="5" x2="2" y2="45" stroke="#34d399" stroke-width="1.5" />
-              <text x="5" y="62" fill="#94a3b8" font-size="9" font-family="sans-serif" text-anchor="middle">F7</text>
-            </g>
-
-            <!-- G4 Exhaust Filter (Top-Right) -->
-            <g transform="translate(560, 95)">
-              <rect x="0" y="0" width="10" height="50" rx="2" fill="#d97706" opacity="0.8" />
-              <line x1="2" y1="5" x2="8" y2="45" stroke="#fbbf24" stroke-width="1.5" />
-              <line x1="8" y1="5" x2="2" y2="45" stroke="#fbbf24" stroke-width="1.5" />
-              <text x="5" y="62" fill="#94a3b8" font-size="9" font-family="sans-serif" text-anchor="middle">G4</text>
-            </g>
-
-            <!-- AIRFLOW PATHS CROSSING THROUGH HEAT EXCHANGER CORE -->
-            <!-- Fresh stream: (200,120) -> curves through LTO core -> (600,350) -->
-            <path d="M 200 120 C 270 120, 320 150, 400 235 C 470 300, 520 350, 600 350"
-                  stroke="url(#freshCoreFlow)" stroke-width="5" stroke-dasharray="8,5" fill="none" opacity="0.85" />
-
-            <!-- Exhaust stream: (600,120) -> curves through LTO core -> (200,350) -->
-            <path d="M 600 120 C 530 120, 480 150, 400 235 C 330 300, 280 350, 200 350"
-                  stroke="url(#exhaustCoreFlow)" stroke-width="5" stroke-dasharray="8,5" fill="none" opacity="0.85" />
-
-            <!-- CENTER: Heat Recovery Exchanger Core (Diamond) -->
+            <!-- CENTER: Heat Recovery Exchanger Core (Diamond) with Unified Metrics Badge -->
             <g transform="translate(400, 235)" id="badge_lto_center" class="clickable-badge">
-              <polygon points="0,-95 95,0 0,95 -95,0" fill="url(#coreGrad)" stroke="#009fe3" stroke-width="2" />
+              <polygon points="0,-106 106,0 0,106 -106,0" fill="#0f172a" stroke="#009fe3" stroke-width="2" />
               <!-- Heat transfer lamellas -->
-              <line x1="-55" y1="-40" x2="55" y2="40" stroke="#334155" stroke-width="1.5" />
-              <line x1="-40" y1="-55" x2="40" y2="55" stroke="#334155" stroke-width="1.5" />
-              <line x1="-20" y1="-75" x2="75" y2="20" stroke="#334155" stroke-width="1.5" />
-              <line x1="-75" y1="-20" x2="20" y2="75" stroke="#334155" stroke-width="1.5" />
+              <line x1="-62" y1="-44" x2="62" y2="44" stroke="#334155" stroke-width="1.5" />
+              <line x1="-44" y1="-62" x2="44" y2="62" stroke="#334155" stroke-width="1.5" />
+              <line x1="-24" y1="-82" x2="82" y2="24" stroke="#334155" stroke-width="1.5" />
+              <line x1="-82" y1="-24" x2="24" y2="82" stroke="#334155" stroke-width="1.5" />
 
-              <!-- Clean center badge for LTO Efficiency & Thermal Power -->
-              <rect x="-75" y="-32" width="150" height="64" rx="10" fill="#090d12" stroke="#009fe3" stroke-width="1.5" filter="url(#badgeShadow)" />
-              <text x="0" y="-8" fill="#ffffff" font-size="13" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_recovery_eff">LTO: -- %</text>
-              <text x="0" y="16" fill="#38bdf8" font-size="12" font-weight="600" font-family="sans-serif" text-anchor="middle" id="svg_recovery_power">Talteenotto: -- W</text>
-            </g>
-
-            <!-- 3) Bottom-Left: JÄTEILMA (Waste air out to outdoors - LVI Blue/Slate) -->
-            <!-- Poistopuhallin (Bottom-Left Bay - on waste air path) -->
-            <g transform="translate(290, 350)" id="badge_exhaust_fan" class="clickable-badge" title="Klikkaa avataksesi poistopuhaltimen tiedot">
-              <circle cx="0" cy="0" r="20" fill="#1e293b" stroke="#3b82f6" stroke-width="1.5" />
-              <circle cx="0" cy="0" r="4" fill="#60a5fa" />
-              <path d="M 0,-14 Q 4,-6 0,0 Q -4,-6 0,-14" fill="#60a5fa" opacity="0.8" />
-              <path d="M 14,0 Q 6,4 0,0 Q 6,-4 14,0" fill="#60a5fa" opacity="0.8" />
-              <path d="M 0,14 Q -4,6 0,0 Q 4,6 0,14" fill="#60a5fa" opacity="0.8" />
-              <path d="M -14,0 Q -6,-4 0,0 Q -6,4 -14,0" fill="#60a5fa" opacity="0.8" />
-              <text x="0" y="28" fill="#94a3b8" font-size="9" font-family="sans-serif" text-anchor="middle">Poistopuhallin</text>
-              <text x="0" y="42" fill="#60a5fa" font-size="11" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_exhaust_fan">-- %</text>
-            </g>
-            <!-- Fully visible duct & continuous flow arrows (Y: 350, length 165) -->
-            <path d="M 200 350 L 35 350" stroke="#3b82f6" stroke-width="36" stroke-linecap="round" fill="none" opacity="0.15" />
-            <path d="M 200 350 L 35 350" stroke="url(#wasteAirGrad)" stroke-width="7" stroke-linecap="round" fill="none" />
-            <path d="M 175 338 L 163 350 L 175 362" fill="none" stroke="#60a5fa" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
-            <path d="M 135 338 L 123 350 L 135 362" fill="none" stroke="#60a5fa" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
-            <path d="M 95 338 L 83 350 L 95 362" fill="none" stroke="#60a5fa" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
-            <path d="M 60 338 L 48 350 L 60 362" fill="none" stroke="#ffffff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#arrowGlow)" />
-            <!-- Channel Badge placed cleanly BELOW duct (Y: 410) -->
-            <g transform="translate(115, 410)" id="badge_waste" class="clickable-badge">
-              <rect x="-55" y="-16" width="110" height="32" rx="8" fill="rgba(15, 23, 42, 0.92)" stroke="#3b82f6" stroke-width="1.5" filter="url(#badgeShadow)" />
-              <text x="0" y="4" text-anchor="middle" font-family="sans-serif">
-                <tspan fill="#94a3b8" font-size="11" font-weight="600">Jäteilma </tspan>
-                <tspan fill="#60a5fa" font-size="12" font-weight="bold" id="svg_waste">-- °C</tspan>
+              <!-- Unified Center Badge -->
+              <rect x="-81" y="-41" width="162" height="82" rx="11" fill="#090d12" stroke="#009fe3" stroke-width="1.8" filter="url(#badgeShadow)" />
+              <text x="0" y="-17" fill="#ffffff" font-size="14.5" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_recovery_eff">LTO: -- %</text>
+              <text x="0" y="5" text-anchor="middle" font-family="sans-serif" id="badge_lto_temp">
+                <tspan fill="#94a3b8" font-size="12" font-weight="600">Lämpötila: </tspan>
+                <tspan fill="#34d399" font-size="13.5" font-weight="bold" id="svg_lto_temp">-- °C</tspan>
               </text>
+              <text x="0" y="26" fill="#38bdf8" font-size="13" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_recovery_power">Talteenotto: -- W</text>
             </g>
 
-            <!-- 4) Bottom-Right: TULOILMA (Supply warm air out to home - LVI Red/Coral) -->
-            <!-- Tulopuhallin (Bottom-Right Bay - on supply air path) -->
-            <g transform="translate(490, 350)" id="badge_supply_fan" class="clickable-badge" title="Klikkaa avataksesi tulopuhaltimen tiedot">
-              <circle cx="0" cy="0" r="20" fill="#1e293b" stroke="#ef4444" stroke-width="1.5" />
-              <circle cx="0" cy="0" r="4" fill="#f87171" />
-              <path d="M 0,-14 Q 4,-6 0,0 Q -4,-6 0,-14" fill="#f87171" opacity="0.8" />
-              <path d="M 14,0 Q 6,4 0,0 Q 6,-4 14,0" fill="#f87171" opacity="0.8" />
-              <path d="M 0,14 Q -4,6 0,0 Q 4,6 0,14" fill="#f87171" opacity="0.8" />
-              <path d="M -14,0 Q -6,-4 0,0 Q -6,4 -14,0" fill="#f87171" opacity="0.8" />
-              <text x="0" y="28" fill="#94a3b8" font-size="9" font-family="sans-serif" text-anchor="middle">Tulopuhallin</text>
-              <text x="0" y="42" fill="#f87171" font-size="11" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_supply_fan">-- %</text>
+            <!-- ==================== 1) TOP-LEFT: ULKOILMA ==================== -->
+            <path d="M 80 120 L 200 120" stroke="#10b981" stroke-width="46" stroke-linecap="round" fill="none" opacity="0.16" />
+            <path d="M 80 120 L 200 120" stroke="url(#freshAirGrad)" stroke-width="6.5" stroke-linecap="round" fill="none" />
+            <!-- 3 Compact chevrons >>> -->
+            <path d="M 88 109 L 99 120 L 88 131" fill="none" stroke="#34d399" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)" />
+            <path d="M 101 109 L 112 120 L 101 131" fill="none" stroke="#34d399" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)" />
+            <path d="M 114 109 L 125 120 L 114 131" fill="none" stroke="#ffffff" stroke-width="3.8" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)" />
+            <!-- Stacked 2-line Badge -->
+            <g transform="translate(160, 120)" id="badge_fresh" class="clickable-badge">
+              <rect x="-40" y="-20" width="80" height="40" rx="8" fill="rgba(11, 15, 20, 0.95)" stroke="#10b981" stroke-width="1.6" filter="url(#badgeShadow)" />
+              <text x="0" y="-4" fill="#94a3b8" font-size="11.5" font-weight="600" font-family="sans-serif" text-anchor="middle">Ulkoilma</text>
+              <text x="0" y="13" fill="#34d399" font-size="14.5" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_fresh">-- °C</text>
+            </g>
+            <!-- G4 Coarse Filter at Ulkoilma Inlet -->
+            <g transform="translate(230, 93)">
+              <rect x="0" y="0" width="11" height="54" rx="2" fill="#059669" opacity="0.85" />
+              <line x1="2" y1="5" x2="9" y2="49" stroke="#34d399" stroke-width="1.5" />
+              <line x1="9" y1="5" x2="2" y2="49" stroke="#34d399" stroke-width="1.5" />
+              <text x="5.5" y="69" fill="#94a3b8" font-size="11" font-weight="bold" font-family="sans-serif" text-anchor="middle">G4</text>
             </g>
 
-            <!-- LTO Intermediate Temp Badge (After Recovery Core on Supply Path, Bottom-Right) -->
-            <g transform="translate(490, 285)" id="badge_lto_temp" class="clickable-badge">
-              <rect x="-38" y="-12" width="76" height="24" rx="5" fill="rgba(15, 23, 42, 0.95)" stroke="#10b981" stroke-width="1.2" filter="url(#badgeShadow)" />
-              <text x="0" y="5" fill="#34d399" font-size="11" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_lto_temp">LTO: -- °C</text>
+            <!-- ==================== 2) TOP-RIGHT: POISTOILMA ==================== -->
+            <path d="M 720 120 L 600 120" stroke="#fbbf24" stroke-width="46" stroke-linecap="round" fill="none" opacity="0.16" />
+            <path d="M 720 120 L 600 120" stroke="url(#exhaustAirGrad)" stroke-width="6.5" stroke-linecap="round" fill="none" />
+            <!-- 3 Compact chevrons <<< -->
+            <path d="M 712 109 L 701 120 L 712 131" fill="none" stroke="#fbbf24" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)" />
+            <path d="M 699 109 L 688 120 L 699 131" fill="none" stroke="#fbbf24" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)" />
+            <path d="M 686 109 L 675 120 L 686 131" fill="none" stroke="#ffffff" stroke-width="3.8" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)" />
+            <!-- Stacked 2-line Badge -->
+            <g transform="translate(640, 120)" id="badge_exhaust" class="clickable-badge">
+              <rect x="-40" y="-20" width="80" height="40" rx="8" fill="rgba(11, 15, 20, 0.95)" stroke="#fbbf24" stroke-width="1.6" filter="url(#badgeShadow)" />
+              <text x="0" y="-4" fill="#94a3b8" font-size="11.5" font-weight="600" font-family="sans-serif" text-anchor="middle">Poistoilma</text>
+              <text x="0" y="13" fill="#fbbf24" font-size="14.5" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_exhaust">-- °C</text>
+            </g>
+            <!-- G4 Coarse Filter at Poistoilma Inlet -->
+            <g transform="translate(560, 93)">
+              <rect x="0" y="0" width="11" height="54" rx="2" fill="#d97706" opacity="0.85" />
+              <line x1="2" y1="5" x2="9" y2="49" stroke="#fbbf24" stroke-width="1.5" />
+              <line x1="9" y1="5" x2="2" y2="49" stroke="#fbbf24" stroke-width="1.5" />
+              <text x="5.5" y="69" fill="#94a3b8" font-size="11" font-weight="bold" font-family="sans-serif" text-anchor="middle">G4</text>
             </g>
 
-            <!-- Post-Heater Coil Component (Active thermal element on supply path, Bottom-Right) -->
-            <g transform="translate(575, 350)" id="heater_coil">
-              <rect x="-10" y="-24" width="20" height="48" rx="4" fill="#181512" stroke="#ea580c" stroke-width="1.5" />
-              <path d="M -5,-16 L 5,-10 L -5,-4 L 5,2 L -5,8 L 5,14" fill="none" stroke="#ea580c" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" id="heater_path" />
+            <!-- ==================== 3) BOTTOM-LEFT: JÄTEILMA ==================== -->
+            <!-- Poistopuhallin -->
+            <g transform="translate(315, 348)" id="badge_exhaust_fan" class="clickable-badge" title="Klikkaa avataksesi poistopuhaltimen tiedot">
+              <circle cx="0" cy="0" r="21" fill="#1e293b" stroke="#3b82f6" stroke-width="1.5" />
+              <circle cx="0" cy="0" r="4.5" fill="#60a5fa" />
+              <path d="M 0,-15 Q 4,-6 0,0 Q -4,-6 0,-15" fill="#60a5fa" opacity="0.8" />
+              <path d="M 15,0 Q 6,4 0,0 Q 6,-4 15,0" fill="#60a5fa" opacity="0.8" />
+              <path d="M 0,15 Q -4,6 0,0 Q 4,6 0,15" fill="#60a5fa" opacity="0.8" />
+              <path d="M -15,0 Q -6,-4 0,0 Q -6,4 -15,0" fill="#60a5fa" opacity="0.8" />
+              <text x="0" y="30" fill="#94a3b8" font-size="11" font-weight="600" font-family="sans-serif" text-anchor="middle">Poistopuhallin</text>
+              <text x="0" y="46" fill="#60a5fa" font-size="13.5" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_exhaust_fan">-- %</text>
+            </g>
+            <path d="M 200 348 L 80 348" stroke="#3b82f6" stroke-width="46" stroke-linecap="round" fill="none" opacity="0.16" />
+            <path d="M 200 348 L 80 348" stroke="url(#wasteAirGrad)" stroke-width="6.5" stroke-linecap="round" fill="none" />
+            <!-- Stacked 2-line Badge -->
+            <g transform="translate(160, 348)" id="badge_waste" class="clickable-badge">
+              <rect x="-40" y="-20" width="80" height="40" rx="8" fill="rgba(11, 15, 20, 0.95)" stroke="#3b82f6" stroke-width="1.6" filter="url(#badgeShadow)" />
+              <text x="0" y="-4" fill="#94a3b8" font-size="11.5" font-weight="600" font-family="sans-serif" text-anchor="middle">Jäteilma</text>
+              <text x="0" y="13" fill="#60a5fa" font-size="14.5" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_waste">-- °C</text>
+            </g>
+            <!-- 3 Compact chevrons exiting duct <<< -->
+            <path d="M 125 337 L 114 348 L 125 359" fill="none" stroke="#60a5fa" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)" />
+            <path d="M 112 337 L 101 348 L 112 359" fill="none" stroke="#60a5fa" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)" />
+            <path d="M 99 337 L 88 348 L 99 359" fill="none" stroke="#ffffff" stroke-width="3.8" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)" />
+
+            <!-- ==================== 4) BOTTOM-RIGHT: TULOILMA ==================== -->
+            <!-- Tulopuhallin -->
+            <g transform="translate(485, 348)" id="badge_supply_fan" class="clickable-badge" title="Klikkaa avataksesi tulopuhaltimen tiedot">
+              <circle cx="0" cy="0" r="21" fill="#1e293b" stroke="#ef4444" stroke-width="1.5" />
+              <circle cx="0" cy="0" r="4.5" fill="#f87171" />
+              <path d="M 0,-15 Q 4,-6 0,0 Q -4,-6 0,-15" fill="#f87171" opacity="0.8" />
+              <path d="M 15,0 Q 6,4 0,0 Q 6,-4 15,0" fill="#f87171" opacity="0.8" />
+              <path d="M 0,15 Q -4,6 0,0 Q 4,6 0,15" fill="#f87171" opacity="0.8" />
+              <path d="M -15,0 Q -6,-4 0,0 Q -6,4 -15,0" fill="#f87171" opacity="0.8" />
+              <text x="0" y="30" fill="#94a3b8" font-size="11" font-weight="600" font-family="sans-serif" text-anchor="middle">Tulopuhallin</text>
+              <text x="0" y="46" fill="#f87171" font-size="13.5" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_supply_fan">-- %</text>
             </g>
 
-            <!-- Post-Heater Power Badge (Above heating coil, Bottom-Right) -->
-            <g transform="translate(575, 285)" id="badge_heater" class="clickable-badge">
-              <rect x="-38" y="-12" width="76" height="24" rx="5" fill="rgba(24, 21, 18, 0.95)" stroke="#ea580c" stroke-width="1.2" id="svg_heater_badge" filter="url(#badgeShadow)" />
-              <text x="0" y="5" fill="#fb923c" font-size="10" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_heater_power">Lämmitin: 0 W</text>
+            <!-- F7 (ePM1) Hienosuodatin tuloilmalle puhaltimen ja lämmittimen välissä -->
+            <g transform="translate(530, 321)">
+              <rect x="0" y="0" width="11" height="54" rx="2" fill="#0284c7" opacity="0.85" />
+              <line x1="2" y1="5" x2="9" y2="49" stroke="#38bdf8" stroke-width="1.5" />
+              <line x1="9" y1="5" x2="2" y2="49" stroke="#38bdf8" stroke-width="1.5" />
+              <text x="5.5" y="69" fill="#38bdf8" font-size="11" font-weight="bold" font-family="sans-serif" text-anchor="middle">F7</text>
             </g>
 
-            <!-- Fully visible duct & continuous flow arrows (Y: 350, length 165) -->
-            <path d="M 600 350 L 765 350" stroke="#ef4444" stroke-width="36" stroke-linecap="round" fill="none" opacity="0.15" />
-            <path d="M 600 350 L 765 350" stroke="url(#supplyAirGrad)" stroke-width="7" stroke-linecap="round" fill="none" />
-            <path d="M 625 338 L 637 350 L 625 362" fill="none" stroke="#f87171" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)" />
-            <path d="M 665 338 L 677 350 L 665 362" fill="none" stroke="#f87171" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)" />
-            <path d="M 705 338 L 717 350 L 705 362" fill="none" stroke="#f87171" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)" />
-            <path d="M 740 338 L 752 350 L 740 362" fill="none" stroke="#ffffff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)" />
-
-            <!-- Channel Badge placed cleanly BELOW duct (Y: 410) -->
-            <g transform="translate(685, 410)" id="badge_supply" class="clickable-badge">
-              <rect x="-55" y="-16" width="110" height="32" rx="8" fill="rgba(15, 23, 42, 0.92)" stroke="#ef4444" stroke-width="1.5" filter="url(#badgeShadow)" />
-              <text x="0" y="4" text-anchor="middle" font-family="sans-serif">
-                <tspan fill="#94a3b8" font-size="11" font-weight="600">Tuloilma </tspan>
-                <tspan fill="#f87171" font-size="12" font-weight="bold" id="svg_supply">-- °C</tspan>
-              </text>
+            <!-- Post-Heater Power Badge -->
+            <g transform="translate(568, 285)" id="badge_heater" class="clickable-badge">
+              <rect x="-42" y="-13" width="84" height="26" rx="6" fill="rgba(24, 21, 18, 0.95)" stroke="#ea580c" stroke-width="1.4" id="svg_heater_badge" filter="url(#badgeShadow)" />
+              <text x="0" y="5" fill="#fb923c" font-size="11.5" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_heater_power">Lämmitin: 0 W</text>
             </g>
+
+            <!-- Post-Heater Coil Element -->
+            <g transform="translate(568, 348)" id="heater_coil">
+              <rect x="-9" y="-22" width="18" height="44" rx="4" fill="#181512" stroke="#ea580c" stroke-width="1.5" />
+              <path d="M -4,-15 L 4,-9 L -4,-3 L 4,3 L -4,9 L 4,15" fill="none" stroke="#ea580c" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" id="heater_path" />
+            </g>
+
+            <path d="M 600 348 L 720 348" stroke="#ef4444" stroke-width="46" stroke-linecap="round" fill="none" opacity="0.16" />
+            <path d="M 600 348 L 720 348" stroke="url(#supplyAirGrad)" stroke-width="6.5" stroke-linecap="round" fill="none" />
+            <!-- Stacked 2-line Badge -->
+            <g transform="translate(640, 348)" id="badge_supply" class="clickable-badge">
+              <rect x="-40" y="-20" width="80" height="40" rx="8" fill="rgba(11, 15, 20, 0.95)" stroke="#ef4444" stroke-width="1.6" filter="url(#badgeShadow)" />
+              <text x="0" y="-4" fill="#94a3b8" font-size="11.5" font-weight="600" font-family="sans-serif" text-anchor="middle">Tuloilma</text>
+              <text x="0" y="13" fill="#f87171" font-size="14.5" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_supply">-- °C</text>
+            </g>
+            <!-- 3 Compact chevrons exiting duct >>> -->
+            <path d="M 675 337 L 686 348 L 675 359" fill="none" stroke="#f87171" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)" />
+            <path d="M 688 337 L 699 348 L 688 359" fill="none" stroke="#f87171" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)" />
+            <path d="M 701 337 L 712 348 L 701 359" fill="none" stroke="#ffffff" stroke-width="3.8" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)" />
           </svg>
         </div>
 
@@ -678,7 +661,7 @@ class ParmairMacCard extends HTMLElement {
 
     if (elFresh && fresh !== null) elFresh.textContent = `${fresh} °C`;
     if (elExhaust && exhaust !== null) elExhaust.textContent = `${exhaust} °C`;
-    if (elLtoTemp && ltoTemp !== null) elLtoTemp.textContent = `LTO: ${ltoTemp} °C`;
+    if (elLtoTemp && ltoTemp !== null) elLtoTemp.textContent = `${ltoTemp} °C`;
     if (elSupply && supply !== null) elSupply.textContent = `${supply} °C`;
     if (elWaste && waste !== null) elWaste.textContent = `${waste} °C`;
 

@@ -1,4 +1,4 @@
-# Parmair MAC for Home Assistant (v0.30.1)
+# Parmair MAC for Home Assistant (v0.50.1)
 
 ![Parmair MAC Logo](parmair_logo.jpg)
 
@@ -352,6 +352,7 @@ If auto-detection fails, you can manually select these during setup.
 
 See [CHANGELOG.md](CHANGELOG.md) for complete version history.
 
+- **v0.50.1**: Compact two-line duct badges embedded inside pipes (`Ulkoilma`, `Poistoilma`, `Jäteilma`, `Tuloilma`), narrowed SVG viewBox (`68 15 664 438`) for better aspect ratio, unified central LTO diamond badge combining efficiency, intermediate temperature, and recovery power, physically accurate G4/G4/F7 filter placements, symmetric fan elevations, and mobile typography boost.
 - **v0.30.1**: Instant Lovelace card static path registration during early component startup (`async_setup`), immediate card shadowRoot initialization for zero-wait dashboard card picker previews, and automated cache-busting Lovelace resource URL management.
 - **v0.21.12**: Unobstructed duct airflow paths with channel temperature badges relocated above/below ducts, header chips for Humidity and CO2 sensors, 98% card loading speedup via Parmair entity caching, and enabled frontend HTTP caching.
 - **v0.21.11**: Finnish LVI standard color palette, swapped supply/waste duct layout (crossed airflow architecture: Tuloilma on bottom-right, Jäteilma on bottom-left), and added interactive Humidity and CO2 sensor badges in the exhaust stream.
