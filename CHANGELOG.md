@@ -1,3 +1,23 @@
+## 0.51.0 - Symmetrical Flow Chevrons, Stacked Heater Badge & Comprehensive Typography Scale (2026-10-16)
+
+### UI & Layout Improvements
+- **16px Symmetrical Flow Chevrons with Zero Badge Collision** — recalibrated all four duct airflow streams so glowing direction arrows never overlap or touch temperature badge boxes:
+  - Ulkoilma & Poistoilma: incoming arrows (`>>>` and `<<<`) terminate with a clean, unobstructed 16px gap before the inlet badges.
+  - Jäteilma & Tuloilma: outgoing arrows (`<<<` and `>>>`) originate with an identical 16px gap after the outlet badges, heading out through the ductwork.
+- **Two-Line Stacked Post-Heater Power Badge** — replaced the single-line heater box with a stacked two-line badge (`Lämmitin` / `0.0 W` or `1200 W`) nestled neatly at `Y = 276` above the heating element. Prevents text from ever overflowing or colliding with the chassis frame or LTO core.
+- **Card-Wide Typography Scale for Mobile Dashboards**:
+  - Header chips (Humidity, CO2, Speed, Control Mode): enlarged to **14.5px bold** with generous 6×14px pill padding.
+  - Channel temperatures: enlarged to **16.5px bold** with 13px channel labels inside 90×44px badges.
+  - Central LTO diamond: recovery efficiency **16.5px bold**, intermediate temperature **15.5px bold**, thermal power **14.5px bold** inside a spacious 176×92px container.
+  - Blowers: fan speed percentages enlarged to **15.5px bold** with 12.5px labels.
+  - Filters: G4 and F7 badges enlarged to **13px bold**.
+  - Bottom metrics row (Power, Energy, Filter state): enlarged values to **16px bold** and labels to 14px with 20px icons.
+  - Control mode selector buttons: enlarged titles to **13.5px bold** and icons to 22px.
+- **750px SVG ViewBox (`25 15 750 438`)** — perfectly proportioned aspect ratio ensuring comfortable duct runs and zero cramped components on both phone screens and desktop dashboards.
+- **Synchronized Standalone SVG (`parmair_schematic.svg`)** — matched the 750px viewBox, symmetrical 16px arrow gaps, 2-line heater badge, and enlarged font sizes in the standalone reference SVG.
+
+---
+
 ## 0.50.1 - Compact Stacked Badges, Symmetrical Fans & Mobile Typography Boost (2026-10-16)
 
 ### UI & Layout Improvements

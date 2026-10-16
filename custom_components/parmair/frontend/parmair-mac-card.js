@@ -75,58 +75,60 @@ class ParmairMacCard extends HTMLElement {
           display: flex;
           align-items: center;
           gap: 10px;
-          font-size: 18px;
+          font-size: 19px;
           font-weight: 700;
           letter-spacing: 0.5px;
           color: #ffffff;
         }
         .brand ha-icon {
           color: #009fe3;
+          --mdc-icon-size: 24px;
         }
         .header-chips {
           display: flex;
-          gap: 6px;
+          gap: 8px;
           align-items: center;
           flex-wrap: wrap;
         }
         .chip {
-          padding: 4px 10px;
+          padding: 6px 14px;
           border-radius: 20px;
-          font-size: 12px;
-          font-weight: 600;
+          font-size: 14.5px;
+          font-weight: 700;
           display: flex;
           align-items: center;
-          gap: 4px;
+          gap: 5px;
         }
         .chip-humidity {
-          background: rgba(6, 182, 212, 0.15);
-          border: 1px solid #06b6d4;
+          background: rgba(6, 182, 212, 0.16);
+          border: 1.5px solid #06b6d4;
           color: #22d3ee;
         }
         .chip-co2 {
-          background: rgba(16, 185, 129, 0.15);
-          border: 1px solid #10b981;
+          background: rgba(16, 185, 129, 0.16);
+          border: 1.5px solid #10b981;
           color: #34d399;
         }
         .status-pill {
-          background: rgba(2, 132, 199, 0.2);
-          border: 1px solid #0284c7;
-          color: #38bdf8;
-          padding: 4px 12px;
+          background: #0066b3;
+          border: 1.5px solid #009fe3;
+          color: #ffffff;
+          padding: 6px 14px;
           border-radius: 20px;
-          font-size: 12px;
-          font-weight: 600;
+          font-size: 14.5px;
+          font-weight: 700;
         }
         .speed-badge {
           background: rgba(51, 65, 85, 0.5);
-          border: 1px solid #475569;
-          color: #94a3b8;
-          padding: 4px 10px;
+          border: 1.5px solid #64748b;
+          color: #cbd5e1;
+          padding: 6px 14px;
           border-radius: 20px;
-          font-size: 12px;
+          font-size: 14.5px;
+          font-weight: 700;
           display: flex;
           align-items: center;
-          gap: 4px;
+          gap: 5px;
         }
         .clickable-badge {
           cursor: pointer;
@@ -163,26 +165,32 @@ class ParmairMacCard extends HTMLElement {
         .metrics-row {
           display: grid;
           grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-          gap: 8px;
+          gap: 10px;
           margin-bottom: 12px;
         }
         .metric-item {
           display: flex;
           align-items: center;
-          gap: 8px;
-          background: rgba(15, 23, 42, 0.5);
-          border-radius: 8px;
-          padding: 8px 12px;
+          gap: 10px;
+          background: rgba(15, 23, 42, 0.6);
+          border-radius: 10px;
+          padding: 11px 16px;
           border: 1px solid #334155;
-          font-size: 13px;
+          font-size: 15px;
           overflow: hidden;
+        }
+        .metric-item ha-icon {
+          --mdc-icon-size: 20px;
         }
         .metric-label {
           color: #94a3b8;
+          font-size: 14px;
+          font-weight: 500;
           white-space: nowrap;
         }
         .metric-value {
-          font-weight: 600;
+          font-weight: 700;
+          font-size: 16px;
           color: #f1f5f9;
           white-space: nowrap;
           overflow: hidden;
@@ -193,21 +201,24 @@ class ParmairMacCard extends HTMLElement {
         .mode-grid {
           display: grid;
           grid-template-columns: repeat(5, minmax(0, 1fr));
-          gap: 6px;
+          gap: 8px;
         }
         .mode-btn {
           background: rgba(30, 41, 59, 0.5);
           border: 1px solid #334155;
           border-radius: 10px;
-          padding: 8px 4px;
+          padding: 10px 4px;
           color: #94a3b8;
           display: flex;
           flex-direction: column;
           align-items: center;
-          gap: 4px;
+          gap: 5px;
           cursor: pointer;
           transition: all 0.2s ease;
           overflow: hidden;
+        }
+        .mode-btn ha-icon {
+          --mdc-icon-size: 22px;
         }
         .mode-btn:hover {
           background: rgba(51, 65, 85, 0.7);
@@ -220,8 +231,8 @@ class ParmairMacCard extends HTMLElement {
           box-shadow: 0 0 10px rgba(0, 159, 227, 0.3);
         }
         .mode-btn span {
-          font-size: 12px;
-          font-weight: 500;
+          font-size: 13.5px;
+          font-weight: 600;
           white-space: nowrap;
           text-overflow: ellipsis;
           overflow: hidden;
@@ -231,14 +242,18 @@ class ParmairMacCard extends HTMLElement {
             gap: 4px;
           }
           .chip, .speed-badge, .status-pill {
-            font-size: 11px;
-            padding: 3px 8px;
+            font-size: 12.5px;
+            padding: 4px 10px;
+          }
+          .metric-item {
+            font-size: 13.5px;
+            padding: 8px 10px;
           }
           .mode-btn span {
-            font-size: 10px;
+            font-size: 11px;
           }
           .mode-btn ha-icon {
-            --mdc-icon-size: 18px;
+            --mdc-icon-size: 19px;
           }
         }
       </style>
@@ -258,7 +273,7 @@ class ParmairMacCard extends HTMLElement {
         </div>
 
         <div class="schematic-box">
-          <svg class="schematic-svg" viewBox="68 15 664 438" preserveAspectRatio="xMidYMid meet">
+          <svg class="schematic-svg" viewBox="25 15 750 438" preserveAspectRatio="xMidYMid meet">
             <defs>
               <linearGradient id="cardBgGrad" x1="0%" y1="0%" x2="0%" y2="100%">
                 <stop offset="0%" stop-color="#18202c" />
@@ -321,7 +336,7 @@ class ParmairMacCard extends HTMLElement {
                 <feComposite in="SourceGraphic" in2="blur" operator="over" />
               </filter>
               <filter id="badgeShadow" x="-20%" y="-20%" width="140%" height="140%">
-                <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000000" flood-opacity="0.65" />
+                <feDropShadow dx="0" dy="2" stdDeviation="3.5" flood-color="#000000" flood-opacity="0.7" />
               </filter>
             </defs>
 
@@ -344,108 +359,109 @@ class ParmairMacCard extends HTMLElement {
               <line x1="-24" y1="-82" x2="82" y2="24" stroke="#334155" stroke-width="1.5" />
               <line x1="-82" y1="-24" x2="24" y2="82" stroke="#334155" stroke-width="1.5" />
 
-              <!-- Unified Center Badge -->
-              <rect x="-81" y="-41" width="162" height="82" rx="11" fill="#090d12" stroke="#009fe3" stroke-width="1.8" filter="url(#badgeShadow)" />
-              <text x="0" y="-17" fill="#ffffff" font-size="14.5" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_recovery_eff">LTO: -- %</text>
-              <text x="0" y="5" text-anchor="middle" font-family="sans-serif" id="badge_lto_temp">
-                <tspan fill="#94a3b8" font-size="12" font-weight="600">Lämpötila: </tspan>
-                <tspan fill="#34d399" font-size="13.5" font-weight="bold" id="svg_lto_temp">-- °C</tspan>
+              <!-- Unified Center Badge: Width 176px, Height 92px -->
+              <rect x="-88" y="-46" width="176" height="92" rx="12" fill="#090d12" stroke="#009fe3" stroke-width="1.8" filter="url(#badgeShadow)" />
+              <text x="0" y="-18" fill="#ffffff" font-size="16.5" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_recovery_eff">LTO: -- %</text>
+              <text x="0" y="7" text-anchor="middle" font-family="sans-serif" id="badge_lto_temp">
+                <tspan fill="#94a3b8" font-size="13.5" font-weight="600">Lämpötila: </tspan>
+                <tspan fill="#34d399" font-size="15.5" font-weight="bold" id="svg_lto_temp">-- °C</tspan>
               </text>
-              <text x="0" y="26" fill="#38bdf8" font-size="13" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_recovery_power">Talteenotto: -- W</text>
+              <text x="0" y="30" fill="#38bdf8" font-size="14.5" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_recovery_power">Talteenotto: -- W</text>
             </g>
 
             <!-- ==================== 1) TOP-LEFT: ULKOILMA ==================== -->
-            <path d="M 80 120 L 200 120" stroke="#10b981" stroke-width="46" stroke-linecap="round" fill="none" opacity="0.16" />
-            <path d="M 80 120 L 200 120" stroke="url(#freshAirGrad)" stroke-width="6.5" stroke-linecap="round" fill="none" />
-            <!-- 3 Compact chevrons >>> -->
-            <path d="M 88 109 L 99 120 L 88 131" fill="none" stroke="#34d399" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)" />
-            <path d="M 101 109 L 112 120 L 101 131" fill="none" stroke="#34d399" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)" />
-            <path d="M 114 109 L 125 120 L 114 131" fill="none" stroke="#ffffff" stroke-width="3.8" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)" />
-            <!-- Stacked 2-line Badge -->
-            <g transform="translate(160, 120)" id="badge_fresh" class="clickable-badge">
-              <rect x="-40" y="-20" width="80" height="40" rx="8" fill="rgba(11, 15, 20, 0.95)" stroke="#10b981" stroke-width="1.6" filter="url(#badgeShadow)" />
-              <text x="0" y="-4" fill="#94a3b8" font-size="11.5" font-weight="600" font-family="sans-serif" text-anchor="middle">Ulkoilma</text>
-              <text x="0" y="13" fill="#34d399" font-size="14.5" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_fresh">-- °C</text>
+            <path d="M 35 120 L 200 120" stroke="#10b981" stroke-width="48" stroke-linecap="round" fill="none" opacity="0.16" />
+            <path d="M 35 120 L 200 120" stroke="url(#freshAirGrad)" stroke-width="7" stroke-linecap="round" fill="none" />
+            <!-- 3 Symmetrical Chevrons >>> ending BEFORE the badge with 16px gap (tips at 66, 80, 94) -->
+            <path d="M 54 108 L 66 120 L 54 132" fill="none" stroke="#34d399" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)" />
+            <path d="M 68 108 L 80 120 L 68 132" fill="none" stroke="#34d399" stroke-width="3.8" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)" />
+            <path d="M 82 108 L 94 120 L 82 132" fill="none" stroke="#ffffff" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)" />
+            <!-- Stacked 2-line Badge: Width 90px, spans X=110..200 -->
+            <g transform="translate(155, 120)" id="badge_fresh" class="clickable-badge">
+              <rect x="-45" y="-22" width="90" height="44" rx="9" fill="rgba(11, 15, 20, 0.96)" stroke="#10b981" stroke-width="1.8" filter="url(#badgeShadow)" />
+              <text x="0" y="-4" fill="#94a3b8" font-size="13" font-weight="600" font-family="sans-serif" text-anchor="middle">Ulkoilma</text>
+              <text x="0" y="15" fill="#34d399" font-size="16.5" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_fresh">-- °C</text>
             </g>
             <!-- G4 Coarse Filter at Ulkoilma Inlet -->
             <g transform="translate(230, 93)">
-              <rect x="0" y="0" width="11" height="54" rx="2" fill="#059669" opacity="0.85" />
-              <line x1="2" y1="5" x2="9" y2="49" stroke="#34d399" stroke-width="1.5" />
-              <line x1="9" y1="5" x2="2" y2="49" stroke="#34d399" stroke-width="1.5" />
-              <text x="5.5" y="69" fill="#94a3b8" font-size="11" font-weight="bold" font-family="sans-serif" text-anchor="middle">G4</text>
+              <rect x="0" y="0" width="12" height="54" rx="2" fill="#059669" opacity="0.85" />
+              <line x1="2" y1="5" x2="10" y2="49" stroke="#34d399" stroke-width="1.5" />
+              <line x1="10" y1="5" x2="2" y2="49" stroke="#34d399" stroke-width="1.5" />
+              <text x="6" y="70" fill="#94a3b8" font-size="13" font-weight="bold" font-family="sans-serif" text-anchor="middle">G4</text>
             </g>
 
             <!-- ==================== 2) TOP-RIGHT: POISTOILMA ==================== -->
-            <path d="M 720 120 L 600 120" stroke="#fbbf24" stroke-width="46" stroke-linecap="round" fill="none" opacity="0.16" />
-            <path d="M 720 120 L 600 120" stroke="url(#exhaustAirGrad)" stroke-width="6.5" stroke-linecap="round" fill="none" />
-            <!-- 3 Compact chevrons <<< -->
-            <path d="M 712 109 L 701 120 L 712 131" fill="none" stroke="#fbbf24" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)" />
-            <path d="M 699 109 L 688 120 L 699 131" fill="none" stroke="#fbbf24" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)" />
-            <path d="M 686 109 L 675 120 L 686 131" fill="none" stroke="#ffffff" stroke-width="3.8" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)" />
-            <!-- Stacked 2-line Badge -->
-            <g transform="translate(640, 120)" id="badge_exhaust" class="clickable-badge">
-              <rect x="-40" y="-20" width="80" height="40" rx="8" fill="rgba(11, 15, 20, 0.95)" stroke="#fbbf24" stroke-width="1.6" filter="url(#badgeShadow)" />
-              <text x="0" y="-4" fill="#94a3b8" font-size="11.5" font-weight="600" font-family="sans-serif" text-anchor="middle">Poistoilma</text>
-              <text x="0" y="13" fill="#fbbf24" font-size="14.5" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_exhaust">-- °C</text>
+            <path d="M 765 120 L 600 120" stroke="#fbbf24" stroke-width="48" stroke-linecap="round" fill="none" opacity="0.16" />
+            <path d="M 765 120 L 600 120" stroke="url(#exhaustAirGrad)" stroke-width="7" stroke-linecap="round" fill="none" />
+            <!-- 3 Symmetrical Chevrons <<< ending BEFORE the badge with 16px gap (tips at 734, 720, 706) -->
+            <path d="M 746 108 L 734 120 L 746 132" fill="none" stroke="#fbbf24" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)" />
+            <path d="M 732 108 L 720 120 L 732 132" fill="none" stroke="#fbbf24" stroke-width="3.8" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)" />
+            <path d="M 718 108 L 706 120 L 718 132" fill="none" stroke="#ffffff" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)" />
+            <!-- Stacked 2-line Badge: Width 90px, spans X=600..690 -->
+            <g transform="translate(645, 120)" id="badge_exhaust" class="clickable-badge">
+              <rect x="-45" y="-22" width="90" height="44" rx="9" fill="rgba(11, 15, 20, 0.96)" stroke="#fbbf24" stroke-width="1.8" filter="url(#badgeShadow)" />
+              <text x="0" y="-4" fill="#94a3b8" font-size="13" font-weight="600" font-family="sans-serif" text-anchor="middle">Poistoilma</text>
+              <text x="0" y="15" fill="#fbbf24" font-size="16.5" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_exhaust">-- °C</text>
             </g>
             <!-- G4 Coarse Filter at Poistoilma Inlet -->
-            <g transform="translate(560, 93)">
-              <rect x="0" y="0" width="11" height="54" rx="2" fill="#d97706" opacity="0.85" />
-              <line x1="2" y1="5" x2="9" y2="49" stroke="#fbbf24" stroke-width="1.5" />
-              <line x1="9" y1="5" x2="2" y2="49" stroke="#fbbf24" stroke-width="1.5" />
-              <text x="5.5" y="69" fill="#94a3b8" font-size="11" font-weight="bold" font-family="sans-serif" text-anchor="middle">G4</text>
+            <g transform="translate(558, 93)">
+              <rect x="0" y="0" width="12" height="54" rx="2" fill="#d97706" opacity="0.85" />
+              <line x1="2" y1="5" x2="10" y2="49" stroke="#fbbf24" stroke-width="1.5" />
+              <line x1="10" y1="5" x2="2" y2="49" stroke="#fbbf24" stroke-width="1.5" />
+              <text x="6" y="70" fill="#94a3b8" font-size="13" font-weight="bold" font-family="sans-serif" text-anchor="middle">G4</text>
             </g>
 
             <!-- ==================== 3) BOTTOM-LEFT: JÄTEILMA ==================== -->
             <!-- Poistopuhallin -->
             <g transform="translate(315, 348)" id="badge_exhaust_fan" class="clickable-badge" title="Klikkaa avataksesi poistopuhaltimen tiedot">
-              <circle cx="0" cy="0" r="21" fill="#1e293b" stroke="#3b82f6" stroke-width="1.5" />
-              <circle cx="0" cy="0" r="4.5" fill="#60a5fa" />
-              <path d="M 0,-15 Q 4,-6 0,0 Q -4,-6 0,-15" fill="#60a5fa" opacity="0.8" />
-              <path d="M 15,0 Q 6,4 0,0 Q 6,-4 15,0" fill="#60a5fa" opacity="0.8" />
-              <path d="M 0,15 Q -4,6 0,0 Q 4,6 0,15" fill="#60a5fa" opacity="0.8" />
-              <path d="M -15,0 Q -6,-4 0,0 Q -6,4 -15,0" fill="#60a5fa" opacity="0.8" />
-              <text x="0" y="30" fill="#94a3b8" font-size="11" font-weight="600" font-family="sans-serif" text-anchor="middle">Poistopuhallin</text>
-              <text x="0" y="46" fill="#60a5fa" font-size="13.5" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_exhaust_fan">-- %</text>
+              <circle cx="0" cy="0" r="23" fill="#1e293b" stroke="#3b82f6" stroke-width="1.8" />
+              <circle cx="0" cy="0" r="5" fill="#60a5fa" />
+              <path d="M 0,-17 Q 5,-7 0,0 Q -5,-7 0,-17" fill="#60a5fa" opacity="0.8" />
+              <path d="M 17,0 Q 7,5 0,0 Q 7,-5 17,0" fill="#60a5fa" opacity="0.8" />
+              <path d="M 0,17 Q -5,7 0,0 Q 5,7 0,17" fill="#60a5fa" opacity="0.8" />
+              <path d="M -17,0 Q -7,-5 0,0 Q -7,5 -17,0" fill="#60a5fa" opacity="0.8" />
+              <text x="0" y="32" fill="#94a3b8" font-size="12.5" font-weight="600" font-family="sans-serif" text-anchor="middle">Poistopuhallin</text>
+              <text x="0" y="50" fill="#60a5fa" font-size="15.5" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_exhaust_fan">-- %</text>
             </g>
-            <path d="M 200 348 L 80 348" stroke="#3b82f6" stroke-width="46" stroke-linecap="round" fill="none" opacity="0.16" />
-            <path d="M 200 348 L 80 348" stroke="url(#wasteAirGrad)" stroke-width="6.5" stroke-linecap="round" fill="none" />
-            <!-- Stacked 2-line Badge -->
-            <g transform="translate(160, 348)" id="badge_waste" class="clickable-badge">
-              <rect x="-40" y="-20" width="80" height="40" rx="8" fill="rgba(11, 15, 20, 0.95)" stroke="#3b82f6" stroke-width="1.6" filter="url(#badgeShadow)" />
-              <text x="0" y="-4" fill="#94a3b8" font-size="11.5" font-weight="600" font-family="sans-serif" text-anchor="middle">Jäteilma</text>
-              <text x="0" y="13" fill="#60a5fa" font-size="14.5" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_waste">-- °C</text>
+            <path d="M 200 348 L 35 348" stroke="#3b82f6" stroke-width="48" stroke-linecap="round" fill="none" opacity="0.16" />
+            <path d="M 200 348 L 35 348" stroke="url(#wasteAirGrad)" stroke-width="7" stroke-linecap="round" fill="none" />
+            <!-- Stacked 2-line Badge: Width 90px, spans X=110..200 -->
+            <g transform="translate(155, 348)" id="badge_waste" class="clickable-badge">
+              <rect x="-45" y="-22" width="90" height="44" rx="9" fill="rgba(11, 15, 20, 0.96)" stroke="#3b82f6" stroke-width="1.8" filter="url(#badgeShadow)" />
+              <text x="0" y="-4" fill="#94a3b8" font-size="13" font-weight="600" font-family="sans-serif" text-anchor="middle">Jäteilma</text>
+              <text x="0" y="15" fill="#60a5fa" font-size="16.5" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_waste">-- °C</text>
             </g>
-            <!-- 3 Compact chevrons exiting duct <<< -->
-            <path d="M 125 337 L 114 348 L 125 359" fill="none" stroke="#60a5fa" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)" />
-            <path d="M 112 337 L 101 348 L 112 359" fill="none" stroke="#60a5fa" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)" />
-            <path d="M 99 337 L 88 348 L 99 359" fill="none" stroke="#ffffff" stroke-width="3.8" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)" />
+            <!-- 3 Symmetrical Chevrons <<< starting AFTER the badge with 16px gap (tips at 82, 68, 54) -->
+            <path d="M 94 336 L 82 348 L 94 360" fill="none" stroke="#60a5fa" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)" />
+            <path d="M 80 336 L 68 348 L 80 360" fill="none" stroke="#60a5fa" stroke-width="3.8" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)" />
+            <path d="M 66 336 L 54 348 L 66 360" fill="none" stroke="#ffffff" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)" />
 
             <!-- ==================== 4) BOTTOM-RIGHT: TULOILMA ==================== -->
             <!-- Tulopuhallin -->
             <g transform="translate(485, 348)" id="badge_supply_fan" class="clickable-badge" title="Klikkaa avataksesi tulopuhaltimen tiedot">
-              <circle cx="0" cy="0" r="21" fill="#1e293b" stroke="#ef4444" stroke-width="1.5" />
-              <circle cx="0" cy="0" r="4.5" fill="#f87171" />
-              <path d="M 0,-15 Q 4,-6 0,0 Q -4,-6 0,-15" fill="#f87171" opacity="0.8" />
-              <path d="M 15,0 Q 6,4 0,0 Q 6,-4 15,0" fill="#f87171" opacity="0.8" />
-              <path d="M 0,15 Q -4,6 0,0 Q 4,6 0,15" fill="#f87171" opacity="0.8" />
-              <path d="M -15,0 Q -6,-4 0,0 Q -6,4 -15,0" fill="#f87171" opacity="0.8" />
-              <text x="0" y="30" fill="#94a3b8" font-size="11" font-weight="600" font-family="sans-serif" text-anchor="middle">Tulopuhallin</text>
-              <text x="0" y="46" fill="#f87171" font-size="13.5" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_supply_fan">-- %</text>
+              <circle cx="0" cy="0" r="23" fill="#1e293b" stroke="#ef4444" stroke-width="1.8" />
+              <circle cx="0" cy="0" r="5" fill="#f87171" />
+              <path d="M 0,-17 Q 5,-7 0,0 Q -5,-7 0,-17" fill="#f87171" opacity="0.8" />
+              <path d="M 17,0 Q 7,5 0,0 Q 7,-5 17,0" fill="#f87171" opacity="0.8" />
+              <path d="M 0,17 Q -5,7 0,0 Q 5,7 0,17" fill="#f87171" opacity="0.8" />
+              <path d="M -17,0 Q -7,-5 0,0 Q -7,5 -17,0" fill="#f87171" opacity="0.8" />
+              <text x="0" y="32" fill="#94a3b8" font-size="12.5" font-weight="600" font-family="sans-serif" text-anchor="middle">Tulopuhallin</text>
+              <text x="0" y="50" fill="#f87171" font-size="15.5" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_supply_fan">-- %</text>
             </g>
 
             <!-- F7 (ePM1) Hienosuodatin tuloilmalle puhaltimen ja lämmittimen välissä -->
             <g transform="translate(530, 321)">
-              <rect x="0" y="0" width="11" height="54" rx="2" fill="#0284c7" opacity="0.85" />
-              <line x1="2" y1="5" x2="9" y2="49" stroke="#38bdf8" stroke-width="1.5" />
-              <line x1="9" y1="5" x2="2" y2="49" stroke="#38bdf8" stroke-width="1.5" />
-              <text x="5.5" y="69" fill="#38bdf8" font-size="11" font-weight="bold" font-family="sans-serif" text-anchor="middle">F7</text>
+              <rect x="0" y="0" width="12" height="54" rx="2" fill="#0284c7" opacity="0.85" />
+              <line x1="2" y1="5" x2="10" y2="49" stroke="#38bdf8" stroke-width="1.5" />
+              <line x1="10" y1="5" x2="2" y2="49" stroke="#38bdf8" stroke-width="1.5" />
+              <text x="6" y="70" fill="#38bdf8" font-size="13" font-weight="bold" font-family="sans-serif" text-anchor="middle">F7</text>
             </g>
 
-            <!-- Post-Heater Power Badge -->
-            <g transform="translate(568, 285)" id="badge_heater" class="clickable-badge">
-              <rect x="-42" y="-13" width="84" height="26" rx="6" fill="rgba(24, 21, 18, 0.95)" stroke="#ea580c" stroke-width="1.4" id="svg_heater_badge" filter="url(#badgeShadow)" />
-              <text x="0" y="5" fill="#fb923c" font-size="11.5" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_heater_power">Lämmitin: 0 W</text>
+            <!-- Kaksirivinen Lämmitin-laatikko: Täydellinen sovitus, ei koskaan leikkaannu! -->
+            <g transform="translate(566, 276)" id="badge_heater" class="clickable-badge">
+              <rect x="-38" y="-19" width="76" height="38" rx="8" fill="rgba(24, 21, 18, 0.96)" stroke="#ea580c" stroke-width="1.6" id="svg_heater_badge" filter="url(#badgeShadow)" />
+              <text x="0" y="-3" fill="#fb923c" font-size="12" font-weight="600" font-family="sans-serif" text-anchor="middle">Lämmitin</text>
+              <text x="0" y="13" fill="#f97316" font-size="14.5" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_heater_power">0 W</text>
             </g>
 
             <!-- Post-Heater Coil Element -->
@@ -454,18 +470,18 @@ class ParmairMacCard extends HTMLElement {
               <path d="M -4,-15 L 4,-9 L -4,-3 L 4,3 L -4,9 L 4,15" fill="none" stroke="#ea580c" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" id="heater_path" />
             </g>
 
-            <path d="M 600 348 L 720 348" stroke="#ef4444" stroke-width="46" stroke-linecap="round" fill="none" opacity="0.16" />
-            <path d="M 600 348 L 720 348" stroke="url(#supplyAirGrad)" stroke-width="6.5" stroke-linecap="round" fill="none" />
-            <!-- Stacked 2-line Badge -->
-            <g transform="translate(640, 348)" id="badge_supply" class="clickable-badge">
-              <rect x="-40" y="-20" width="80" height="40" rx="8" fill="rgba(11, 15, 20, 0.95)" stroke="#ef4444" stroke-width="1.6" filter="url(#badgeShadow)" />
-              <text x="0" y="-4" fill="#94a3b8" font-size="11.5" font-weight="600" font-family="sans-serif" text-anchor="middle">Tuloilma</text>
-              <text x="0" y="13" fill="#f87171" font-size="14.5" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_supply">-- °C</text>
+            <path d="M 600 348 L 765 348" stroke="#ef4444" stroke-width="48" stroke-linecap="round" fill="none" opacity="0.16" />
+            <path d="M 600 348 L 765 348" stroke="url(#supplyAirGrad)" stroke-width="7" stroke-linecap="round" fill="none" />
+            <!-- Stacked 2-line Badge: Width 90px, spans X=600..690 -->
+            <g transform="translate(645, 348)" id="badge_supply" class="clickable-badge">
+              <rect x="-45" y="-22" width="90" height="44" rx="9" fill="rgba(11, 15, 20, 0.96)" stroke="#ef4444" stroke-width="1.8" filter="url(#badgeShadow)" />
+              <text x="0" y="-4" fill="#94a3b8" font-size="13" font-weight="600" font-family="sans-serif" text-anchor="middle">Tuloilma</text>
+              <text x="0" y="15" fill="#f87171" font-size="16.5" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_supply">-- °C</text>
             </g>
-            <!-- 3 Compact chevrons exiting duct >>> -->
-            <path d="M 675 337 L 686 348 L 675 359" fill="none" stroke="#f87171" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)" />
-            <path d="M 688 337 L 699 348 L 688 359" fill="none" stroke="#f87171" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)" />
-            <path d="M 701 337 L 712 348 L 701 359" fill="none" stroke="#ffffff" stroke-width="3.8" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)" />
+            <!-- 3 Symmetrical Chevrons >>> starting AFTER the badge with 16px gap (tips at 718, 732, 746) -->
+            <path d="M 706 336 L 718 348 L 706 360" fill="none" stroke="#f87171" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)" />
+            <path d="M 720 336 L 732 348 L 720 360" fill="none" stroke="#f87171" stroke-width="3.8" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)" />
+            <path d="M 734 336 L 746 348 L 734 360" fill="none" stroke="#ffffff" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)" />
           </svg>
         </div>
 
@@ -686,7 +702,7 @@ class ParmairMacCard extends HTMLElement {
     const elHeaterPath = this.shadowRoot.getElementById("heater_path");
 
     if (elHeaterPower) {
-      elHeaterPower.textContent = `Lämmitin: ${heaterPower} W`;
+      elHeaterPower.textContent = `${heaterPower} W`;
       const pVal = parseFloat(heaterPower);
       if (!isNaN(pVal) && pVal > 0) {
         if (elHeaterBadge) {
