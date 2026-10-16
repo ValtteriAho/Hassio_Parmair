@@ -2,6 +2,7 @@
   "name": "Parmair MAC",
   "content_in_root": false,
   "render_readme": true,
-  "domains": ["button", "fan", "number", "select", "sensor", "switch"],
+  "country": "FI",
+  "domains": ["button", "number", "select", "sensor", "switch"],
   "homeassistant": "2025.1.0"
 }
