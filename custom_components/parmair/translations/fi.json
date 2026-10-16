@@ -45,8 +45,144 @@
   },
   "entity": {
     "sensor": {
+      "software_version": {
+        "name": "Ohjelmistoversio"
+      },
+      "heater_type": {
+        "name": "Lämmittimen tyyppi",
+        "state": {
+          "electric": "Sähkö",
+          "water": "Vesi",
+          "none": "Ei mitään"
+        }
+      },
+      "fresh_air_temp": {
+        "name": "Ulkoilman lämpötila"
+      },
+      "supply_after_recovery_temp": {
+        "name": "Tuloilman lämpötila (LTO:n jälkeen)"
+      },
+      "supply_temp": {
+        "name": "Tuloilman lämpötila"
+      },
+      "exhaust_temp": {
+        "name": "Poistoilman lämpötila"
+      },
+      "waste_temp": {
+        "name": "Jäteilman lämpötila"
+      },
+      "exhaust_temp_setpoint": {
+        "name": "Poistoilman lämpötilapyyntö"
+      },
+      "supply_temp_setpoint": {
+        "name": "Tuloilman lämpötilapyyntö"
+      },
+      "control_state": {
+        "name": "Käyttötila"
+      },
+      "actual_speed": {
+        "name": "Nykyinen nopeus"
+      },
+      "power": {
+        "name": "Virtatila",
+        "state": {
+          "off": "Pois päältä",
+          "shutting_down": "Sammutetaan",
+          "starting": "Käynnistetään",
+          "running": "Käynnissä",
+          "on": "Päällä"
+        }
+      },
+      "alarm_count": {
+        "name": "Hälytysten määrä"
+      },
+      "sum_alarm": {
+        "name": "Yhteishälytys"
+      },
+      "defrost_state": {
+        "name": "Sulatus",
+        "state": {
+          "off": "Pois päältä",
+          "active": "Aktiivinen"
+        }
+      },
+      "filter_state": {
+        "name": "Suodattimen tila",
+        "state": {
+          "ok": "OK",
+          "replace": "Vaihda",
+          "acknowledge_change": "Kuittaa vaihto",
+          "replace_reminder": "Vaihtomuistutus"
+        }
+      },
+      "heat_recovery_efficiency": {
+        "name": "Lämmöntalteenoton hyötysuhde"
+      },
+      "lto_heat_recovery_control": {
+        "name": "LTO-ohjaus"
+      },
+      "supply_fan_speed": {
+        "name": "Tulopuhaltimen nopeus"
+      },
+      "exhaust_fan_speed": {
+        "name": "Poistopuhaltimen nopeus"
+      },
+      "pre_heater_output": {
+        "name": "Esilämmittimen teho"
+      },
+      "post_heater_output": {
+        "name": "Jälkilämmittimen teho"
+      },
+      "humidity": {
+        "name": "Kosteus"
+      },
+      "humidity_24h_avg": {
+        "name": "Kosteus (24h keskiarvo)"
+      },
+      "filter_last_changed": {
+        "name": "Suodatin vaihdettu"
+      },
+      "co2_exhaust": {
+        "name": "Poistoilman CO2"
+      },
+      "home_state": {
+        "name": "Koti/Poissa-tila",
+        "state": {
+          "away": "Poissaolo",
+          "home": "Koti"
+        }
+      },
+      "boost_state": {
+        "name": "Tehostustila",
+        "state": {
+          "off": "Pois päältä",
+          "on": "Päällä"
+        }
+      },
+      "hp_rad_output": {
+        "name": "Maalämpöpatterin tila",
+        "state": {
+          "inactive": "Ei käytössä",
+          "active": "Aktiivinen"
+        }
+      },
+      "fan_power": {
+        "name": "Puhaltimien teho"
+      },
+      "heater_power": {
+        "name": "Jälkilämmittimen teho"
+      },
+      "total_power": {
+        "name": "Kokonaisottoteho"
+      },
+      "total_energy": {
+        "name": "Kokonaisenergia"
+      },
+      "heat_recovery_power": {
+        "name": "Lämmöntalteenoton teho"
+      },
       "operational_mode": {
-        "name": "Käyttötila",
+        "name": "Toimintatila",
         "state": {
           "off": "Pois päältä",
           "away": "Poissaolo",
@@ -58,6 +194,162 @@
           "sauna": "Sauna",
           "fireplace": "Takka"
         }
+      }
+    },
+    "select": {
+      "control_state": {
+        "name": "Käyttötila",
+        "state": {
+          "away": "Poissaolo",
+          "home": "Koti",
+          "boost": "Tehostus",
+          "sauna": "Sauna",
+          "fireplace": "Takka"
+        }
+      },
+      "filter_interval": {
+        "name": "Suodattimen vaihtoväli",
+        "state": {
+          "3_months": "3 kuukautta",
+          "4_months": "4 kuukautta",
+          "6_months": "6 kuukautta"
+        }
+      },
+      "home_speed_preset": {
+        "name": "Kotitilan nopeusesiasetus",
+        "state": {
+          "speed_1": "Nopeus 1",
+          "speed_2": "Nopeus 2",
+          "speed_3": "Nopeus 3",
+          "speed_4": "Nopeus 4",
+          "speed_5": "Nopeus 5"
+        }
+      },
+      "away_speed_preset": {
+        "name": "Poissaolotilan nopeusesiasetus",
+        "state": {
+          "speed_1": "Nopeus 1",
+          "speed_2": "Nopeus 2",
+          "speed_3": "Nopeus 3",
+          "speed_4": "Nopeus 4",
+          "speed_5": "Nopeus 5"
+        }
+      },
+      "boost_speed": {
+        "name": "Tehostustilan nopeusesiasetus",
+        "state": {
+          "speed_3": "Nopeus 3",
+          "speed_4": "Nopeus 4",
+          "speed_5": "Nopeus 5"
+        }
+      },
+      "boost_duration": {
+        "name": "Tehostuksen kesto",
+        "state": {
+          "30_min": "30 min",
+          "60_min": "60 min",
+          "90_min": "90 min",
+          "120_min": "120 min",
+          "180_min": "180 min"
+        }
+      },
+      "overpressure_duration": {
+        "name": "Takkatoiminnon kesto",
+        "state": {
+          "15_min": "15 min",
+          "30_min": "30 min",
+          "45_min": "45 min",
+          "60_min": "60 min",
+          "120_min": "120 min"
+        }
+      },
+      "manual_speed": {
+        "name": "Manuaalinen nopeus",
+        "state": {
+          "auto": "Automaattinen",
+          "stop": "Pysäytetty",
+          "speed_1": "Nopeus 1",
+          "speed_2": "Nopeus 2",
+          "speed_3": "Nopeus 3",
+          "speed_4": "Nopeus 4",
+          "speed_5": "Nopeus 5"
+        }
+      },
+      "summer_mode": {
+        "name": "Kesätila",
+        "state": {
+          "off": "Pois päältä",
+          "on": "Päällä",
+          "auto": "Automaattinen"
+        }
+      },
+      "hp_rad_mode": {
+        "name": "Maalämpöpatterin tila",
+        "state": {
+          "off": "Pois päältä",
+          "on": "Päällä",
+          "auto": "Automaattinen"
+        }
+      }
+    },
+    "switch": {
+      "summer_mode": {
+        "name": "Kesätila"
+      },
+      "time_program_enable": {
+        "name": "Aikaohjelma"
+      },
+      "heater_enable": {
+        "name": "Jälkilämmitin"
+      },
+      "auto_co2_boost": {
+        "name": "Automaattinen CO2-tehostus"
+      },
+      "auto_humidity_boost": {
+        "name": "Automaattinen kosteustehostus"
+      },
+      "auto_co2_home_away": {
+        "name": "Automaattinen CO2 Koti/Poissa"
+      },
+      "auto_cold_lowspeed": {
+        "name": "Automaattinen kylmän sään nopeudenalennus"
+      }
+    },
+    "number": {
+      "exhaust_temp_setpoint": {
+        "name": "Poistoilman lämpötilapyyntö"
+      },
+      "supply_temp_setpoint": {
+        "name": "Tuloilman lämpötilapyyntö"
+      },
+      "summer_mode_temp_limit": {
+        "name": "Kesätilan lämpötilaraja"
+      },
+      "boost_timer": {
+        "name": "Tehostusajastin"
+      },
+      "overpressure_timer": {
+        "name": "Takkatoiminnon ajastin"
+      },
+      "co2_home_threshold": {
+        "name": "CO2 Koti-kynnysarvo"
+      },
+      "co2_boost_threshold": {
+        "name": "CO2 Tehostus-kynnysarvo"
+      },
+      "hp_rad_winter_limit": {
+        "name": "Maalämpöpatterin talviraja"
+      },
+      "hp_rad_summer_limit": {
+        "name": "Maalämpöpatterin kesäraja"
+      }
+    },
+    "button": {
+      "acknowledge_alarms": {
+        "name": "Kuittaa hälytykset"
+      },
+      "filter_replaced": {
+        "name": "Kuittaa suodattimen vaihto"
       }
     }
   }

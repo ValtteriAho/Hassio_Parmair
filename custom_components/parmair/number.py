@@ -114,12 +114,12 @@ class ParmairNumberEntity(CoordinatorEntity[ParmairCoordinator], NumberEntity):
         coordinator: ParmairCoordinator,
         entry: ConfigEntry,
         data_key: str,
-        name: str,
+        name: str | None = None,
     ) -> None:
         """Initialize the number entity."""
         super().__init__(coordinator)
         self._data_key = data_key
-        self._attr_name = name
+        self._attr_translation_key = data_key
         self._attr_unique_id = f"{entry.entry_id}_{data_key}"
         self._attr_device_info = coordinator.device_info
 

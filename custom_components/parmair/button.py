@@ -50,16 +50,17 @@ class ParmairButton(CoordinatorEntity[ParmairCoordinator], ButtonEntity):
         coordinator: ParmairCoordinator,
         entry: ConfigEntry,
         data_key: str,
-        name: str,
-        icon: str,
-        press_value: int,
+        name: str | None = None,
+        icon: str | None = None,
+        press_value: int = 1,
     ) -> None:
         """Initialize the button."""
         super().__init__(coordinator)
         self._data_key = data_key
         self._press_value = press_value
-        self._attr_name = name
-        self._attr_icon = icon
+        self._attr_translation_key = data_key
+        if icon:
+            self._attr_icon = icon
         self._attr_unique_id = f"{entry.entry_id}_{data_key}"
         self._attr_device_info = coordinator.device_info
 
@@ -68,12 +69,12 @@ class ParmairButton(CoordinatorEntity[ParmairCoordinator], ButtonEntity):
         try:
             _LOGGER.debug(
                 "Button pressed: %s, writing %s to register %s",
-                self._attr_name,
+                self._data_key,
                 self._press_value,
                 self._data_key,
             )
             await self.coordinator.async_write_register(self._data_key, self._press_value)
             await self.coordinator.async_request_refresh()
         except Exception as ex:
-            _LOGGER.error("Failed to press button %s: %s", self._attr_name, ex)
+            _LOGGER.error("Failed to press button %s: %s", self._data_key, ex)
             raise

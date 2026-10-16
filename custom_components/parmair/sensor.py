@@ -262,12 +262,12 @@ class ParmairRegisterEntity(CoordinatorEntity[ParmairCoordinator]):
         coordinator: ParmairCoordinator,
         entry: ConfigEntry,
         data_key: str,
-        name: str,
+        name: str | None = None,
     ) -> None:
         super().__init__(coordinator)
         self._data_key = data_key
         self._register = coordinator.get_register_definition(data_key)
-        self._attr_name = name
+        self._attr_translation_key = data_key
         self._attr_unique_id = f"{entry.entry_id}_{data_key}"
         self._attr_has_entity_name = True
         self._attr_device_info = coordinator.device_info
@@ -656,7 +656,7 @@ class ParmairFilterChangeDateSensor(CoordinatorEntity[ParmairCoordinator], Senso
     ) -> None:
         """Initialize the sensor."""
         super().__init__(coordinator)
-        self._attr_name = "Filter Last Changed"
+        self._attr_translation_key = "filter_last_changed"
         self._attr_unique_id = f"{entry.entry_id}_filter_last_changed"
         self._attr_device_info = coordinator.device_info
 
@@ -738,7 +738,6 @@ class ParmairOperationalStatusSensor(CoordinatorEntity[ParmairCoordinator], Sens
     ) -> None:
         """Initialize the sensor."""
         super().__init__(coordinator)
-        self._attr_name = "Operational Mode"
         self._attr_unique_id = f"{entry.entry_id}_operational_mode"
         self._attr_device_info = coordinator.device_info
 
@@ -919,7 +918,7 @@ class ParmairFanPowerSensor(_ParmairPowerSensorBase):
 
     def __init__(self, coordinator: ParmairCoordinator, entry: ConfigEntry) -> None:
         super().__init__(coordinator, entry)
-        self._attr_name = "Fan Power"
+        self._attr_translation_key = "fan_power"
         self._attr_unique_id = f"{entry.entry_id}_fan_power"
 
     @property
@@ -952,7 +951,7 @@ class ParmairHeaterPowerSensor(_ParmairPowerSensorBase):
 
     def __init__(self, coordinator: ParmairCoordinator, entry: ConfigEntry) -> None:
         super().__init__(coordinator, entry)
-        self._attr_name = "Post Heater Power"
+        self._attr_translation_key = "heater_power"
         self._attr_unique_id = f"{entry.entry_id}_post_heater_power"
 
     @property
@@ -977,7 +976,7 @@ class ParmairTotalPowerSensor(_ParmairPowerSensorBase):
 
     def __init__(self, coordinator: ParmairCoordinator, entry: ConfigEntry) -> None:
         super().__init__(coordinator, entry)
-        self._attr_name = "Total Power"
+        self._attr_translation_key = "total_power"
         self._attr_unique_id = f"{entry.entry_id}_total_power"
 
     @property
@@ -1015,7 +1014,7 @@ class ParmairHeatRecoveryPowerSensor(_ParmairPowerSensorBase):
 
     def __init__(self, coordinator: ParmairCoordinator, entry: ConfigEntry) -> None:
         super().__init__(coordinator, entry)
-        self._attr_name = "Heat Recovery Power"
+        self._attr_translation_key = "heat_recovery_power"
         self._attr_unique_id = f"{entry.entry_id}_heat_recovery_power"
 
     @property
@@ -1059,7 +1058,7 @@ class ParmairTotalEnergySensor(CoordinatorEntity[ParmairCoordinator], RestoreEnt
     def __init__(self, coordinator: ParmairCoordinator, entry: ConfigEntry) -> None:
         super().__init__(coordinator)
         self._entry = entry
-        self._attr_name = "Total Energy"
+        self._attr_translation_key = "total_energy"
         self._attr_unique_id = f"{entry.entry_id}_total_energy"
         self._attr_device_info = coordinator.device_info
         self._state: float = 0.0

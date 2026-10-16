@@ -126,16 +126,17 @@ class ParmairSwitch(CoordinatorEntity[ParmairCoordinator], SwitchEntity):
         coordinator: ParmairCoordinator,
         entry: ConfigEntry,
         data_key: str,
-        name: str,
-        icon: str,
-        description: str,
+        name: str | None = None,
+        icon: str | None = None,
+        description: str | None = None,
         entity_category: EntityCategory | None = EntityCategory.CONFIG,
     ) -> None:
         """Initialize the switch."""
         super().__init__(coordinator)
         self._data_key = data_key
-        self._attr_name = name
-        self._attr_icon = icon
+        self._attr_translation_key = data_key
+        if icon:
+            self._attr_icon = icon
         if entity_category is not None:
             self._attr_entity_category = entity_category
         self._attr_unique_id = f"{entry.entry_id}_{data_key}"

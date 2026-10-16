@@ -1,9 +1,96 @@
 /**
- * Parmair MAC Home Assistant Lovelace Custom Card
- * Clean Scandinavian HVAC schematic with real counterflow heat recovery airflow,
- * live channel temperatures, electric/water post-heater power, and mode controls.
- * Fully responsive: embedded inline SVG preserves 100% pixel-perfect coordinates across all screen sizes.
+ * Translations dictionary for Parmair MAC card.
+ * Base and fallback language is English ("en").
+ * Home Assistant user language ("fi", etc.) is dynamically mapped.
  */
+const TRANSLATIONS = {
+  en: {
+    fresh_air: "Outdoor Air",
+    exhaust_air: "Extract Air",
+    supply_air: "Supply Air",
+    waste_air: "Waste Air",
+    heat_recovery: "Heat Recovery",
+    hr_abbr: "HR",
+    temperature: "Temperature",
+    heater: "Heater",
+    supply_fan: "Supply Fan",
+    exhaust_fan: "Extract Fan",
+    power: "Power",
+    energy: "Energy",
+    filter: "Filter",
+    speed: "Speed",
+    away: "Away",
+    home: "Home",
+    boost: "Boost",
+    sauna: "Sauna",
+    fireplace: "Fireplace",
+    off: "Off",
+    replace: "Replace",
+    ok: "OK",
+    tip_humidity: "Click to open humidity sensor details",
+    tip_co2: "Click to open CO2 sensor details",
+    tip_speed: "Click to open speed details",
+    tip_status: "Click to open status details",
+    tip_exhaust_fan: "Click to open extract fan details",
+    tip_supply_fan: "Click to open supply fan details",
+    mode_away: "Away",
+    mode_home: "Home",
+    mode_boost: "Boost",
+    mode_sauna: "Sauna",
+    mode_fireplace: "Fireplace",
+    mode_off: "Off",
+    mode_stop: "Stop",
+    mode_summer_cooling: "Summer Cooling",
+    mode_summer: "Summer Cooling",
+    mode_co2_boost: "CO2 Boost",
+    mode_humidity_boost: "Humidity Boost",
+    editor_title: "Parmair MAC Card",
+    editor_desc: "This card automatically connects all sensors and operating modes of your installed Parmair MAC unit. No additional configuration needed!",
+  },
+  fi: {
+    fresh_air: "Ulkoilma",
+    exhaust_air: "Poistoilma",
+    supply_air: "Tuloilma",
+    waste_air: "Jäteilma",
+    heat_recovery: "Talteenotto",
+    hr_abbr: "LTO",
+    temperature: "Lämpötila",
+    heater: "Lämmitin",
+    supply_fan: "Tulopuhallin",
+    exhaust_fan: "Poistopuhallin",
+    power: "Ottoteho",
+    energy: "Energia",
+    filter: "Suodatin",
+    speed: "Nopeus",
+    away: "Poissa",
+    home: "Kotona",
+    boost: "Tehostus",
+    sauna: "Sauna",
+    fireplace: "Takka",
+    off: "Pois päältä",
+    replace: "Vaihda",
+    ok: "OK",
+    tip_humidity: "Klikkaa avataksesi kosteusanturin tiedot",
+    tip_co2: "Klikkaa avataksesi CO2-anturin tiedot",
+    tip_speed: "Klikkaa avataksesi anturitiedot",
+    tip_status: "Klikkaa avataksesi tilatiedot",
+    tip_exhaust_fan: "Klikkaa avataksesi poistopuhaltimen tiedot",
+    tip_supply_fan: "Klikkaa avataksesi tulopuhaltimen tiedot",
+    mode_away: "Poissaolo",
+    mode_home: "Koti",
+    mode_boost: "Tehostus",
+    mode_sauna: "Sauna",
+    mode_fireplace: "Takka",
+    mode_off: "Pois päältä",
+    mode_stop: "Pysäytetty",
+    mode_summer_cooling: "Kesäjäähdytys",
+    mode_summer: "Kesäjäähdytys",
+    mode_co2_boost: "CO2-tehostus",
+    mode_humidity_boost: "Kosteustehostus",
+    editor_title: "Parmair MAC -kortti",
+    editor_desc: "Tämä kortti yhdistää automaattisesti kaikki asennetun Parmair MAC -laitteesi anturit ja käyttötilat. Lisäasetuksia ei tarvita!",
+  },
+};
 
 class ParmairMacCard extends HTMLElement {
   set hass(hass) {
@@ -265,10 +352,10 @@ class ParmairMacCard extends HTMLElement {
             <span id="title">PARMAIR MAC</span>
           </div>
           <div class="header-chips">
-            <div id="chip_humidity" class="chip chip-humidity clickable-badge" title="Klikkaa avataksesi kosteusanturin tiedot">💧 -- %</div>
-            <div id="chip_co2" class="chip chip-co2 clickable-badge" title="Klikkaa avataksesi CO2-anturin tiedot" style="display: none;">🌱 -- ppm</div>
-            <div id="speed" class="speed-badge clickable-badge" title="Klikkaa avataksesi anturitiedot"><ha-icon icon="mdi:fan"></ha-icon> Nopeus --</div>
-            <div id="state_pill" class="status-pill clickable-badge" title="Klikkaa avataksesi tilatiedot">--</div>
+            <div id="chip_humidity" class="chip chip-humidity clickable-badge" title="Click to open humidity sensor details">💧 -- %</div>
+            <div id="chip_co2" class="chip chip-co2 clickable-badge" title="Click to open CO2 sensor details" style="display: none;">🌱 -- ppm</div>
+            <div id="speed" class="speed-badge clickable-badge" title="Click to open speed details"><ha-icon icon="mdi:fan"></ha-icon> Speed --</div>
+            <div id="state_pill" class="status-pill clickable-badge" title="Click to open status details">--</div>
           </div>
         </div>
 
@@ -361,15 +448,15 @@ class ParmairMacCard extends HTMLElement {
 
               <!-- Unified Center Badge: Width 176px, Height 92px -->
               <rect x="-88" y="-46" width="176" height="92" rx="12" fill="#090d12" stroke="#009fe3" stroke-width="1.8" filter="url(#badgeShadow)" />
-              <text x="0" y="-18" fill="#ffffff" font-size="16.5" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_recovery_eff">LTO: -- %</text>
+              <text x="0" y="-18" fill="#ffffff" font-size="16.5" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_recovery_eff">HR: -- %</text>
               <text x="0" y="7" text-anchor="middle" font-family="sans-serif" id="badge_lto_temp">
-                <tspan fill="#94a3b8" font-size="13.5" font-weight="600">Lämpötila: </tspan>
+                <tspan fill="#94a3b8" font-size="13.5" font-weight="600" id="lbl_lto_temp">Temperature: </tspan>
                 <tspan fill="#34d399" font-size="15.5" font-weight="bold" id="svg_lto_temp">-- °C</tspan>
               </text>
-              <text x="0" y="30" fill="#38bdf8" font-size="14.5" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_recovery_power">Talteenotto: -- W</text>
+              <text x="0" y="30" fill="#38bdf8" font-size="14.5" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_recovery_power">Heat Recovery: -- W</text>
             </g>
 
-            <!-- ==================== 1) TOP-LEFT: ULKOILMA ==================== -->
+            <!-- ==================== 1) TOP-LEFT: OUTDOOR AIR ==================== -->
             <path d="M 35 120 L 200 120" stroke="#10b981" stroke-width="48" stroke-linecap="round" fill="none" opacity="0.16" />
             <path d="M 35 120 L 200 120" stroke="url(#freshAirGrad)" stroke-width="7" stroke-linecap="round" fill="none" />
             <!-- 3 Symmetrical Chevrons >>> ending BEFORE the badge with 16px gap (tips at 66, 80, 94) -->
@@ -379,10 +466,10 @@ class ParmairMacCard extends HTMLElement {
             <!-- Stacked 2-line Badge: Width 90px, spans X=110..200 -->
             <g transform="translate(155, 120)" id="badge_fresh" class="clickable-badge">
               <rect x="-45" y="-22" width="90" height="44" rx="9" fill="rgba(11, 15, 20, 0.96)" stroke="#10b981" stroke-width="1.8" filter="url(#badgeShadow)" />
-              <text x="0" y="-4" fill="#94a3b8" font-size="13" font-weight="600" font-family="sans-serif" text-anchor="middle">Ulkoilma</text>
+              <text x="0" y="-4" fill="#94a3b8" font-size="13" font-weight="600" font-family="sans-serif" text-anchor="middle" id="lbl_fresh">Outdoor Air</text>
               <text x="0" y="15" fill="#34d399" font-size="16.5" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_fresh">-- °C</text>
             </g>
-            <!-- G4 Coarse Filter at Ulkoilma Inlet -->
+            <!-- G4 Coarse Filter at Fresh Air Inlet -->
             <g transform="translate(230, 93)">
               <rect x="0" y="0" width="12" height="54" rx="2" fill="#059669" opacity="0.85" />
               <line x1="2" y1="5" x2="10" y2="49" stroke="#34d399" stroke-width="1.5" />
@@ -390,7 +477,7 @@ class ParmairMacCard extends HTMLElement {
               <text x="6" y="70" fill="#94a3b8" font-size="13" font-weight="bold" font-family="sans-serif" text-anchor="middle">G4</text>
             </g>
 
-            <!-- ==================== 2) TOP-RIGHT: POISTOILMA ==================== -->
+            <!-- ==================== 2) TOP-RIGHT: EXTRACT AIR ==================== -->
             <path d="M 765 120 L 600 120" stroke="#fbbf24" stroke-width="48" stroke-linecap="round" fill="none" opacity="0.16" />
             <path d="M 765 120 L 600 120" stroke="url(#exhaustAirGrad)" stroke-width="7" stroke-linecap="round" fill="none" />
             <!-- 3 Symmetrical Chevrons <<< ending BEFORE the badge with 16px gap (tips at 734, 720, 706) -->
@@ -400,10 +487,10 @@ class ParmairMacCard extends HTMLElement {
             <!-- Stacked 2-line Badge: Width 90px, spans X=600..690 -->
             <g transform="translate(645, 120)" id="badge_exhaust" class="clickable-badge">
               <rect x="-45" y="-22" width="90" height="44" rx="9" fill="rgba(11, 15, 20, 0.96)" stroke="#fbbf24" stroke-width="1.8" filter="url(#badgeShadow)" />
-              <text x="0" y="-4" fill="#94a3b8" font-size="13" font-weight="600" font-family="sans-serif" text-anchor="middle">Poistoilma</text>
+              <text x="0" y="-4" fill="#94a3b8" font-size="13" font-weight="600" font-family="sans-serif" text-anchor="middle" id="lbl_exhaust">Extract Air</text>
               <text x="0" y="15" fill="#fbbf24" font-size="16.5" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_exhaust">-- °C</text>
             </g>
-            <!-- G4 Coarse Filter at Poistoilma Inlet -->
+            <!-- G4 Coarse Filter at Extract Air Inlet -->
             <g transform="translate(558, 93)">
               <rect x="0" y="0" width="12" height="54" rx="2" fill="#d97706" opacity="0.85" />
               <line x1="2" y1="5" x2="10" y2="49" stroke="#fbbf24" stroke-width="1.5" />
@@ -411,16 +498,16 @@ class ParmairMacCard extends HTMLElement {
               <text x="6" y="70" fill="#94a3b8" font-size="13" font-weight="bold" font-family="sans-serif" text-anchor="middle">G4</text>
             </g>
 
-            <!-- ==================== 3) BOTTOM-LEFT: JÄTEILMA ==================== -->
-            <!-- Poistopuhallin -->
-            <g transform="translate(315, 348)" id="badge_exhaust_fan" class="clickable-badge" title="Klikkaa avataksesi poistopuhaltimen tiedot">
+            <!-- ==================== 3) BOTTOM-LEFT: WASTE AIR ==================== -->
+            <!-- Extract Fan -->
+            <g transform="translate(315, 348)" id="badge_exhaust_fan" class="clickable-badge" title="Click to open extract fan details">
               <circle cx="0" cy="0" r="23" fill="#1e293b" stroke="#3b82f6" stroke-width="1.8" />
               <circle cx="0" cy="0" r="5" fill="#60a5fa" />
               <path d="M 0,-17 Q 5,-7 0,0 Q -5,-7 0,-17" fill="#60a5fa" opacity="0.8" />
               <path d="M 17,0 Q 7,5 0,0 Q 7,-5 17,0" fill="#60a5fa" opacity="0.8" />
               <path d="M 0,17 Q -5,7 0,0 Q 5,7 0,17" fill="#60a5fa" opacity="0.8" />
               <path d="M -17,0 Q -7,-5 0,0 Q -7,5 -17,0" fill="#60a5fa" opacity="0.8" />
-              <text x="0" y="32" fill="#94a3b8" font-size="12.5" font-weight="600" font-family="sans-serif" text-anchor="middle">Poistopuhallin</text>
+              <text x="0" y="32" fill="#94a3b8" font-size="12.5" font-weight="600" font-family="sans-serif" text-anchor="middle" id="lbl_exhaust_fan">Extract Fan</text>
               <text x="0" y="50" fill="#60a5fa" font-size="15.5" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_exhaust_fan">-- %</text>
             </g>
             <path d="M 200 348 L 35 348" stroke="#3b82f6" stroke-width="48" stroke-linecap="round" fill="none" opacity="0.16" />
@@ -428,7 +515,7 @@ class ParmairMacCard extends HTMLElement {
             <!-- Stacked 2-line Badge: Width 90px, spans X=110..200 -->
             <g transform="translate(155, 348)" id="badge_waste" class="clickable-badge">
               <rect x="-45" y="-22" width="90" height="44" rx="9" fill="rgba(11, 15, 20, 0.96)" stroke="#3b82f6" stroke-width="1.8" filter="url(#badgeShadow)" />
-              <text x="0" y="-4" fill="#94a3b8" font-size="13" font-weight="600" font-family="sans-serif" text-anchor="middle">Jäteilma</text>
+              <text x="0" y="-4" fill="#94a3b8" font-size="13" font-weight="600" font-family="sans-serif" text-anchor="middle" id="lbl_waste">Waste Air</text>
               <text x="0" y="15" fill="#60a5fa" font-size="16.5" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_waste">-- °C</text>
             </g>
             <!-- 3 Symmetrical Chevrons <<< starting AFTER the badge with 16px gap (tips at 82, 68, 54) -->
@@ -436,16 +523,16 @@ class ParmairMacCard extends HTMLElement {
             <path d="M 80 336 L 68 348 L 80 360" fill="none" stroke="#60a5fa" stroke-width="3.8" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)" />
             <path d="M 66 336 L 54 348 L 66 360" fill="none" stroke="#ffffff" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)" />
 
-            <!-- ==================== 4) BOTTOM-RIGHT: TULOILMA ==================== -->
-            <!-- Tulopuhallin -->
-            <g transform="translate(485, 348)" id="badge_supply_fan" class="clickable-badge" title="Klikkaa avataksesi tulopuhaltimen tiedot">
+            <!-- ==================== 4) BOTTOM-RIGHT: SUPPLY AIR ==================== -->
+            <!-- Supply Fan -->
+            <g transform="translate(485, 348)" id="badge_supply_fan" class="clickable-badge" title="Click to open supply fan details">
               <circle cx="0" cy="0" r="23" fill="#1e293b" stroke="#ef4444" stroke-width="1.8" />
               <circle cx="0" cy="0" r="5" fill="#f87171" />
               <path d="M 0,-17 Q 5,-7 0,0 Q -5,-7 0,-17" fill="#f87171" opacity="0.8" />
               <path d="M 17,0 Q 7,5 0,0 Q 7,-5 17,0" fill="#f87171" opacity="0.8" />
               <path d="M 0,17 Q -5,7 0,0 Q 5,7 0,17" fill="#f87171" opacity="0.8" />
               <path d="M -17,0 Q -7,-5 0,0 Q -7,5 -17,0" fill="#f87171" opacity="0.8" />
-              <text x="0" y="32" fill="#94a3b8" font-size="12.5" font-weight="600" font-family="sans-serif" text-anchor="middle">Tulopuhallin</text>
+              <text x="0" y="32" fill="#94a3b8" font-size="12.5" font-weight="600" font-family="sans-serif" text-anchor="middle" id="lbl_supply_fan">Supply Fan</text>
               <text x="0" y="50" fill="#f87171" font-size="15.5" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_supply_fan">-- %</text>
             </g>
 
@@ -460,7 +547,7 @@ class ParmairMacCard extends HTMLElement {
             <!-- Kaksirivinen Lämmitin-laatikko: Täydellinen sovitus, ei koskaan leikkaannu! -->
             <g transform="translate(566, 276)" id="badge_heater" class="clickable-badge">
               <rect x="-38" y="-19" width="76" height="38" rx="8" fill="rgba(24, 21, 18, 0.96)" stroke="#ea580c" stroke-width="1.6" id="svg_heater_badge" filter="url(#badgeShadow)" />
-              <text x="0" y="-3" fill="#fb923c" font-size="12" font-weight="600" font-family="sans-serif" text-anchor="middle">Lämmitin</text>
+              <text x="0" y="-3" fill="#fb923c" font-size="12" font-weight="600" font-family="sans-serif" text-anchor="middle" id="lbl_heater">Heater</text>
               <text x="0" y="13" fill="#f97316" font-size="14.5" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_heater_power">0 W</text>
             </g>
 
@@ -475,7 +562,7 @@ class ParmairMacCard extends HTMLElement {
             <!-- Stacked 2-line Badge: Width 90px, spans X=600..690 -->
             <g transform="translate(645, 348)" id="badge_supply" class="clickable-badge">
               <rect x="-45" y="-22" width="90" height="44" rx="9" fill="rgba(11, 15, 20, 0.96)" stroke="#ef4444" stroke-width="1.8" filter="url(#badgeShadow)" />
-              <text x="0" y="-4" fill="#94a3b8" font-size="13" font-weight="600" font-family="sans-serif" text-anchor="middle">Tuloilma</text>
+              <text x="0" y="-4" fill="#94a3b8" font-size="13" font-weight="600" font-family="sans-serif" text-anchor="middle" id="lbl_supply">Supply Air</text>
               <text x="0" y="15" fill="#f87171" font-size="16.5" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_supply">-- °C</text>
             </g>
             <!-- 3 Symmetrical Chevrons >>> starting AFTER the badge with 16px gap (tips at 718, 732, 746) -->
@@ -488,17 +575,17 @@ class ParmairMacCard extends HTMLElement {
         <div class="metrics-row">
           <div class="metric-item clickable-metric" id="metric_power">
             <ha-icon icon="mdi:flash" style="color: #38bdf8;"></ha-icon>
-            <span class="metric-label">Ottoteho:</span>
+            <span class="metric-label" id="lbl_power">Power:</span>
             <span id="total_power" class="metric-value">-- W</span>
           </div>
           <div class="metric-item clickable-metric" id="metric_energy">
             <ha-icon icon="mdi:counter" style="color: #fbbf24;"></ha-icon>
-            <span class="metric-label">Energia:</span>
+            <span class="metric-label" id="lbl_energy">Energy:</span>
             <span id="total_energy" class="metric-value">-- kWh</span>
           </div>
           <div class="metric-item clickable-metric" id="metric_filter">
             <ha-icon icon="mdi:air-filter" style="color: #4ade80;"></ha-icon>
-            <span class="metric-label">Suodatin:</span>
+            <span class="metric-label" id="lbl_filter">Filter:</span>
             <span id="filter_days" class="metric-value">OK</span>
           </div>
         </div>
@@ -506,23 +593,23 @@ class ParmairMacCard extends HTMLElement {
         <div class="mode-grid">
           <button class="mode-btn" data-mode="Away">
             <ha-icon icon="mdi:home-export-outline"></ha-icon>
-            <span>Poissa</span>
+            <span id="lbl_mode_away">Away</span>
           </button>
           <button class="mode-btn" data-mode="Home">
             <ha-icon icon="mdi:home"></ha-icon>
-            <span>Kotona</span>
+            <span id="lbl_mode_home">Home</span>
           </button>
           <button class="mode-btn" data-mode="Boost">
             <ha-icon icon="mdi:fan-chevron-up"></ha-icon>
-            <span>Tehostus</span>
+            <span id="lbl_mode_boost">Boost</span>
           </button>
           <button class="mode-btn" data-mode="Sauna">
             <ha-icon icon="mdi:radiator"></ha-icon>
-            <span>Sauna</span>
+            <span id="lbl_mode_sauna">Sauna</span>
           </button>
           <button class="mode-btn" data-mode="Fireplace">
             <ha-icon icon="mdi:fire"></ha-icon>
-            <span>Takka</span>
+            <span id="lbl_mode_fireplace">Fireplace</span>
           </button>
         </div>
       </ha-card>
@@ -631,8 +718,69 @@ class ParmairMacCard extends HTMLElement {
     return null;
   }
 
+  _getLanguage() {
+    const rawLang =
+      (this._hass && (this._hass.language || (this._hass.locale && this._hass.locale.language))) ||
+      "en";
+    return rawLang.toLowerCase().split("-")[0];
+  }
+
+  _t(key, lang = null) {
+    const l = lang || this._getLanguage();
+    const dict = TRANSLATIONS[l] || TRANSLATIONS["en"];
+    return dict[key] || TRANSLATIONS["en"][key] || key;
+  }
+
+  _applyTranslations(lang) {
+    const t = (k) => this._t(k, lang);
+    const root = this.shadowRoot;
+    if (!root) return;
+
+    const setTxt = (id, text) => {
+      const el = root.getElementById(id);
+      if (el) el.textContent = text;
+    };
+
+    const setTitle = (id, title) => {
+      const el = root.getElementById(id);
+      if (el) el.setAttribute("title", title);
+    };
+
+    setTitle("chip_humidity", t("tip_humidity"));
+    setTitle("chip_co2", t("tip_co2"));
+    setTitle("speed", t("tip_speed"));
+    setTitle("state_pill", t("tip_status"));
+    setTitle("badge_exhaust_fan", t("tip_exhaust_fan"));
+    setTitle("badge_supply_fan", t("tip_supply_fan"));
+
+    setTxt("lbl_lto_temp", t("temperature") + ": ");
+    setTxt("lbl_fresh", t("fresh_air"));
+    setTxt("lbl_exhaust", t("exhaust_air"));
+    setTxt("lbl_waste", t("waste_air"));
+    setTxt("lbl_supply", t("supply_air"));
+    setTxt("lbl_exhaust_fan", t("exhaust_fan"));
+    setTxt("lbl_supply_fan", t("supply_fan"));
+    setTxt("lbl_heater", t("heater"));
+
+    setTxt("lbl_power", t("power") + ":");
+    setTxt("lbl_energy", t("energy") + ":");
+    setTxt("lbl_filter", t("filter") + ":");
+
+    setTxt("lbl_mode_away", t("away"));
+    setTxt("lbl_mode_home", t("home"));
+    setTxt("lbl_mode_boost", t("boost"));
+    setTxt("lbl_mode_sauna", t("sauna"));
+    setTxt("lbl_mode_fireplace", t("fireplace"));
+  }
+
   updateCard() {
     if (!this.shadowRoot || !this._hass) return;
+
+    const lang = this._getLanguage();
+    if (this._currentLang !== lang) {
+      this._currentLang = lang;
+      this._applyTranslations(lang);
+    }
 
     // 1) Mode & Speed
     const currentMode =
@@ -641,11 +789,16 @@ class ParmairMacCard extends HTMLElement {
       this._findValue(["current_speed", "actual_speed", "actual_fan_speed"]) || "--";
 
     const statePill = this.shadowRoot.getElementById("state_pill");
-    if (statePill) statePill.textContent = currentMode;
+    if (statePill) {
+      const modeKey = currentMode.toLowerCase().replace(/[\s-]+/g, "_");
+      const translatedMode = this._t(`mode_${modeKey}`);
+      statePill.textContent =
+        translatedMode !== `mode_${modeKey}` ? translatedMode : currentMode;
+    }
 
     const speedBadge = this.shadowRoot.getElementById("speed");
     if (speedBadge) {
-      speedBadge.innerHTML = `<ha-icon icon="mdi:fan"></ha-icon> Nopeus ${speed}`;
+      speedBadge.innerHTML = `<ha-icon icon="mdi:fan"></ha-icon> ${this._t("speed")} ${speed}`;
     }
 
     // Highlight active button
@@ -691,8 +844,9 @@ class ParmairMacCard extends HTMLElement {
     const elEff = this.shadowRoot.getElementById("svg_recovery_eff");
     const elRecPower = this.shadowRoot.getElementById("svg_recovery_power");
 
-    if (elEff && eff !== null) elEff.textContent = `LTO: ${eff} %`;
-    if (elRecPower && recPower !== null) elRecPower.textContent = `Talteenotto: ${recPower} W`;
+    if (elEff && eff !== null) elEff.textContent = `${this._t("hr_abbr")}: ${eff} %`;
+    if (elRecPower && recPower !== null)
+      elRecPower.textContent = `${this._t("heat_recovery")}: ${recPower} W`;
 
     // 4) Heater Power & Visual Glow
     const heaterPower =
@@ -748,8 +902,11 @@ class ParmairMacCard extends HTMLElement {
     if (elTotalEnergy && totalEnergy !== null) elTotalEnergy.textContent = `${totalEnergy} kWh`;
     if (elFilterDays && filterState !== null) {
       let displayFilter = filterState;
-      if (typeof filterState === "string" && filterState.toLowerCase().includes("replace reminder")) {
-        displayFilter = "Vaihda";
+      const lower = String(filterState).toLowerCase();
+      if (lower.includes("replace reminder") || lower === "replace" || lower === "vaihda") {
+        displayFilter = this._t("replace");
+      } else if (lower === "ok") {
+        displayFilter = this._t("ok");
       }
       elFilterDays.textContent = displayFilter;
     }
@@ -794,19 +951,33 @@ class ParmairMacCard extends HTMLElement {
 }
 
 class ParmairMacCardEditor extends HTMLElement {
+  set hass(hass) {
+    this._hass = hass;
+    this.render();
+  }
+
   setConfig(config) {
     this._config = config;
-    if (!this.innerHTML) {
-      this.innerHTML = `
-        <div style="padding: 16px; font-family: inherit;">
-          <p style="margin: 0 0 8px; font-weight: 600;">Parmair MAC Card</p>
-          <p style="margin: 0; color: var(--secondary-text-color, #94a3b8); font-size: 13px;">
-            Tämä kortti yhdistää automaattisesti kaikki asennetun Parmair MAC -laitteesi anturit ja käyttötilat.
-            Lisäasetuksia ei tarvita!
-          </p>
-        </div>
-      `;
-    }
+    this.render();
+  }
+
+  render() {
+    const rawLang =
+      (this._hass && (this._hass.language || (this._hass.locale && this._hass.locale.language))) ||
+      "en";
+    const lang = rawLang.toLowerCase().split("-")[0];
+    const dict = TRANSLATIONS[lang] || TRANSLATIONS["en"];
+    const title = dict.editor_title || TRANSLATIONS["en"].editor_title;
+    const desc = dict.editor_desc || TRANSLATIONS["en"].editor_desc;
+
+    this.innerHTML = `
+      <div style="padding: 16px; font-family: inherit;">
+        <p style="margin: 0 0 8px; font-weight: 600;">${title}</p>
+        <p style="margin: 0; color: var(--secondary-text-color, #94a3b8); font-size: 13px;">
+          ${desc}
+        </p>
+      </div>
+    `;
   }
 }
 

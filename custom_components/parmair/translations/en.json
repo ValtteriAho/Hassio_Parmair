@@ -3,7 +3,7 @@
     "step": {
       "user": {
         "title": "Connect to Parmair MAC",
-        "description": "Enter the connection details for your Parmair MAC ventilation system. Current version: {version}.",
+        "description": "Enter the connection details for your Parmair MAC ventilation system. Hardware model and software version will be auto-detected. Current version: {version}.",
         "data": {
           "host": "IP Address",
           "port": "Port",
@@ -13,7 +13,7 @@
       },
       "manual_version": {
         "title": "Select Software Version",
-        "description": "Auto-detection failed. Please manually select your device's software version and heater type. Check your device's display or manual for the software version.",
+        "description": "Auto-detection failed to determine your device's software version. Please select your Parmair device's software version and heater type manually. Check your device's display or manual for the software version.",
         "data": {
           "software_version": "Software Version",
           "heater_type": "Heater Type"
@@ -45,6 +45,142 @@
   },
   "entity": {
     "sensor": {
+      "software_version": {
+        "name": "Software Version"
+      },
+      "heater_type": {
+        "name": "Heater Type",
+        "state": {
+          "electric": "Electric",
+          "water": "Water",
+          "none": "None"
+        }
+      },
+      "fresh_air_temp": {
+        "name": "Fresh Air Temperature"
+      },
+      "supply_after_recovery_temp": {
+        "name": "Supply Air Temperature (After Recovery)"
+      },
+      "supply_temp": {
+        "name": "Supply Air Temperature"
+      },
+      "exhaust_temp": {
+        "name": "Exhaust Air Temperature"
+      },
+      "waste_temp": {
+        "name": "Waste Air Temperature"
+      },
+      "exhaust_temp_setpoint": {
+        "name": "Exhaust Temperature Setpoint"
+      },
+      "supply_temp_setpoint": {
+        "name": "Supply Temperature Setpoint"
+      },
+      "control_state": {
+        "name": "Control State"
+      },
+      "actual_speed": {
+        "name": "Current Speed"
+      },
+      "power": {
+        "name": "Power State",
+        "state": {
+          "off": "Off",
+          "shutting_down": "Shutting Down",
+          "starting": "Starting",
+          "running": "Running",
+          "on": "On"
+        }
+      },
+      "alarm_count": {
+        "name": "Alarm Count"
+      },
+      "sum_alarm": {
+        "name": "Summary Alarm"
+      },
+      "defrost_state": {
+        "name": "Defrost State",
+        "state": {
+          "off": "Off",
+          "active": "Active"
+        }
+      },
+      "filter_state": {
+        "name": "Filter Status",
+        "state": {
+          "ok": "OK",
+          "replace": "Replace",
+          "acknowledge_change": "Acknowledge Change",
+          "replace_reminder": "Replace Reminder"
+        }
+      },
+      "heat_recovery_efficiency": {
+        "name": "Heat Recovery Efficiency"
+      },
+      "lto_heat_recovery_control": {
+        "name": "LTO Heat Recovery Control"
+      },
+      "supply_fan_speed": {
+        "name": "Supply Fan Speed"
+      },
+      "exhaust_fan_speed": {
+        "name": "Exhaust Fan Speed"
+      },
+      "pre_heater_output": {
+        "name": "Pre-heater Output"
+      },
+      "post_heater_output": {
+        "name": "Post-heater Output"
+      },
+      "humidity": {
+        "name": "Humidity"
+      },
+      "humidity_24h_avg": {
+        "name": "Humidity 24h Average"
+      },
+      "filter_last_changed": {
+        "name": "Filter Last Changed"
+      },
+      "co2_exhaust": {
+        "name": "CO2 Exhaust Air"
+      },
+      "home_state": {
+        "name": "Home/Away State",
+        "state": {
+          "away": "Away",
+          "home": "Home"
+        }
+      },
+      "boost_state": {
+        "name": "Boost State",
+        "state": {
+          "off": "Off",
+          "on": "On"
+        }
+      },
+      "hp_rad_output": {
+        "name": "Heat Pump Output",
+        "state": {
+          "inactive": "Inactive",
+          "active": "Active"
+        }
+      },
+      "fan_power": {
+        "name": "Fan Power"
+      },
+      "heater_power": {
+        "name": "Post Heater Power"
+      },
+      "total_power": {
+        "name": "Total Power"
+      },
+      "total_energy": {
+        "name": "Total Energy"
+      },
+      "heat_recovery_power": {
+        "name": "Heat Recovery Power"
+      },
       "operational_mode": {
         "name": "Operational Mode",
         "state": {
@@ -58,6 +194,162 @@
           "sauna": "Sauna",
           "fireplace": "Fireplace"
         }
+      }
+    },
+    "select": {
+      "control_state": {
+        "name": "Control State",
+        "state": {
+          "away": "Away",
+          "home": "Home",
+          "boost": "Boost",
+          "sauna": "Sauna",
+          "fireplace": "Fireplace"
+        }
+      },
+      "filter_interval": {
+        "name": "Filter Change Interval",
+        "state": {
+          "3_months": "3 months",
+          "4_months": "4 months",
+          "6_months": "6 months"
+        }
+      },
+      "home_speed_preset": {
+        "name": "Home Speed Preset",
+        "state": {
+          "speed_1": "Speed 1",
+          "speed_2": "Speed 2",
+          "speed_3": "Speed 3",
+          "speed_4": "Speed 4",
+          "speed_5": "Speed 5"
+        }
+      },
+      "away_speed_preset": {
+        "name": "Away Speed Preset",
+        "state": {
+          "speed_1": "Speed 1",
+          "speed_2": "Speed 2",
+          "speed_3": "Speed 3",
+          "speed_4": "Speed 4",
+          "speed_5": "Speed 5"
+        }
+      },
+      "boost_speed": {
+        "name": "Boost Speed Preset",
+        "state": {
+          "speed_3": "Speed 3",
+          "speed_4": "Speed 4",
+          "speed_5": "Speed 5"
+        }
+      },
+      "boost_duration": {
+        "name": "Boost Duration Preset",
+        "state": {
+          "30_min": "30 min",
+          "60_min": "60 min",
+          "90_min": "90 min",
+          "120_min": "120 min",
+          "180_min": "180 min"
+        }
+      },
+      "overpressure_duration": {
+        "name": "Overpressure Duration Preset",
+        "state": {
+          "15_min": "15 min",
+          "30_min": "30 min",
+          "45_min": "45 min",
+          "60_min": "60 min",
+          "120_min": "120 min"
+        }
+      },
+      "manual_speed": {
+        "name": "Manual Speed Control",
+        "state": {
+          "auto": "Auto",
+          "stop": "Stop",
+          "speed_1": "Speed 1",
+          "speed_2": "Speed 2",
+          "speed_3": "Speed 3",
+          "speed_4": "Speed 4",
+          "speed_5": "Speed 5"
+        }
+      },
+      "summer_mode": {
+        "name": "Summer Mode",
+        "state": {
+          "off": "Off",
+          "on": "On",
+          "auto": "Auto"
+        }
+      },
+      "hp_rad_mode": {
+        "name": "Heat Pump Mode",
+        "state": {
+          "off": "Off",
+          "on": "On",
+          "auto": "Auto"
+        }
+      }
+    },
+    "switch": {
+      "summer_mode": {
+        "name": "Summer Mode"
+      },
+      "time_program_enable": {
+        "name": "Time Program"
+      },
+      "heater_enable": {
+        "name": "Post Heater"
+      },
+      "auto_co2_boost": {
+        "name": "Auto CO2 Boost"
+      },
+      "auto_humidity_boost": {
+        "name": "Auto Humidity Boost"
+      },
+      "auto_co2_home_away": {
+        "name": "Auto CO2 Home/Away"
+      },
+      "auto_cold_lowspeed": {
+        "name": "Auto Cold Speed Reduction"
+      }
+    },
+    "number": {
+      "exhaust_temp_setpoint": {
+        "name": "Exhaust Temperature Setpoint"
+      },
+      "supply_temp_setpoint": {
+        "name": "Supply Temperature Setpoint"
+      },
+      "summer_mode_temp_limit": {
+        "name": "Summer Mode Temperature Limit"
+      },
+      "boost_timer": {
+        "name": "Boost Timer"
+      },
+      "overpressure_timer": {
+        "name": "Overpressure Timer"
+      },
+      "co2_home_threshold": {
+        "name": "CO2 Home Threshold"
+      },
+      "co2_boost_threshold": {
+        "name": "CO2 Boost Threshold"
+      },
+      "hp_rad_winter_limit": {
+        "name": "Heat Pump Winter Limit"
+      },
+      "hp_rad_summer_limit": {
+        "name": "Heat Pump Summer Limit"
+      }
+    },
+    "button": {
+      "acknowledge_alarms": {
+        "name": "Acknowledge Alarms"
+      },
+      "filter_replaced": {
+        "name": "Filter Replaced"
       }
     }
   }

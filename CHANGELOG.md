@@ -1,3 +1,20 @@
+## 0.80.0 - Full English Foundation & Dynamic Multi-Language Support (2026-10-16)
+
+### Internationalization & Architecture
+- **Canonical English Foundation** — standardized the underlying codebase, Lovelace card, and Home Assistant entities on English (`en`) as the single source of truth and fallback.
+- **Dynamic Frontend Card Localization (`parmair-mac-card.js`)**:
+  - Embedded dynamic multi-language dictionary (`TRANSLATIONS`) supporting English (`en`) and Finnish (`fi`).
+  - Seamlessly resolves language via Home Assistant's user interface setting (`hass.language`).
+  - Automatically translates all SVG duct labels (Fresh air, Exhaust air, Waste air, Supply air), metrics (Recovery, Power, Energy), operating modes, speed presets, filter badges, tooltips, and card configuration editor.
+  - Maintains strict Modbus command and state integrity without altering raw service calls or telemetry keys.
+- **Entity Platform Translation Key Refactoring**:
+  - Refactored sensor, select, switch, number, and button entity classes to utilize Home Assistant's native `_attr_translation_key` architecture.
+  - Added comprehensive entity names and state string options to `strings.json` (canonical English), `translations/en.json`, and `translations/fi.json`.
+  - Preserves exact English entity IDs (e.g. `sensor.parmair_mac_fresh_air_temperature`) to guarantee full backwards compatibility with existing automations and scripts.
+- **Resource Cache-Busting Version Bump** — updated automated Lovelace resource injection to version `0.80.0` ensuring browsers instantly pick up updated frontend components.
+
+---
+
 ## 0.51.0 - Symmetrical Flow Chevrons, Stacked Heater Badge & Comprehensive Typography Scale (2026-10-16)
 
 ### UI & Layout Improvements

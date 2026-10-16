@@ -160,7 +160,7 @@ class ParmairStateSelect(CoordinatorEntity[ParmairCoordinator], SelectEntity):
     """Select entity for ventilation state (Away / Home / Boost / Sauna / Fireplace)."""
 
     _attr_has_entity_name = True
-    _attr_name = "Control State"
+    _attr_translation_key = "control_state"
     _attr_icon = "mdi:state-machine"
     # No entity_category — shows in Controls
 
@@ -198,7 +198,7 @@ class ParmairFilterIntervalSelect(CoordinatorEntity[ParmairCoordinator], SelectE
     """Select entity for filter change interval (3, 4 or 6 months)."""
 
     _attr_has_entity_name = True
-    _attr_name = "Filter Change Interval"
+    _attr_translation_key = "filter_interval"
     _attr_icon = "mdi:air-filter"
     _attr_options = FILTER_INTERVAL_OPTIONS
     _attr_entity_category = EntityCategory.CONFIG
@@ -238,7 +238,7 @@ class ParmairManualSpeedSelect(CoordinatorEntity[ParmairCoordinator], SelectEnti
     """Select entity for manual speed control (Auto, Stop, Speed 1-5)."""
 
     _attr_has_entity_name = True
-    _attr_name = "Manual Speed Control"
+    _attr_translation_key = "manual_speed"
     _attr_icon = "mdi:fan-speed-1"
     _attr_options = MANUAL_SPEED_OPTIONS
     _attr_entity_category = EntityCategory.CONFIG
@@ -287,12 +287,14 @@ class ParmairSpeedPresetSelect(CoordinatorEntity[ParmairCoordinator], SelectEnti
         coordinator: ParmairCoordinator,
         entry: ConfigEntry,
         data_key: str,
-        name: str,
+        name: str | None = None,
     ) -> None:
         """Initialize speed preset select."""
         super().__init__(coordinator)
         self._data_key = data_key
-        self._attr_name = name
+        self._attr_translation_key = (
+            "home_speed_preset" if data_key == REG_HOME_SPEED else "away_speed_preset"
+        )
         self._attr_unique_id = f"{entry.entry_id}_{data_key}"
         self._attr_device_info = coordinator.device_info
 
@@ -329,7 +331,7 @@ class ParmairBoostSpeedSelect(CoordinatorEntity[ParmairCoordinator], SelectEntit
     """Select entity for boost speed preset (Speed 3, 4 or 5)."""
 
     _attr_has_entity_name = True
-    _attr_name = "Boost Speed Preset"
+    _attr_translation_key = "boost_speed"
     _attr_icon = "mdi:fan"
     _attr_options = BOOST_SPEED_OPTIONS
     _attr_entity_category = EntityCategory.CONFIG
@@ -377,7 +379,7 @@ class ParmairSummerModeSelect(CoordinatorEntity[ParmairCoordinator], SelectEntit
     """Select entity for summer mode on V2 (Off, On, Auto)."""
 
     _attr_has_entity_name = True
-    _attr_name = "Summer Mode"
+    _attr_translation_key = "summer_mode"
     _attr_icon = "mdi:weather-sunny"
     _attr_options = SUMMER_MODE_OPTIONS
     _attr_entity_category = EntityCategory.CONFIG
@@ -417,7 +419,7 @@ class ParmairBoostDurationSelect(CoordinatorEntity[ParmairCoordinator], SelectEn
     """Select entity for boost duration preset when activating boost."""
 
     _attr_has_entity_name = True
-    _attr_name = "Boost Duration Preset"
+    _attr_translation_key = "boost_duration"
     _attr_icon = "mdi:timer"
     _attr_options = BOOST_DURATION_OPTIONS
     _attr_entity_category = EntityCategory.CONFIG
@@ -457,7 +459,7 @@ class ParmairOverpressureDurationSelect(CoordinatorEntity[ParmairCoordinator], S
     """Select entity for overpressure duration preset when activating overpressure."""
 
     _attr_has_entity_name = True
-    _attr_name = "Overpressure Duration Preset"
+    _attr_translation_key = "overpressure_duration"
     _attr_icon = "mdi:timer"
     _attr_options = OVERPRESSURE_DURATION_OPTIONS
     _attr_entity_category = EntityCategory.CONFIG
@@ -501,7 +503,7 @@ class ParmairHeatPumpModeSelect(CoordinatorEntity[ParmairCoordinator], SelectEnt
     """
 
     _attr_has_entity_name = True
-    _attr_name = "Heat Pump Mode"
+    _attr_translation_key = "hp_rad_mode"
     _attr_icon = "mdi:heat-pump"
     _attr_options = HP_MODE_OPTIONS
     _attr_entity_category = EntityCategory.CONFIG
