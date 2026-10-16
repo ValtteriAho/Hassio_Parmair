@@ -1,3 +1,13 @@
+## 0.90.1 - Precision Clip-Path LTO Core Boundary & Symmetrical Crossing Lamellas (2026-10-16)
+
+### UI & Heat Exchanger Visualization
+- **Precision `<clipPath>` Core Boundary** — wrapped all internal heat exchanger lamellas in an exact diamond polygon clip-path (`ltoCoreClip`), completely eliminating any line overhang or protrusion beyond the diamond's perimeter.
+- **Symmetrical Crossing Lamellas (16 Plates)** — quadrupled the number of heat transfer lamellas from 4 to 16 lines (8 parallel to the SW–NE axis and 8 parallel to the NW–SE axis), creating an authentic, finely spaced counterflow plate matrix.
+- **Synchronized Standalone SVG (`parmair_schematic.svg`)** — updated the standalone schematic reference with the identical 16-lamella crossing grid and boundary clip-path.
+- **Resource Cache-Busting Version Bump** — updated automated Lovelace resource injection to version `0.90.1`.
+
+---
+
 ## 0.90.0 - Constant LTO Airflow Visualization & Translucent Frosted Core (2026-10-16)
 
 ### UI & Heat Exchanger Visualization

@@ -425,20 +425,40 @@ class ParmairMacCard extends HTMLElement {
               <filter id="badgeShadow" x="-20%" y="-20%" width="140%" height="140%">
                 <feDropShadow dx="0" dy="2" stdDeviation="3.5" flood-color="#000000" flood-opacity="0.7" />
               </filter>
+              <!-- Exact boundary clipPath for LTO diamond core (prevents lamellas from exceeding perimeter) -->
+              <clipPath id="ltoCoreClip">
+                <polygon points="0,-106 106,0 0,106 -106,0" />
+              </clipPath>
             </defs>
 
             <!-- Machine Chassis -->
             <rect x="200" y="52" width="400" height="366" rx="14" fill="#0b0f14" stroke="#475569" stroke-width="2.5" />
             <rect x="214" y="66" width="372" height="338" rx="10" fill="#131922" stroke="#1e293b" stroke-width="1.5" />
 
-            <!-- CENTER: LTO Exchanger Core Diamond Base & Lamellas -->
+            <!-- CENTER: LTO Exchanger Core Diamond Base & Crossing Lamellas -->
             <g transform="translate(400, 235)">
               <polygon points="0,-106 106,0 0,106 -106,0" fill="#0f172a" stroke="#009fe3" stroke-width="2" />
-              <!-- Heat transfer lamellas -->
-              <line x1="-70" y1="-50" x2="70" y2="50" stroke="#334155" stroke-width="1.6" opacity="0.65" />
-              <line x1="-50" y1="-70" x2="50" y2="70" stroke="#334155" stroke-width="1.6" opacity="0.65" />
-              <line x1="-30" y1="-90" x2="90" y2="30" stroke="#334155" stroke-width="1.6" opacity="0.65" />
-              <line x1="-90" y1="-30" x2="30" y2="90" stroke="#334155" stroke-width="1.6" opacity="0.65" />
+              <!-- Symmetrical crossing heat transfer lamellas (Option B: 8 + 8 = 16 clipped precisely to diamond) -->
+              <g clip-path="url(#ltoCoreClip)">
+                <!-- Direction 1: parallel to SW-NE axis (slope +1) -->
+                <line x1="-120" y1="-190" x2="120" y2="50" stroke="#334155" stroke-width="1.5" opacity="0.65" />
+                <line x1="-120" y1="-170" x2="120" y2="70" stroke="#334155" stroke-width="1.5" opacity="0.65" />
+                <line x1="-120" y1="-150" x2="120" y2="90" stroke="#334155" stroke-width="1.5" opacity="0.65" />
+                <line x1="-120" y1="-130" x2="120" y2="110" stroke="#334155" stroke-width="1.5" opacity="0.65" />
+                <line x1="-120" y1="-110" x2="120" y2="130" stroke="#334155" stroke-width="1.5" opacity="0.65" />
+                <line x1="-120" y1="-90" x2="120" y2="150" stroke="#334155" stroke-width="1.5" opacity="0.65" />
+                <line x1="-120" y1="-70" x2="120" y2="170" stroke="#334155" stroke-width="1.5" opacity="0.65" />
+                <line x1="-120" y1="-50" x2="120" y2="190" stroke="#334155" stroke-width="1.5" opacity="0.65" />
+                <!-- Direction 2: parallel to NW-SE axis (slope -1) -->
+                <line x1="-120" y1="50" x2="120" y2="-190" stroke="#334155" stroke-width="1.5" opacity="0.65" />
+                <line x1="-120" y1="70" x2="120" y2="-170" stroke="#334155" stroke-width="1.5" opacity="0.65" />
+                <line x1="-120" y1="90" x2="120" y2="-150" stroke="#334155" stroke-width="1.5" opacity="0.65" />
+                <line x1="-120" y1="110" x2="120" y2="-130" stroke="#334155" stroke-width="1.5" opacity="0.65" />
+                <line x1="-120" y1="130" x2="120" y2="-110" stroke="#334155" stroke-width="1.5" opacity="0.65" />
+                <line x1="-120" y1="150" x2="120" y2="-90" stroke="#334155" stroke-width="1.5" opacity="0.65" />
+                <line x1="-120" y1="170" x2="120" y2="-70" stroke="#334155" stroke-width="1.5" opacity="0.65" />
+                <line x1="-120" y1="190" x2="120" y2="-50" stroke="#334155" stroke-width="1.5" opacity="0.65" />
+              </g>
             </g>
 
             <!-- Internal flow curves crossing through the core -->
