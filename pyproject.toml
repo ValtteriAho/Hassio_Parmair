@@ -1,6 +1,6 @@
 [project]
 name = "parmair-ha"
-version = "0.90.1"
+version = "1.0.0"
 description = "Home Assistant integration for Parmair MAC ventilation units"
 readme = "README.md"
 license = {text = "MIT"}
@@ -10,7 +10,7 @@ authors = [
 ]
 keywords = ["home-assistant", "parmair", "ventilation", "modbus"]
 classifiers = [
-    "Development Status :: 4 - Beta",
+    "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",

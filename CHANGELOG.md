@@ -1,3 +1,25 @@
+## 1.0.0 - Official Production Release & HACS Default Integration (2026-10-16)
+
+### Highlights & Milestone
+- **First Major Production Release (1.0.0)** — marks the integration as fully mature, stable, and ready for official inclusion in the Home Assistant Community Store (HACS) default repository.
+- **Full Support for Parmair MAC Hardware Generations**:
+  - Legacy v1.x (Modbus 1.87 firmware) with discrete Away/Home/Boost mode control.
+  - Modern v2.x (Modbus 2.28+ firmware) with centralized `USERSTATECONTROL_FO`, Sauna, Fireplace, and automated boost triggers.
+- **Built-in Lovelace Dashboard Card (`custom:parmair-mac-card`)**:
+  - Zero manual YAML installation needed — automatically registers static HTTP endpoint and Lovelace frontend resource on integration startup.
+  - Visual 2D cross-section schematic with real-time temperature badges, counterflow diamond LTO heat exchanger visualization, rotating blowers, and filter indicators.
+  - Dynamic multi-language support (English and Finnish) matching Home Assistant user profile settings.
+- **Power & Energy Telemetry**:
+  - Fan power tracking with cubic affinity law modelling based on real ventilation load curves.
+  - Electric post-heater power tracking with automatic firmware-generation inversion handling (`REG_HEATER_TYPE_V1` vs `REG_HEATER_TYPE_V2`).
+  - Thermal heat recovery power estimation (Watts) recovered across the heat exchanger.
+- **Clean Entity Architecture & Standards Compliance**:
+  - Full adherence to Home Assistant architectural standards (`EntityCategory.CONFIG`, `EntityCategory.DIAGNOSTIC`).
+  - 100% compliant with Home Assistant `hassfest` validation and strict HACS Action specifications.
+  - Full test suite passing offline via `pytest` and fixtures.
+
+---
+
 ## 0.90.1 - Precision Clip-Path LTO Core Boundary & Symmetrical Crossing Lamellas (2026-10-16)
 
 ### UI & Heat Exchanger Visualization
