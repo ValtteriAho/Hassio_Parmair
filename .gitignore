@@ -9,6 +9,10 @@ venv/
 *.egg-info/
 dist/
 build/
+.ruff_cache/
+.pytest_cache/
+.mypy_cache/
+
 
 # IDEs
 .vscode/
@@ -25,7 +29,8 @@ build/
 .DS_Store
 Thumbs.db
 
-# Documentation
+# Documentation (local reference)
+docs/reference/
 MODBUS_REGISTERS.md
 MODBUS_REGISTERS_1XX.md
 MODBUS_REGISTERS_2XX.md
