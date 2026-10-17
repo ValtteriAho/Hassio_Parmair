@@ -1,6 +1,8 @@
 # Parmair MAC for Home Assistant (v1.1.2)
 
-![Parmair MAC Logo](parmair_logo.jpg)
+<p align="center">
+  <img src="custom_components/parmair/brand/icon@2x.png" width="160" height="160" alt="Parmair MAC Logo">
+</p>
 
 **Control your Parmair ventilation system from Home Assistant.**
 
