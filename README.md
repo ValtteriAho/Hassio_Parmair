@@ -1,4 +1,4 @@
-# Parmair MAC for Home Assistant (v1.0.0)
+# Parmair MAC for Home Assistant (v1.1.0)
 
 ![Parmair MAC Logo](parmair_logo.jpg)
 
@@ -352,6 +352,8 @@ If auto-detection fails, you can manually select these during setup.
 
 See [CHANGELOG.md](CHANGELOG.md) for complete version history.
 
+- **v1.1.0**: Detected unit hardware model displayed dynamically in card header (e.g. `PARMAIR MAC 120`), in-card filter replacement confirmation and direct Modbus counter acknowledgment (`✓ Kuittaa`), locked 48px metric element height for zero layout shift, and new diagnostic `ParmairModelSensor` entity.
+- **v1.0.0**: Official major production release and HACS default inclusion milestone, complete support for v1.x and v2.x Parmair MAC units, built-in dynamic Lovelace card (`custom:parmair-mac-card`), and calibrated power & energy telemetry.
 - **v0.90.1**: Precision `<clipPath>` core boundary eliminating any lamella overhang beyond diamond perimeter, with 16 symmetrical crossing heat exchange lamellas (8+8) creating an authentic counterflow plate matrix.
 - **v0.90.0**: Constant heat recovery (LTO) counterflow visualization subtly visible in the background through a modern translucent frosted metrics badge (`rgba(8, 12, 18, 0.76)`), with diamond base and lamella layering precision.
 - **v0.80.0**: Full canonical English foundation, dynamic bilingual card localization (English & Finnish), Home Assistant native `_attr_translation_key` architecture, and automated Lovelace cache-busting.

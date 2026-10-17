@@ -46,6 +46,9 @@ const TRANSLATIONS = {
     mode_humidity_boost: "Humidity Boost",
     editor_title: "Parmair MAC Card",
     editor_desc: "This card automatically connects all sensors and operating modes of your installed Parmair MAC unit. No additional configuration needed!",
+    confirm_filter_reset: "Acknowledge filter replacement?",
+    btn_acknowledge: "Acknowledge",
+    filter_acknowledged: "Acknowledged!",
   },
   fi: {
     fresh_air: "Ulkoilma",
@@ -89,6 +92,9 @@ const TRANSLATIONS = {
     mode_humidity_boost: "Kosteustehostus",
     editor_title: "Parmair MAC -kortti",
     editor_desc: "Tämä kortti yhdistää automaattisesti kaikki asennetun Parmair MAC -laitteesi anturit ja käyttötilat. Lisäasetuksia ei tarvita!",
+    confirm_filter_reset: "Kuittaa suodattimien vaihto tehdyksi?",
+    btn_acknowledge: "Kuittaa",
+    filter_acknowledged: "Kuitattu!",
   },
 };
 
@@ -261,10 +267,42 @@ class ParmairMacCard extends HTMLElement {
           gap: 10px;
           background: rgba(15, 23, 42, 0.6);
           border-radius: 10px;
-          padding: 11px 16px;
+          padding: 0 16px;
           border: 1px solid #334155;
           font-size: 15px;
           overflow: hidden;
+          height: 48px;
+          min-height: 48px;
+          max-height: 48px;
+          box-sizing: border-box;
+        }
+        .metric-item.filter-warning {
+          background: rgba(245, 158, 11, 0.12);
+          border: 1.5px solid #f59e0b;
+          box-shadow: 0 0 10px rgba(245, 158, 11, 0.25);
+        }
+        .metric-item.filter-warning:hover {
+          background: rgba(245, 158, 11, 0.2);
+          border-color: #fbbf24;
+        }
+        .filter-reset-pill {
+          background: #d97706;
+          color: #ffffff;
+          font-size: 12px;
+          font-weight: 700;
+          padding: 3px 8px;
+          border-radius: 6px;
+          border: 1px solid #f59e0b;
+          white-space: nowrap;
+          cursor: pointer;
+          transition: background 0.15s ease;
+        }
+        .filter-reset-pill:hover {
+          background: #b45309;
+        }
+        .model-badge {
+          color: #38bdf8;
+          font-weight: 700;
         }
         .metric-item ha-icon {
           --mdc-icon-size: 20px;
@@ -606,10 +644,13 @@ class ParmairMacCard extends HTMLElement {
             <span class="metric-label" id="lbl_energy">Energy:</span>
             <span id="total_energy" class="metric-value">-- kWh</span>
           </div>
-          <div class="metric-item clickable-metric" id="metric_filter">
-            <ha-icon icon="mdi:air-filter" style="color: #4ade80;"></ha-icon>
+          <div class="metric-item clickable-metric" id="metric_filter" title="Click to acknowledge filter replacement or inspect details">
+            <ha-icon icon="mdi:air-filter" id="filter_icon" style="color: #4ade80;"></ha-icon>
             <span class="metric-label" id="lbl_filter">Filter:</span>
-            <span id="filter_days" class="metric-value">OK</span>
+            <div id="filter_val_wrap" style="display: flex; align-items: center; gap: 8px;">
+              <span id="filter_days" class="metric-value">OK</span>
+              <span id="btn_filter_reset" class="filter-reset-pill" style="display: none;">✓ Acknowledge</span>
+            </div>
           </div>
         </div>
 
@@ -663,7 +704,13 @@ class ParmairMacCard extends HTMLElement {
     this._attachMoreInfo("badge_heater", ["post_heater_power", "heater_power"]);
     this._attachMoreInfo("metric_power", ["total_power"]);
     this._attachMoreInfo("metric_energy", ["total_energy"]);
-    this._attachMoreInfo("metric_filter", ["filter_status", "filter_state"]);
+    
+    // Filter click: prompt confirmation to reset or open more-info
+    const metricFilter = this.shadowRoot.getElementById("metric_filter");
+    if (metricFilter) {
+      metricFilter.addEventListener("click", () => this._handleFilterClick());
+    }
+
     this._attachMoreInfo("state_pill", ["control_state", "operational_mode", "state"]);
     this._attachMoreInfo("speed", ["current_speed", "actual_speed", "actual_fan_speed"]);
     this._attachMoreInfo("badge_supply_fan", ["supply_fan_speed"]);
@@ -679,6 +726,44 @@ class ParmairMacCard extends HTMLElement {
     if (el) {
       el.addEventListener("click", () => this._fireMoreInfo(suffixes));
     }
+  }
+
+  _handleFilterClick() {
+    if (!this._hass) return;
+    const parmairEntities = this._getParmairEntities();
+    const buttonEntity = Object.keys(parmairEntities).find(
+      (id) =>
+        id.startsWith("button.") &&
+        (id.endsWith("filter_replaced") || id.includes("filter"))
+    );
+
+    const filterState = this._findValue(["filter_status", "filter_state"]);
+    const lower = filterState ? String(filterState).toLowerCase() : "";
+    const isWarning =
+      lower.includes("replace reminder") ||
+      lower === "replace" ||
+      lower === "vaihda";
+
+    const promptMsg = this._t("confirm_filter_reset");
+    if (isWarning || buttonEntity) {
+      if (window.confirm(promptMsg)) {
+        if (buttonEntity) {
+          this._hass.callService("button", "press", {
+            entity_id: buttonEntity,
+          });
+          const elFilterDays = this.shadowRoot.getElementById("filter_days");
+          const elResetBtn = this.shadowRoot.getElementById("btn_filter_reset");
+          if (elFilterDays) {
+            elFilterDays.textContent = this._t("filter_acknowledged");
+          }
+          if (elResetBtn) {
+            elResetBtn.style.display = "none";
+          }
+        }
+        return;
+      }
+    }
+    this._fireMoreInfo(["filter_status", "filter_state"]);
   }
 
   _getParmairEntities() {
@@ -805,6 +890,22 @@ class ParmairMacCard extends HTMLElement {
       this._applyTranslations(lang);
     }
 
+    // 0) Header Brand & Model
+    const model = this._findValue(["model", "device_model", "hardware_model"]);
+    const elTitle = this.shadowRoot.getElementById("title");
+    if (elTitle) {
+      if (model && model !== "unknown" && model !== "None") {
+        const cleanModel = String(model).trim();
+        if (cleanModel.toUpperCase().startsWith("MAC")) {
+          elTitle.innerHTML = `PARMAIR <span class="model-badge">${cleanModel}</span>`;
+        } else {
+          elTitle.innerHTML = `PARMAIR <span class="model-badge">MAC ${cleanModel}</span>`;
+        }
+      } else {
+        elTitle.textContent = "PARMAIR MAC";
+      }
+    }
+
     // 1) Mode & Speed
     const currentMode =
       this._findValue(["control_state", "state", "operational_mode"]) || "Home";
@@ -920,16 +1021,41 @@ class ParmairMacCard extends HTMLElement {
     const elTotalPower = this.shadowRoot.getElementById("total_power");
     const elTotalEnergy = this.shadowRoot.getElementById("total_energy");
     const elFilterDays = this.shadowRoot.getElementById("filter_days");
+    const elFilterItem = this.shadowRoot.getElementById("metric_filter");
+    const elFilterIcon = this.shadowRoot.getElementById("filter_icon");
+    const elResetBtn = this.shadowRoot.getElementById("btn_filter_reset");
 
     if (elTotalPower && totalPower !== null) elTotalPower.textContent = `${totalPower} W`;
     if (elTotalEnergy && totalEnergy !== null) elTotalEnergy.textContent = `${totalEnergy} kWh`;
     if (elFilterDays && filterState !== null) {
       let displayFilter = filterState;
       const lower = String(filterState).toLowerCase();
-      if (lower.includes("replace reminder") || lower === "replace" || lower === "vaihda") {
+      const isWarning =
+        lower.includes("replace reminder") ||
+        lower === "replace" ||
+        lower === "vaihda";
+
+      if (isWarning) {
         displayFilter = this._t("replace");
-      } else if (lower === "ok") {
-        displayFilter = this._t("ok");
+        if (elFilterItem) elFilterItem.classList.add("filter-warning");
+        if (elFilterIcon) {
+          elFilterIcon.style.color = "#f59e0b";
+          elFilterIcon.setAttribute("icon", "mdi:alert-circle-outline");
+        }
+        if (elFilterDays) elFilterDays.style.color = "#fbbf24";
+        if (elResetBtn) {
+          elResetBtn.style.display = "";
+          elResetBtn.textContent = `✓ ${this._t("btn_acknowledge")}`;
+        }
+      } else {
+        if (lower === "ok") displayFilter = this._t("ok");
+        if (elFilterItem) elFilterItem.classList.remove("filter-warning");
+        if (elFilterIcon) {
+          elFilterIcon.style.color = "#4ade80";
+          elFilterIcon.setAttribute("icon", "mdi:air-filter");
+        }
+        if (elFilterDays) elFilterDays.style.color = "#4ade80";
+        if (elResetBtn) elResetBtn.style.display = "none";
       }
       elFilterDays.textContent = displayFilter;
     }

@@ -45,6 +45,9 @@
   },
   "entity": {
     "sensor": {
+      "model": {
+        "name": "Malli"
+      },
       "software_version": {
         "name": "Ohjelmistoversio"
       },

@@ -83,6 +83,12 @@ class TestSystemInfo:
         assert model.startswith("MAC "), f"Model should start with 'MAC ', got {model}"
         assert re.match(r"^MAC .+$", model), f"Model should match 'MAC <model>', got {model}"
 
+    def test_model_in_device_info(self, coordinator: MockCoordinator) -> None:
+        """Model in device info should be valid for sensor exposure."""
+        model = coordinator.device_info.get("model")
+        assert model is not None
+        assert model == "MAC 120"
+
 
 class TestTemperatures:
     """Test temperature interpretation."""

@@ -45,6 +45,9 @@
   },
   "entity": {
     "sensor": {
+      "model": {
+        "name": "Model"
+      },
       "software_version": {
         "name": "Software Version"
       },

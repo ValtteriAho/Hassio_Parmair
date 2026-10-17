@@ -1,3 +1,13 @@
+## 1.1.0 - Hardware Model in Card Header & In-Card Filter Replacement Acknowledgment (2026-10-17)
+
+### Highlights & Features
+- **Detected Hardware Model in Card Header** — automatically surfaces the exact Parmair MAC unit model (e.g. `PARMAIR MAC 120`) in the card header next to the ventilation fan icon (`mdi:fan`), backed by a new diagnostic sensor entity `sensor.parmair_mac_model`.
+- **In-Card Filter Replacement Acknowledgment** — when filter replacement is due (*Replace* / *Vaihda*), the filter metric turns amber and displays an action badge (`✓ Kuittaa` / `✓ Acknowledge`). Clicking prompts the user for confirmation and directly calls `button.press` on `button.parmair_mac_filter_replaced` to reset the Modbus filter counter without navigating away.
+- **Zero-Layout-Shift Fixed Height (48px)** — locked metric row elements to a fixed 48px height, guaranteeing that card dimensions do not shift when the filter alert appears.
+- **Resource Cache-Busting Version Bump** — updated automated Lovelace resource injection URL to `?v=1.1.0`.
+
+---
+
 ## 1.0.0 - Official Production Release & HACS Default Integration (2026-10-16)
 
 ### Highlights & Milestone
