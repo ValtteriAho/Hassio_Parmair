@@ -1,6 +1,6 @@
 [project]
 name = "parmair-ha"
-version = "1.1.0"
+version = "1.1.1"
 description = "Home Assistant integration for Parmair MAC ventilation units"
 readme = "README.md"
 license = {text = "MIT"}

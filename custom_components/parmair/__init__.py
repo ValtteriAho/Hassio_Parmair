@@ -68,32 +68,38 @@ async def _async_register_frontend(hass: HomeAssistant) -> None:
     if not frontend_dir.exists():
         return
 
-    # Check if already registered
-    if "parmair_frontend_registered" in hass.data.get(DOMAIN, {}):
-        return
+    # Register static path once
+    if not hass.data.setdefault(DOMAIN, {}).get("parmair_frontend_registered"):
+        try:
+            await hass.http.async_register_static_paths(
+                [
+                    StaticPathConfig(
+                        url_path="/parmair",
+                        path=str(frontend_dir),
+                        cache_headers=True,
+                    )
+                ]
+            )
+            hass.data[DOMAIN]["parmair_frontend_registered"] = True
+            _LOGGER.debug("Registered Parmair frontend at /parmair")
+        except Exception as err:
+            _LOGGER.warning("Could not register Parmair frontend path: %s", err)
 
-    try:
-        await hass.http.async_register_static_paths(
-            [
-                StaticPathConfig(
-                    url_path="/parmair",
-                    path=str(frontend_dir),
-                    cache_headers=True,
-                )
-            ]
-        )
-        hass.data.setdefault(DOMAIN, {})["parmair_frontend_registered"] = True
-        _LOGGER.debug("Registered Parmair frontend at /parmair")
-
-        # Automatically register as Lovelace resource so it appears in UI Add Card picker
-        await _async_register_lovelace_resource(hass)
-    except Exception as err:
-        _LOGGER.warning("Could not register Parmair frontend path: %s", err)
+    # Automatically register as Lovelace resource so it appears in UI Add Card picker
+    await _async_register_lovelace_resource(hass)
 
 
 async def _async_register_lovelace_resource(hass: HomeAssistant) -> None:
     """Automatically add Parmair custom card to Lovelace resources and frontend."""
-    version = "1.1.0"
+    from homeassistant.loader import async_get_integration
+
+    try:
+        integration = await async_get_integration(hass, DOMAIN)
+        version = str(integration.version) if integration.version else "1.1.0"
+    except Exception as ex:
+        _LOGGER.debug("Could not get integration version, fallback: %s", ex)
+        version = "1.1.0"
+
     card_url = f"/parmair/parmair-mac-card.js?v={version}"
 
     # Always register via frontend extra_js_url (loads module directly into browser window)

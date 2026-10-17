@@ -1130,8 +1130,12 @@ class ParmairMacCardEditor extends HTMLElement {
   }
 }
 
-customElements.define("parmair-mac-card-editor", ParmairMacCardEditor);
-customElements.define("parmair-mac-card", ParmairMacCard);
+if (!customElements.get("parmair-mac-card-editor")) {
+  customElements.define("parmair-mac-card-editor", ParmairMacCardEditor);
+}
+if (!customElements.get("parmair-mac-card")) {
+  customElements.define("parmair-mac-card", ParmairMacCard);
+}
 
 window.customCards = window.customCards || [];
 if (!window.customCards.some((c) => c.type === "parmair-mac-card")) {
@@ -1142,3 +1146,9 @@ if (!window.customCards.some((c) => c.type === "parmair-mac-card")) {
     description: "Interactive Scandinavian HVAC schematic card with live airflow, LTO heat recovery, and heating element controls for Parmair MAC.",
   });
 }
+
+console.info(
+  "%c PARMAIR-MAC-CARD %c v1.1.1 ",
+  "color: white; background: #0284c7; font-weight: 700; border-radius: 3px 0 0 3px;",
+  "color: #0284c7; background: #e0f2fe; font-weight: 700; border-radius: 0 3px 3px 0;"
+);

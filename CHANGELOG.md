@@ -1,3 +1,13 @@
+## 1.1.1 - Dynamic Cache-Busting & Robust Lovelace Resource Lifecycle (2026-10-17)
+
+### Frontend & Architecture Improvements
+- **Dynamic Manifest Versioning** — frontend resource registration now programmatically extracts the current integration version via Home Assistant Core's `async_get_integration(hass, DOMAIN)` (`integration.version`) rather than relying on a hardcoded string. Every subsequent release automatically updates the cache-busting query parameter (`?v=X.Y.Z`).
+- **Resilient Resource Lifecycle on Reloads** — decoupled static HTTP path registration from Lovelace resource management so reloading integration entries or config options always verifies and refreshes the Lovelace resource collection without requiring a full Home Assistant reboot.
+- **Custom Elements Double-Definition Guard** — wrapped `customElements.define("parmair-mac-card", ...)` and `parmair-mac-card-editor` with `!customElements.get(...)` checks, eliminating any `CustomElementRegistry` collisions or console errors across multiple dashboard reloads or simultaneous resource imports.
+- **Console Version Badge** — added a stylized, non-intrusive DevTools console badge (`PARMAIR-MAC-CARD v1.1.1`) allowing immediate client-side verification of the active script version after updates or hard refreshes (`Ctrl+F5`).
+
+---
+
 ## 1.1.0 - Hardware Model in Card Header & In-Card Filter Replacement Acknowledgment (2026-10-17)
 
 ### Highlights & Features
