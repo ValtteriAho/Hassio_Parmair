@@ -1,4 +1,4 @@
-# Parmair MAC for Home Assistant (v1.1.1)
+# Parmair MAC for Home Assistant (v1.1.2)
 
 ![Parmair MAC Logo](parmair_logo.jpg)
 
@@ -352,6 +352,7 @@ If auto-detection fails, you can manually select these during setup.
 
 See [CHANGELOG.md](CHANGELOG.md) for complete version history.
 
+- **v1.1.2**: Harmonize dark mode background with official Home Assistant theme (`#1c1c1c` / `--ha-card-background`), full dynamic light theme compatibility (`.theme-dark` vs `.theme-light`), theme-adaptive vector chassis, and dynamic CSS text/border variables.
 - **v1.1.1**: Dynamic manifest-driven cache-busting (`integration.version`), resilient resource lifecycle during configuration reloads, customElements double-definition protection, and DevTools console version badge.
 - **v1.1.0**: Detected unit hardware model displayed dynamically in card header (e.g. `PARMAIR MAC 120`), in-card filter replacement confirmation and direct Modbus counter acknowledgment (`✓ Kuittaa`), locked 48px metric element height for zero layout shift, and new diagnostic `ParmairModelSensor` entity.
 - **v1.0.0**: Official major production release and HACS default inclusion milestone, complete support for v1.x and v2.x Parmair MAC units, built-in dynamic Lovelace card (`custom:parmair-mac-card`), and calibrated power & energy telemetry.

@@ -147,11 +147,11 @@ class ParmairMacCard extends HTMLElement {
           font-family: var(--ha-card-font-family, inherit);
         }
         ha-card {
-          background: var(--ha-card-background, #1e242c);
-          color: var(--primary-text-color, #ffffff);
-          border-radius: var(--ha-card-border-radius, 16px);
+          background: var(--ha-card-background, var(--card-background-color, white));
+          color: var(--primary-text-color, #212121);
+          border-radius: var(--ha-card-border-radius, 12px);
           box-shadow: var(--ha-card-box-shadow, none);
-          border: var(--ha-card-border-width, 1px) solid var(--ha-card-border-color, #334155);
+          border: var(--ha-card-border-width, 1px) solid var(--ha-card-border-color, var(--divider-color, rgba(125, 125, 125, 0.15)));
           overflow: hidden;
           padding: 16px;
           position: relative;
@@ -171,11 +171,15 @@ class ParmairMacCard extends HTMLElement {
           font-size: 19px;
           font-weight: 700;
           letter-spacing: 0.5px;
-          color: #ffffff;
+          color: var(--primary-text-color, #212121);
         }
         .brand ha-icon {
-          color: #009fe3;
+          color: var(--primary-color, #03a9f4);
           --mdc-icon-size: 24px;
+        }
+        .model-badge {
+          color: var(--primary-color, #03a9f4);
+          font-weight: 700;
         }
         .header-chips {
           display: flex;
@@ -195,26 +199,32 @@ class ParmairMacCard extends HTMLElement {
         .chip-humidity {
           background: rgba(6, 182, 212, 0.16);
           border: 1.5px solid #06b6d4;
+          color: #0891b2;
+        }
+        .theme-dark .chip-humidity {
           color: #22d3ee;
         }
         .chip-co2 {
           background: rgba(16, 185, 129, 0.16);
           border: 1.5px solid #10b981;
+          color: #059669;
+        }
+        .theme-dark .chip-co2 {
           color: #34d399;
         }
         .status-pill {
-          background: #0066b3;
-          border: 1.5px solid #009fe3;
-          color: #ffffff;
+          background: var(--primary-color, #03a9f4);
+          border: 1.5px solid var(--primary-color, #03a9f4);
+          color: var(--text-primary-color, #ffffff);
           padding: 6px 14px;
           border-radius: 20px;
           font-size: 14.5px;
           font-weight: 700;
         }
         .speed-badge {
-          background: rgba(51, 65, 85, 0.5);
-          border: 1.5px solid #64748b;
-          color: #cbd5e1;
+          background: rgba(var(--rgb-primary-text-color, 125, 125, 125), 0.06);
+          border: 1.5px solid var(--ha-card-border-color, var(--divider-color, rgba(125, 125, 125, 0.15)));
+          color: var(--primary-text-color, #212121);
           padding: 6px 14px;
           border-radius: 20px;
           font-size: 14.5px;
@@ -236,8 +246,8 @@ class ParmairMacCard extends HTMLElement {
           transition: background 0.15s ease, border-color 0.15s ease;
         }
         .clickable-metric:hover {
-          background: rgba(30, 41, 59, 0.85);
-          border-color: #0284c7;
+          background: rgba(var(--rgb-primary-text-color, 125, 125, 125), 0.09);
+          border-color: var(--primary-color, #03a9f4);
         }
 
         /* SVG Schematic Container */
@@ -246,12 +256,69 @@ class ParmairMacCard extends HTMLElement {
           border-radius: 12px;
           overflow: hidden;
           margin-bottom: 12px;
-          background: #131922;
+          background: var(--secondary-background-color, rgba(var(--rgb-primary-text-color, 125, 125, 125), 0.04));
+          border: 1px solid var(--ha-card-border-color, var(--divider-color, rgba(125, 125, 125, 0.12)));
         }
         .schematic-svg {
           display: block;
           width: 100%;
           height: auto;
+        }
+
+        /* SVG Theme Adaptive Classes */
+        .chassis-outer {
+          fill: #0d0d0d;
+          stroke: #333333;
+        }
+        .chassis-inner {
+          fill: #171717;
+          stroke: #242424;
+        }
+        .core-diamond {
+          fill: #111111;
+        }
+        .core-lamella {
+          stroke: #2a2a2a;
+        }
+        .center-badge-bg {
+          fill: rgba(20, 20, 20, 0.85);
+        }
+        .badge-bg {
+          fill: rgba(18, 18, 18, 0.94);
+        }
+        .svg-val-white {
+          fill: #ffffff;
+        }
+        .svg-lbl {
+          fill: #94a3b8;
+        }
+
+        /* Light Theme Overrides */
+        .theme-light .chassis-outer {
+          fill: #ebeef2;
+          stroke: #cbd5e1;
+        }
+        .theme-light .chassis-inner {
+          fill: #ffffff;
+          stroke: #e2e8f0;
+        }
+        .theme-light .core-diamond {
+          fill: #f8fafc;
+        }
+        .theme-light .core-lamella {
+          stroke: #e2e8f0;
+        }
+        .theme-light .center-badge-bg {
+          fill: rgba(255, 255, 255, 0.92);
+        }
+        .theme-light .badge-bg {
+          fill: rgba(255, 255, 255, 0.94);
+        }
+        .theme-light .svg-val-white {
+          fill: #0f172a;
+        }
+        .theme-light .svg-lbl {
+          fill: #64748b;
         }
 
         /* Metrics row */
@@ -265,10 +332,10 @@ class ParmairMacCard extends HTMLElement {
           display: flex;
           align-items: center;
           gap: 10px;
-          background: rgba(15, 23, 42, 0.6);
+          background: rgba(var(--rgb-primary-text-color, 125, 125, 125), 0.04);
+          border: 1px solid var(--ha-card-border-color, var(--divider-color, rgba(125, 125, 125, 0.12)));
           border-radius: 10px;
           padding: 0 16px;
-          border: 1px solid #334155;
           font-size: 15px;
           overflow: hidden;
           height: 48px;
@@ -277,12 +344,12 @@ class ParmairMacCard extends HTMLElement {
           box-sizing: border-box;
         }
         .metric-item.filter-warning {
-          background: rgba(245, 158, 11, 0.12);
+          background: rgba(245, 158, 11, 0.14);
           border: 1.5px solid #f59e0b;
           box-shadow: 0 0 10px rgba(245, 158, 11, 0.25);
         }
         .metric-item.filter-warning:hover {
-          background: rgba(245, 158, 11, 0.2);
+          background: rgba(245, 158, 11, 0.22);
           border-color: #fbbf24;
         }
         .filter-reset-pill {
@@ -300,15 +367,11 @@ class ParmairMacCard extends HTMLElement {
         .filter-reset-pill:hover {
           background: #b45309;
         }
-        .model-badge {
-          color: #38bdf8;
-          font-weight: 700;
-        }
         .metric-item ha-icon {
           --mdc-icon-size: 20px;
         }
         .metric-label {
-          color: #94a3b8;
+          color: var(--secondary-text-color, #727272);
           font-size: 14px;
           font-weight: 500;
           white-space: nowrap;
@@ -316,7 +379,7 @@ class ParmairMacCard extends HTMLElement {
         .metric-value {
           font-weight: 700;
           font-size: 16px;
-          color: #f1f5f9;
+          color: var(--primary-text-color, #212121);
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
@@ -329,11 +392,11 @@ class ParmairMacCard extends HTMLElement {
           gap: 8px;
         }
         .mode-btn {
-          background: rgba(30, 41, 59, 0.5);
-          border: 1px solid #334155;
+          background: rgba(var(--rgb-primary-text-color, 125, 125, 125), 0.04);
+          border: 1px solid var(--ha-card-border-color, var(--divider-color, rgba(125, 125, 125, 0.12)));
           border-radius: 10px;
           padding: 10px 4px;
-          color: #94a3b8;
+          color: var(--secondary-text-color, #727272);
           display: flex;
           flex-direction: column;
           align-items: center;
@@ -346,14 +409,14 @@ class ParmairMacCard extends HTMLElement {
           --mdc-icon-size: 22px;
         }
         .mode-btn:hover {
-          background: rgba(51, 65, 85, 0.7);
-          color: #f1f5f9;
+          background: rgba(var(--rgb-primary-text-color, 125, 125, 125), 0.08);
+          color: var(--primary-text-color, #212121);
         }
         .mode-btn.active {
-          background: #0066b3;
-          border-color: #009fe3;
-          color: #ffffff;
-          box-shadow: 0 0 10px rgba(0, 159, 227, 0.3);
+          background: var(--primary-color, #03a9f4);
+          border-color: var(--primary-color, #03a9f4);
+          color: var(--text-primary-color, #ffffff);
+          box-shadow: 0 0 10px rgba(3, 169, 244, 0.35);
         }
         .mode-btn span {
           font-size: 13.5px;
@@ -470,32 +533,32 @@ class ParmairMacCard extends HTMLElement {
             </defs>
 
             <!-- Machine Chassis -->
-            <rect x="200" y="52" width="400" height="366" rx="14" fill="#0b0f14" stroke="#475569" stroke-width="2.5" />
-            <rect x="214" y="66" width="372" height="338" rx="10" fill="#131922" stroke="#1e293b" stroke-width="1.5" />
+            <rect class="chassis-outer" x="200" y="52" width="400" height="366" rx="14" stroke-width="2.5" />
+            <rect class="chassis-inner" x="214" y="66" width="372" height="338" rx="10" stroke-width="1.5" />
 
             <!-- CENTER: LTO Exchanger Core Diamond Base & Crossing Lamellas -->
             <g transform="translate(400, 235)">
-              <polygon points="0,-106 106,0 0,106 -106,0" fill="#0f172a" stroke="#009fe3" stroke-width="2" />
+              <polygon class="core-diamond" points="0,-106 106,0 0,106 -106,0" stroke="#009fe3" stroke-width="2" />
               <!-- Symmetrical crossing heat transfer lamellas (Option B: 8 + 8 = 16 clipped precisely to diamond) -->
               <g clip-path="url(#ltoCoreClip)">
                 <!-- Direction 1: parallel to SW-NE axis (slope +1) -->
-                <line x1="-120" y1="-190" x2="120" y2="50" stroke="#334155" stroke-width="1.5" opacity="0.65" />
-                <line x1="-120" y1="-170" x2="120" y2="70" stroke="#334155" stroke-width="1.5" opacity="0.65" />
-                <line x1="-120" y1="-150" x2="120" y2="90" stroke="#334155" stroke-width="1.5" opacity="0.65" />
-                <line x1="-120" y1="-130" x2="120" y2="110" stroke="#334155" stroke-width="1.5" opacity="0.65" />
-                <line x1="-120" y1="-110" x2="120" y2="130" stroke="#334155" stroke-width="1.5" opacity="0.65" />
-                <line x1="-120" y1="-90" x2="120" y2="150" stroke="#334155" stroke-width="1.5" opacity="0.65" />
-                <line x1="-120" y1="-70" x2="120" y2="170" stroke="#334155" stroke-width="1.5" opacity="0.65" />
-                <line x1="-120" y1="-50" x2="120" y2="190" stroke="#334155" stroke-width="1.5" opacity="0.65" />
+                <line class="core-lamella" x1="-120" y1="-190" x2="120" y2="50" stroke-width="1.5" opacity="0.65" />
+                <line class="core-lamella" x1="-120" y1="-170" x2="120" y2="70" stroke-width="1.5" opacity="0.65" />
+                <line class="core-lamella" x1="-120" y1="-150" x2="120" y2="90" stroke-width="1.5" opacity="0.65" />
+                <line class="core-lamella" x1="-120" y1="-130" x2="120" y2="110" stroke-width="1.5" opacity="0.65" />
+                <line class="core-lamella" x1="-120" y1="-110" x2="120" y2="130" stroke-width="1.5" opacity="0.65" />
+                <line class="core-lamella" x1="-120" y1="-90" x2="120" y2="150" stroke-width="1.5" opacity="0.65" />
+                <line class="core-lamella" x1="-120" y1="-70" x2="120" y2="170" stroke-width="1.5" opacity="0.65" />
+                <line class="core-lamella" x1="-120" y1="-50" x2="120" y2="190" stroke-width="1.5" opacity="0.65" />
                 <!-- Direction 2: parallel to NW-SE axis (slope -1) -->
-                <line x1="-120" y1="50" x2="120" y2="-190" stroke="#334155" stroke-width="1.5" opacity="0.65" />
-                <line x1="-120" y1="70" x2="120" y2="-170" stroke="#334155" stroke-width="1.5" opacity="0.65" />
-                <line x1="-120" y1="90" x2="120" y2="-150" stroke="#334155" stroke-width="1.5" opacity="0.65" />
-                <line x1="-120" y1="110" x2="120" y2="-130" stroke="#334155" stroke-width="1.5" opacity="0.65" />
-                <line x1="-120" y1="130" x2="120" y2="-110" stroke="#334155" stroke-width="1.5" opacity="0.65" />
-                <line x1="-120" y1="150" x2="120" y2="-90" stroke="#334155" stroke-width="1.5" opacity="0.65" />
-                <line x1="-120" y1="170" x2="120" y2="-70" stroke="#334155" stroke-width="1.5" opacity="0.65" />
-                <line x1="-120" y1="190" x2="120" y2="-50" stroke="#334155" stroke-width="1.5" opacity="0.65" />
+                <line class="core-lamella" x1="-120" y1="50" x2="120" y2="-190" stroke-width="1.5" opacity="0.65" />
+                <line class="core-lamella" x1="-120" y1="70" x2="120" y2="-170" stroke-width="1.5" opacity="0.65" />
+                <line class="core-lamella" x1="-120" y1="90" x2="120" y2="-150" stroke-width="1.5" opacity="0.65" />
+                <line class="core-lamella" x1="-120" y1="110" x2="120" y2="-130" stroke-width="1.5" opacity="0.65" />
+                <line class="core-lamella" x1="-120" y1="130" x2="120" y2="-110" stroke-width="1.5" opacity="0.65" />
+                <line class="core-lamella" x1="-120" y1="150" x2="120" y2="-90" stroke-width="1.5" opacity="0.65" />
+                <line class="core-lamella" x1="-120" y1="170" x2="120" y2="-70" stroke-width="1.5" opacity="0.65" />
+                <line class="core-lamella" x1="-120" y1="190" x2="120" y2="-50" stroke-width="1.5" opacity="0.65" />
               </g>
             </g>
 
@@ -508,10 +571,10 @@ class ParmairMacCard extends HTMLElement {
             <!-- CENTER: Heat Recovery Exchanger Core Unified Metrics Badge (translucent frosted plate) -->
             <g transform="translate(400, 235)" id="badge_lto_center" class="clickable-badge">
               <!-- Unified Center Badge: Width 176px, Height 92px -->
-              <rect x="-88" y="-46" width="176" height="92" rx="12" fill="rgba(8, 12, 18, 0.76)" stroke="#009fe3" stroke-width="1.8" filter="url(#badgeShadow)" />
-              <text x="0" y="-18" fill="#ffffff" font-size="16.5" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_recovery_eff">HR: -- %</text>
+              <rect class="center-badge-bg" x="-88" y="-46" width="176" height="92" rx="12" stroke="#009fe3" stroke-width="1.8" filter="url(#badgeShadow)" />
+              <text class="svg-val-white" x="0" y="-18" font-size="16.5" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_recovery_eff">HR: -- %</text>
               <text x="0" y="7" text-anchor="middle" font-family="sans-serif" id="badge_lto_temp">
-                <tspan fill="#94a3b8" font-size="13.5" font-weight="600" id="lbl_lto_temp">Temperature: </tspan>
+                <tspan class="svg-lbl" font-size="13.5" font-weight="600" id="lbl_lto_temp">Temperature: </tspan>
                 <tspan fill="#34d399" font-size="15.5" font-weight="bold" id="svg_lto_temp">-- °C</tspan>
               </text>
               <text x="0" y="30" fill="#38bdf8" font-size="14.5" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_recovery_power">Heat Recovery: -- W</text>
@@ -526,8 +589,8 @@ class ParmairMacCard extends HTMLElement {
             <path d="M 82 108 L 94 120 L 82 132" fill="none" stroke="#ffffff" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)" />
             <!-- Stacked 2-line Badge: Width 90px, spans X=110..200 -->
             <g transform="translate(155, 120)" id="badge_fresh" class="clickable-badge">
-              <rect x="-45" y="-22" width="90" height="44" rx="9" fill="rgba(11, 15, 20, 0.96)" stroke="#10b981" stroke-width="1.8" filter="url(#badgeShadow)" />
-              <text x="0" y="-4" fill="#94a3b8" font-size="13" font-weight="600" font-family="sans-serif" text-anchor="middle" id="lbl_fresh">Outdoor Air</text>
+              <rect class="badge-bg" x="-45" y="-22" width="90" height="44" rx="9" stroke="#10b981" stroke-width="1.8" filter="url(#badgeShadow)" />
+              <text class="svg-lbl" x="0" y="-4" font-size="13" font-weight="600" font-family="sans-serif" text-anchor="middle" id="lbl_fresh">Outdoor Air</text>
               <text x="0" y="15" fill="#34d399" font-size="16.5" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_fresh">-- °C</text>
             </g>
             <!-- G4 Coarse Filter at Fresh Air Inlet -->
@@ -535,7 +598,7 @@ class ParmairMacCard extends HTMLElement {
               <rect x="0" y="0" width="12" height="54" rx="2" fill="#059669" opacity="0.85" />
               <line x1="2" y1="5" x2="10" y2="49" stroke="#34d399" stroke-width="1.5" />
               <line x1="10" y1="5" x2="2" y2="49" stroke="#34d399" stroke-width="1.5" />
-              <text x="6" y="70" fill="#94a3b8" font-size="13" font-weight="bold" font-family="sans-serif" text-anchor="middle">G4</text>
+              <text x="6" y="70" class="svg-lbl" font-size="13" font-weight="bold" font-family="sans-serif" text-anchor="middle">G4</text>
             </g>
 
             <!-- ==================== 2) TOP-RIGHT: EXTRACT AIR ==================== -->
@@ -547,8 +610,8 @@ class ParmairMacCard extends HTMLElement {
             <path d="M 718 108 L 706 120 L 718 132" fill="none" stroke="#ffffff" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)" />
             <!-- Stacked 2-line Badge: Width 90px, spans X=600..690 -->
             <g transform="translate(645, 120)" id="badge_exhaust" class="clickable-badge">
-              <rect x="-45" y="-22" width="90" height="44" rx="9" fill="rgba(11, 15, 20, 0.96)" stroke="#fbbf24" stroke-width="1.8" filter="url(#badgeShadow)" />
-              <text x="0" y="-4" fill="#94a3b8" font-size="13" font-weight="600" font-family="sans-serif" text-anchor="middle" id="lbl_exhaust">Extract Air</text>
+              <rect class="badge-bg" x="-45" y="-22" width="90" height="44" rx="9" stroke="#fbbf24" stroke-width="1.8" filter="url(#badgeShadow)" />
+              <text class="svg-lbl" x="0" y="-4" font-size="13" font-weight="600" font-family="sans-serif" text-anchor="middle" id="lbl_exhaust">Extract Air</text>
               <text x="0" y="15" fill="#fbbf24" font-size="16.5" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_exhaust">-- °C</text>
             </g>
             <!-- G4 Coarse Filter at Extract Air Inlet -->
@@ -556,7 +619,7 @@ class ParmairMacCard extends HTMLElement {
               <rect x="0" y="0" width="12" height="54" rx="2" fill="#d97706" opacity="0.85" />
               <line x1="2" y1="5" x2="10" y2="49" stroke="#fbbf24" stroke-width="1.5" />
               <line x1="10" y1="5" x2="2" y2="49" stroke="#fbbf24" stroke-width="1.5" />
-              <text x="6" y="70" fill="#94a3b8" font-size="13" font-weight="bold" font-family="sans-serif" text-anchor="middle">G4</text>
+              <text x="6" y="70" class="svg-lbl" font-size="13" font-weight="bold" font-family="sans-serif" text-anchor="middle">G4</text>
             </g>
 
             <!-- ==================== 3) BOTTOM-LEFT: WASTE AIR ==================== -->
@@ -568,15 +631,15 @@ class ParmairMacCard extends HTMLElement {
               <path d="M 17,0 Q 7,5 0,0 Q 7,-5 17,0" fill="#60a5fa" opacity="0.8" />
               <path d="M 0,17 Q -5,7 0,0 Q 5,7 0,17" fill="#60a5fa" opacity="0.8" />
               <path d="M -17,0 Q -7,-5 0,0 Q -7,5 -17,0" fill="#60a5fa" opacity="0.8" />
-              <text x="0" y="32" fill="#94a3b8" font-size="12.5" font-weight="600" font-family="sans-serif" text-anchor="middle" id="lbl_exhaust_fan">Extract Fan</text>
+              <text x="0" y="32" class="svg-lbl" font-size="12.5" font-weight="600" font-family="sans-serif" text-anchor="middle" id="lbl_exhaust_fan">Extract Fan</text>
               <text x="0" y="50" fill="#60a5fa" font-size="15.5" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_exhaust_fan">-- %</text>
             </g>
             <path d="M 200 348 L 35 348" stroke="#3b82f6" stroke-width="48" stroke-linecap="round" fill="none" opacity="0.16" />
             <path d="M 200 348 L 35 348" stroke="url(#wasteAirGrad)" stroke-width="7" stroke-linecap="round" fill="none" />
             <!-- Stacked 2-line Badge: Width 90px, spans X=110..200 -->
             <g transform="translate(155, 348)" id="badge_waste" class="clickable-badge">
-              <rect x="-45" y="-22" width="90" height="44" rx="9" fill="rgba(11, 15, 20, 0.96)" stroke="#3b82f6" stroke-width="1.8" filter="url(#badgeShadow)" />
-              <text x="0" y="-4" fill="#94a3b8" font-size="13" font-weight="600" font-family="sans-serif" text-anchor="middle" id="lbl_waste">Waste Air</text>
+              <rect class="badge-bg" x="-45" y="-22" width="90" height="44" rx="9" stroke="#3b82f6" stroke-width="1.8" filter="url(#badgeShadow)" />
+              <text class="svg-lbl" x="0" y="-4" font-size="13" font-weight="600" font-family="sans-serif" text-anchor="middle" id="lbl_waste">Waste Air</text>
               <text x="0" y="15" fill="#60a5fa" font-size="16.5" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_waste">-- °C</text>
             </g>
             <!-- 3 Symmetrical Chevrons <<< starting AFTER the badge with 16px gap (tips at 82, 68, 54) -->
@@ -593,7 +656,7 @@ class ParmairMacCard extends HTMLElement {
               <path d="M 17,0 Q 7,5 0,0 Q 7,-5 17,0" fill="#f87171" opacity="0.8" />
               <path d="M 0,17 Q -5,7 0,0 Q 5,7 0,17" fill="#f87171" opacity="0.8" />
               <path d="M -17,0 Q -7,-5 0,0 Q -7,5 -17,0" fill="#f87171" opacity="0.8" />
-              <text x="0" y="32" fill="#94a3b8" font-size="12.5" font-weight="600" font-family="sans-serif" text-anchor="middle" id="lbl_supply_fan">Supply Fan</text>
+              <text x="0" y="32" class="svg-lbl" font-size="12.5" font-weight="600" font-family="sans-serif" text-anchor="middle" id="lbl_supply_fan">Supply Fan</text>
               <text x="0" y="50" fill="#f87171" font-size="15.5" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_supply_fan">-- %</text>
             </g>
 
@@ -602,13 +665,13 @@ class ParmairMacCard extends HTMLElement {
               <rect x="0" y="0" width="12" height="54" rx="2" fill="#0284c7" opacity="0.85" />
               <line x1="2" y1="5" x2="10" y2="49" stroke="#38bdf8" stroke-width="1.5" />
               <line x1="10" y1="5" x2="2" y2="49" stroke="#38bdf8" stroke-width="1.5" />
-              <text x="6" y="70" fill="#38bdf8" font-size="13" font-weight="bold" font-family="sans-serif" text-anchor="middle">F7</text>
+              <text x="6" y="70" class="svg-lbl" font-size="13" font-weight="bold" font-family="sans-serif" text-anchor="middle">F7</text>
             </g>
 
             <!-- Kaksirivinen Lämmitin-laatikko: Täydellinen sovitus, ei koskaan leikkaannu! -->
             <g transform="translate(566, 276)" id="badge_heater" class="clickable-badge">
-              <rect x="-38" y="-19" width="76" height="38" rx="8" fill="rgba(24, 21, 18, 0.96)" stroke="#ea580c" stroke-width="1.6" id="svg_heater_badge" filter="url(#badgeShadow)" />
-              <text x="0" y="-3" fill="#fb923c" font-size="12" font-weight="600" font-family="sans-serif" text-anchor="middle" id="lbl_heater">Heater</text>
+              <rect class="badge-bg" x="-38" y="-19" width="76" height="38" rx="8" stroke="#ea580c" stroke-width="1.6" id="svg_heater_badge" filter="url(#badgeShadow)" />
+              <text class="svg-lbl" x="0" y="-3" font-size="12" font-weight="600" font-family="sans-serif" text-anchor="middle" id="lbl_heater">Heater</text>
               <text x="0" y="13" fill="#f97316" font-size="14.5" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_heater_power">0 W</text>
             </g>
 
@@ -622,8 +685,8 @@ class ParmairMacCard extends HTMLElement {
             <path d="M 600 348 L 765 348" stroke="url(#supplyAirGrad)" stroke-width="7" stroke-linecap="round" fill="none" />
             <!-- Stacked 2-line Badge: Width 90px, spans X=600..690 -->
             <g transform="translate(645, 348)" id="badge_supply" class="clickable-badge">
-              <rect x="-45" y="-22" width="90" height="44" rx="9" fill="rgba(11, 15, 20, 0.96)" stroke="#ef4444" stroke-width="1.8" filter="url(#badgeShadow)" />
-              <text x="0" y="-4" fill="#94a3b8" font-size="13" font-weight="600" font-family="sans-serif" text-anchor="middle" id="lbl_supply">Supply Air</text>
+              <rect class="badge-bg" x="-45" y="-22" width="90" height="44" rx="9" stroke="#ef4444" stroke-width="1.8" filter="url(#badgeShadow)" />
+              <text class="svg-lbl" x="0" y="-4" font-size="13" font-weight="600" font-family="sans-serif" text-anchor="middle" id="lbl_supply">Supply Air</text>
               <text x="0" y="15" fill="#f87171" font-size="16.5" font-weight="bold" font-family="sans-serif" text-anchor="middle" id="svg_supply">-- °C</text>
             </g>
             <!-- 3 Symmetrical Chevrons >>> starting AFTER the badge with 16px gap (tips at 718, 732, 746) -->
@@ -883,6 +946,17 @@ class ParmairMacCard extends HTMLElement {
 
   updateCard() {
     if (!this.shadowRoot || !this._hass) return;
+
+    // Theme detection (Home Assistant official theme API + system prefers-color-scheme fallback)
+    const isDark =
+      (this._hass && this._hass.themes && this._hass.themes.darkMode !== undefined)
+        ? Boolean(this._hass.themes.darkMode)
+        : window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const cardEl = this.shadowRoot.querySelector("ha-card");
+    if (cardEl) {
+      cardEl.classList.toggle("theme-dark", isDark);
+      cardEl.classList.toggle("theme-light", !isDark);
+    }
 
     const lang = this._getLanguage();
     if (this._currentLang !== lang) {
@@ -1148,7 +1222,7 @@ if (!window.customCards.some((c) => c.type === "parmair-mac-card")) {
 }
 
 console.info(
-  "%c PARMAIR-MAC-CARD %c v1.1.1 ",
+  "%c PARMAIR-MAC-CARD %c v1.1.2 ",
   "color: white; background: #0284c7; font-weight: 700; border-radius: 3px 0 0 3px;",
   "color: #0284c7; background: #e0f2fe; font-weight: 700; border-radius: 0 3px 3px 0;"
 );

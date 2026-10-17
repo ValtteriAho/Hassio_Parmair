@@ -1,3 +1,13 @@
+## 1.1.2 - Native Home Assistant Theme Harmonization & Full Light Theme Support (2026-10-17)
+
+### Frontend & Styling
+- **Harmonized Default Dark Theme (`#1c1c1c`)** — replaced slate/blue tinted card background with official Home Assistant CSS theme variables (`--ha-card-background`, `--card-background-color`), ensuring exact pixel-perfect color matching with standard Home Assistant cards.
+- **Full Light Theme Compatibility** — dynamically detects dark and light mode (`hass.themes.darkMode` with system `prefers-color-scheme` fallback) and applies responsive chassis styling (`.theme-dark` vs `.theme-light`). Outer casing, core diamond, lamellas, and badges adapt smoothly between crisp charcoal/slate for dark themes and clean white/soft-gray for light themes.
+- **Dynamic Text & Accent Variables** — replaced hardcoded text colors with `--primary-text-color`, `--secondary-text-color`, `--primary-color`, and `--divider-color`. Metric tiles and mode buttons now use subtle dynamic alpha backgrounds (`rgba(var(--rgb-primary-text-color), 0.04)`), rendering beautifully across any theme.
+- **Client Cache-Busting Bump** — automated Lovelace resource URL updated to `?v=1.1.2` alongside DevTools console version badge.
+
+---
+
 ## 1.1.1 - Dynamic Cache-Busting & Robust Lovelace Resource Lifecycle (2026-10-17)
 
 ### Frontend & Architecture Improvements
