@@ -6,7 +6,7 @@ import logging
 
 import homeassistant.helpers.config_validation as cv
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import Platform
+from homeassistant.const import EVENT_HOMEASSISTANT_STARTED, Platform
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryNotReady
 
@@ -85,8 +85,16 @@ async def _async_register_frontend(hass: HomeAssistant) -> None:
         except Exception as err:
             _LOGGER.warning("Could not register Parmair frontend path: %s", err)
 
-    # Automatically register as Lovelace resource so it appears in UI Add Card picker
+    # Automatically register as Lovelace resource so it appears in UI Add Card picker and on hard refreshes
     await _async_register_lovelace_resource(hass)
+
+    # If Home Assistant is still starting up, also register on EVENT_HOMEASSISTANT_STARTED
+    # to guarantee lovelace storage collection is loaded and ready
+    if not hass.is_running:
+        async def _register_when_started(_event: object = None) -> None:
+            await _async_register_lovelace_resource(hass)
+
+        hass.bus.async_listen_once(EVENT_HOMEASSISTANT_STARTED, _register_when_started)
 
 
 async def _async_register_lovelace_resource(hass: HomeAssistant) -> None:
@@ -137,13 +145,13 @@ async def _async_register_lovelace_resource(hass: HomeAssistant) -> None:
                     None,
                 )
                 if existing_item is None:
-                    await resources.async_create_item({"res_type": "module", "url": card_url})
+                    await resources.async_create_item({"type": "module", "url": card_url})
                     _LOGGER.info("Registered Parmair MAC Card in Lovelace resources: %s", card_url)
                 elif existing_item.get("url") != card_url and hasattr(
                     resources, "async_update_item"
                 ):
                     await resources.async_update_item(
-                        existing_item["id"], {"res_type": "module", "url": card_url}
+                        existing_item["id"], {"type": "module", "url": card_url}
                     )
                     _LOGGER.info("Updated Parmair MAC Card in Lovelace resources to %s", card_url)
             except Exception as ex:

@@ -108,6 +108,9 @@ class ParmairMacCard extends HTMLElement {
   }
 
   setConfig(config) {
+    if (!config) {
+      throw new Error("Invalid configuration");
+    }
     this._config = config;
     if (!this.content) {
       this.initCard();
@@ -139,7 +142,9 @@ class ParmairMacCard extends HTMLElement {
   }
 
   initCard() {
-    this.attachShadow({ mode: "open" });
+    if (!this.shadowRoot) {
+      this.attachShadow({ mode: "open" });
+    }
     this.shadowRoot.innerHTML = `
       <style>
         :host {
@@ -971,7 +976,14 @@ class ParmairMacCard extends HTMLElement {
 
   updateCard() {
     if (!this.shadowRoot || !this._hass) return;
+    try {
+      this._updateCardImpl();
+    } catch (err) {
+      console.warn("ParmairMacCard update error:", err);
+    }
+  }
 
+  _updateCardImpl() {
     // Theme detection (Home Assistant official theme API + system prefers-color-scheme fallback)
     const isDark =
       (this._hass && this._hass.themes && this._hass.themes.darkMode !== undefined)
@@ -1266,7 +1278,7 @@ if (!window.customCards.some((c) => c.type === "parmair-mac-card")) {
 }
 
 console.info(
-  "%c PARMAIR-MAC-CARD %c v1.1.3 ",
+  "%c PARMAIR-MAC-CARD %c v1.1.4 ",
   "color: white; background: #0284c7; font-weight: 700; border-radius: 3px 0 0 3px;",
   "color: #0284c7; background: #e0f2fe; font-weight: 700; border-radius: 0 3px 3px 0;"
 );

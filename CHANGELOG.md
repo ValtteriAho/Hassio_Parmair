@@ -1,3 +1,13 @@
+## 1.1.4 - Lovelace Resource Registration Schema Fix & Hard Refresh Resilience (2026-10-22)
+
+### Bug Fixes & Frontend Hard Refresh Resilience
+- **Fixed Lovelace Resource Registration Schema** — corrected resource storage registration in `__init__.py` where dictionary payload used `"res_type": "module"` instead of Home Assistant Core's required schema key `"type": "module"`. This schema violation previously caused `resources.async_create_item()` to silently fail, leaving the custom card out of Lovelace's dashboard resource registry and triggering `Configuration error: Custom element doesn't exist` during hard browser reloads (`Ctrl + F5`).
+- **Startup Race-Condition Protection** — attached resource registration to `EVENT_HOMEASSISTANT_STARTED` when Home Assistant is booting, ensuring the Lovelace resource storage collection is fully loaded and ready to store the card URL.
+- **Defensive ShadowRoot Initialization** — guarded `this.attachShadow()` with `!this.shadowRoot` check in `parmair-mac-card.js` to eliminate any possible `DOMException` collisions on re-attachment.
+- **Safe Card Update Pipeline** — isolated `updateCard()` execution inside an error boundary to prevent dashboard crashes or card replacement with error cards during early initialization states.
+
+---
+
 ## 1.1.3 - Real-Time Operational Mode in Lovelace Card & Physical Summer Cooling Fix (2026-10-22)
 
 ### Bug Fixes & Operational State Improvements
