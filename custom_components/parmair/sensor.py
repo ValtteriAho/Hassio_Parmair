@@ -48,6 +48,7 @@ from .const import (
     REG_SUPPLY_AFTER_RECOVERY_TEMP,
     REG_SUPPLY_FAN_SPEED,
     SOFTWARE_VERSION_2,
+    derive_operational_mode,
 )
 from .coordinator import ParmairCoordinator
 
@@ -719,19 +720,20 @@ class ParmairFilterChangeDateSensor(CoordinatorEntity[ParmairCoordinator], Senso
 
 
 class ParmairOperationalStatusSensor(CoordinatorEntity[ParmairCoordinator], SensorEntity):
-    """Derived sensor showing the effective operational mode for v2.x firmware.
+    """Derived operational state combining control state and active automations.
 
-    Combines USERSTATECONTROL_FO with auto-feature enable registers and live
-    sensor readings to indicate *why* the unit is in its current state:
-
-      off              — unit is off
-      away             — Away mode (manual / time-program / CO2 home-away automation)
-      home             — Home mode (manual / time-program / CO2 home-away automation)
-      boost            — Boost mode (manual / button / time-program)
-      co2_boost        — Boost triggered by CO2 level exceeding threshold
-      humidity_boost   — Boost triggered by humidity exceeding 24h average
-      sauna            — Sauna / bypass mode
-      fireplace        — Fireplace mode
+    Hierarchical derivation:
+    1. Off state (power == 0 or control_state == 0)
+    2. Away state (control_state == 1)
+    3. Home state (control_state == 2):
+       - Automated CO2 boost (auto_co2_boost enabled + CO2 ≥ threshold)
+       - Automated humidity boost (auto_humidity_boost enabled + elevated RH)
+       - Summer cooling (summer_mode enabled + summer season active)
+       - Normal Home operation
+    4. Boost state (control_state == 3):
+       - Distinguishes manual boost vs CO2 boost vs humidity boost
+    5. Sauna state (control_state == 4)
+    6. Fireplace state (control_state == 5)
 
     v2.x only — not added to the entity registry for v1.x devices.
     """
@@ -765,91 +767,7 @@ class ParmairOperationalStatusSensor(CoordinatorEntity[ParmairCoordinator], Sens
     @property
     def native_value(self) -> str | None:
         """Derive the effective operational mode from available register data."""
-        data = self.coordinator.data
-        if not data:
-            return None
-
-        power = data.get("power")
-        if power == 0:
-            return "off"
-
-        control_state = data.get("control_state")
-        if control_state is None:
-            return None
-        control_state = int(control_state)
-
-        if control_state == 0:  # Off state via user state register (USERSTATECONTROL_FO)
-            return "off"
-
-        if control_state == 3:  # Boost
-            # CO2-triggered boost: automation enabled + CO2 ≥ boost threshold
-            co2 = data.get("co2_exhaust")
-            co2_threshold = data.get("co2_boost_threshold")
-            if (
-                data.get("auto_co2_boost") == 1
-                and co2 is not None
-                and co2_threshold is not None
-                and co2 >= co2_threshold
-            ):
-                return "co2_boost"
-
-            # Humidity-triggered boost: automation enabled + humidity notably above 24h avg
-            # ME05_BOOSTSTART_S default is 10% above avg; we use 5% as a conservative detection
-            # threshold since we don't poll the actual setting register (1142).
-            humidity = data.get("humidity")
-            humidity_avg = data.get("humidity_24h_avg")
-            if (
-                data.get("auto_humidity_boost") == 1
-                and humidity is not None
-                and humidity_avg is not None
-                and humidity > humidity_avg + 5
-            ):
-                return "humidity_boost"
-
-            return "boost"
-
-        if control_state == 4:
-            return "sauna"
-
-        if control_state == 5:
-            return "fireplace"
-
-        if control_state == 2:  # Home
-            # Auto-triggered boosts keep USERSTATECONTROL_FO at Home (2) — the firmware
-            # increases fan speed transparently without changing the user state register.
-            # Must check here, not only in control_state==3 (which handles manual boost).
-            co2 = data.get("co2_exhaust")
-            co2_threshold = data.get("co2_boost_threshold")
-            if (
-                data.get("auto_co2_boost") == 1
-                and co2 is not None
-                and co2_threshold is not None
-                and co2 >= co2_threshold
-            ):
-                return "co2_boost"
-
-            humidity = data.get("humidity")
-            humidity_avg = data.get("humidity_24h_avg")
-            if (
-                data.get("auto_humidity_boost") == 1
-                and humidity is not None
-                and humidity_avg is not None
-                and humidity > humidity_avg + 5
-            ):
-                return "humidity_boost"
-
-            # Summer cooling: firmware keeps USERSTATECONTROL_FO at Home (2) while the
-            # bypass is active.  Only check here — Away/Boost/Sauna/Fireplace are not
-            # affected by summer cooling and must not be overridden.
-            if data.get("summer_mode_state") == 2 and data.get("summer_mode", 0) != 0:
-                return "summer"
-
-            return "home"
-
-        if control_state == 1:
-            return "away"
-
-        return None
+        return derive_operational_mode(self.coordinator.data)
 
     @property
     def extra_state_attributes(self) -> dict[str, object]:

@@ -47,6 +47,7 @@ HEATER_TYPE_ELECTRIC_V1 = _const.HEATER_TYPE_ELECTRIC_V1
 HEATER_TYPE_ELECTRIC_V2 = _const.HEATER_TYPE_ELECTRIC_V2
 HEATER_TYPE_UNKNOWN = _const.HEATER_TYPE_UNKNOWN
 REG_HEATER_TYPE = _const.REG_HEATER_TYPE
+derive_operational_mode = _const.derive_operational_mode
 
 
 @dataclass

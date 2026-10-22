@@ -29,6 +29,7 @@ from tools.mock_coordinator import (  # noqa: E402
     REG_POWER,
     SOFTWARE_VERSION_2,
     MockCoordinator,
+    derive_operational_mode,
     get_registers_for_version,
     load_dump,
 )
@@ -519,3 +520,74 @@ class TestPowerCalculations:
         # At 97% speed (speed 5 preset on MAC 150), fans draw ~306W, total with 5W standby = ~311W (matching field data)
         speed_5_power = 2 * fan_rating * ((97 / 100.0) ** FAN_POWER_AFFINITY_EXPONENT)
         assert 300.0 < speed_5_power + 5.0 < 315.0
+
+
+class TestOperationalMode:
+    """Test operational mode derivation logic."""
+
+    def test_operational_mode_home_default(self) -> None:
+        """Verify normal Home state when no triggers are active."""
+        data = {
+            "power": 1,
+            "control_state": 2,
+            "actual_speed": 2,
+            "home_speed": 2,
+            "humidity": 25,
+            "humidity_24h_avg": 25.0,
+            "auto_humidity_boost": 0,
+            "summer_mode_state": 0,
+        }
+        assert derive_operational_mode(data) == "home"
+
+    def test_operational_mode_humidity_boost_delta(self) -> None:
+        """Verify humidity boost triggered by >5% rise over 24h average."""
+        data = {
+            "power": 1,
+            "control_state": 2,
+            "humidity": 35,
+            "humidity_24h_avg": 25.0,
+            "auto_humidity_boost": 1,
+        }
+        assert derive_operational_mode(data) == "humidity_boost"
+
+    def test_operational_mode_humidity_boost_speed(self) -> None:
+        """Verify humidity boost triggered by elevated fan speed + above-average humidity."""
+        data = {
+            "power": 1,
+            "control_state": 2,
+            "actual_speed": 4,
+            "home_speed": 2,
+            "humidity": 28,
+            "humidity_24h_avg": 25.0,
+            "auto_humidity_boost": 1,
+        }
+        assert derive_operational_mode(data) == "humidity_boost"
+
+    def test_operational_mode_summer_daytime_not_cooling(self) -> None:
+        """Verify that summer season does NOT trigger cooling when bypass is closed or outdoor is hot."""
+        data = {
+            "power": 1,
+            "control_state": 2,
+            "summer_mode": 2,
+            "summer_mode_state": 2,  # Summer season
+            "lto_heat_recovery_control": 100.0,  # Heat recovery active / bypass closed
+            "fresh_air_temp": 28.0,
+            "exhaust_temp": 23.0,
+            "summer_mode_temp_limit": 21.0,
+        }
+        # Crucial bug fix verification: must return home, NOT summer!
+        assert derive_operational_mode(data) == "home"
+
+    def test_operational_mode_summer_cooling_active_evening(self) -> None:
+        """Verify that summer cooling activates when bypass damper is open and outdoor air is cool."""
+        data = {
+            "power": 1,
+            "control_state": 2,
+            "summer_mode": 2,
+            "summer_mode_state": 2,
+            "lto_heat_recovery_control": 0.0,  # Bypass damper fully open
+            "fresh_air_temp": 16.5,
+            "exhaust_temp": 23.5,
+            "summer_mode_temp_limit": 21.0,
+        }
+        assert derive_operational_mode(data) == "summer"

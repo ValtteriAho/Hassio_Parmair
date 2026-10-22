@@ -220,6 +220,31 @@ class ParmairMacCard extends HTMLElement {
           border-radius: 20px;
           font-size: 14.5px;
           font-weight: 700;
+          transition: all 0.2s ease;
+        }
+        .status-pill.status-boost-humidity {
+          background: rgba(6, 182, 212, 0.22);
+          border: 1.5px solid #06b6d4;
+          color: #0891b2;
+        }
+        .theme-dark .status-pill.status-boost-humidity {
+          color: #22d3ee;
+        }
+        .status-pill.status-boost-co2 {
+          background: rgba(16, 185, 129, 0.22);
+          border: 1.5px solid #10b981;
+          color: #059669;
+        }
+        .theme-dark .status-pill.status-boost-co2 {
+          color: #34d399;
+        }
+        .status-pill.status-summer {
+          background: rgba(14, 165, 233, 0.22);
+          border: 1.5px solid #0ea5e9;
+          color: #0284c7;
+        }
+        .theme-dark .status-pill.status-summer {
+          color: #38bdf8;
         }
         .speed-badge {
           background: rgba(var(--rgb-primary-text-color, 125, 125, 125), 0.06);
@@ -774,7 +799,7 @@ class ParmairMacCard extends HTMLElement {
       metricFilter.addEventListener("click", () => this._handleFilterClick());
     }
 
-    this._attachMoreInfo("state_pill", ["control_state", "operational_mode", "state"]);
+    this._attachMoreInfo("state_pill", ["operational_mode", "control_state", "state"]);
     this._attachMoreInfo("speed", ["current_speed", "actual_speed", "actual_fan_speed"]);
     this._attachMoreInfo("badge_supply_fan", ["supply_fan_speed"]);
     this._attachMoreInfo("badge_exhaust_fan", ["exhaust_fan_speed"]);
@@ -981,8 +1006,10 @@ class ParmairMacCard extends HTMLElement {
     }
 
     // 1) Mode & Speed
-    const currentMode =
-      this._findValue(["control_state", "state", "operational_mode"]) || "Home";
+    // Distinguish active operational state (with boosts/cooling) from base user control setting (Home/Away/etc.)
+    const opMode = this._findValue(["operational_mode"]);
+    const ctrlState = this._findValue(["control_state", "state"]) || "Home";
+    const currentMode = opMode || ctrlState;
     const speed =
       this._findValue(["current_speed", "actual_speed", "actual_fan_speed"]) || "--";
 
@@ -992,6 +1019,23 @@ class ParmairMacCard extends HTMLElement {
       const translatedMode = this._t(`mode_${modeKey}`);
       statePill.textContent =
         translatedMode !== `mode_${modeKey}` ? translatedMode : currentMode;
+
+      // Dynamic styling class for automated boost / cooling modes
+      statePill.classList.remove(
+        "status-boost-humidity",
+        "status-boost-co2",
+        "status-summer",
+        "status-boost"
+      );
+      if (modeKey === "humidity_boost") {
+        statePill.classList.add("status-boost-humidity");
+      } else if (modeKey === "co2_boost") {
+        statePill.classList.add("status-boost-co2");
+      } else if (modeKey === "summer" || modeKey === "summer_cooling") {
+        statePill.classList.add("status-summer");
+      } else if (modeKey === "boost") {
+        statePill.classList.add("status-boost");
+      }
     }
 
     const speedBadge = this.shadowRoot.getElementById("speed");
@@ -999,11 +1043,11 @@ class ParmairMacCard extends HTMLElement {
       speedBadge.innerHTML = `<ha-icon icon="mdi:fan"></ha-icon> ${this._t("speed")} ${speed}`;
     }
 
-    // Highlight active button
+    // Highlight active button based on the base user control setting (Home, Away, Boost, Sauna, Fireplace)
     const buttons = this.shadowRoot.querySelectorAll(".mode-btn");
     buttons.forEach((btn) => {
       const mode = btn.getAttribute("data-mode");
-      if (mode && mode.toLowerCase() === currentMode.toLowerCase()) {
+      if (mode && mode.toLowerCase() === ctrlState.toLowerCase()) {
         btn.classList.add("active");
       } else {
         btn.classList.remove("active");
@@ -1222,7 +1266,7 @@ if (!window.customCards.some((c) => c.type === "parmair-mac-card")) {
 }
 
 console.info(
-  "%c PARMAIR-MAC-CARD %c v1.1.2 ",
+  "%c PARMAIR-MAC-CARD %c v1.1.3 ",
   "color: white; background: #0284c7; font-weight: 700; border-radius: 3px 0 0 3px;",
   "color: #0284c7; background: #e0f2fe; font-weight: 700; border-radius: 0 3px 3px 0;"
 );

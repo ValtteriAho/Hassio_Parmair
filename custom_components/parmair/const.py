@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import Any
 
 DOMAIN = "parmair"
 
@@ -683,3 +684,125 @@ FILTER_STATE_MAP_V2: dict[int, str] = {
     1: "Acknowledge Change",
     2: "Replace Reminder",
 }
+
+
+def derive_operational_mode(data: dict[str, Any] | None) -> str | None:
+    """Derive the effective operational mode from register data.
+
+    Hierarchical derivation:
+    1. Off state (power == 0 or control_state == 0)
+    2. Away state (control_state == 1)
+    3. Home state (control_state == 2):
+       - Automated CO2 boost
+       - Automated humidity boost
+       - Timed boost
+       - Active summer cooling bypass (only when damper is open & outdoor air cooler than room)
+       - Default: home
+    4. Boost state (control_state == 3)
+    5. Sauna state (control_state == 4)
+    6. Fireplace state (control_state == 5)
+    """
+    if not data:
+        return None
+
+    power = data.get("power")
+    if power == 0:
+        return "off"
+
+    control_state = data.get("control_state")
+    if control_state is None:
+        return None
+    control_state = int(control_state)
+
+    if control_state == 0:
+        return "off"
+
+    if control_state == 3:  # Boost
+        co2 = data.get("co2_exhaust")
+        co2_threshold = data.get("co2_boost_threshold")
+        if (
+            data.get("auto_co2_boost") == 1
+            and co2 is not None
+            and co2_threshold is not None
+            and co2 >= co2_threshold
+        ):
+            return "co2_boost"
+
+        humidity = data.get("humidity")
+        humidity_avg = data.get("humidity_24h_avg")
+        if (
+            data.get("auto_humidity_boost") == 1
+            and humidity is not None
+            and humidity_avg is not None
+            and humidity > humidity_avg
+        ):
+            return "humidity_boost"
+
+        return "boost"
+
+    if control_state == 4:
+        return "sauna"
+
+    if control_state == 5:
+        return "fireplace"
+
+    if control_state == 2:  # Home
+        co2 = data.get("co2_exhaust")
+        co2_threshold = data.get("co2_boost_threshold")
+        if (
+            data.get("auto_co2_boost") == 1
+            and co2 is not None
+            and co2_threshold is not None
+            and co2 >= co2_threshold
+        ):
+            return "co2_boost"
+
+        humidity = data.get("humidity")
+        humidity_avg = data.get("humidity_24h_avg")
+        actual_speed = data.get("actual_speed")
+        home_speed = data.get("home_speed")
+        if (
+            data.get("auto_humidity_boost") == 1
+            and humidity is not None
+            and humidity_avg is not None
+        ):
+            if humidity > humidity_avg + 5:
+                return "humidity_boost"
+            if (
+                actual_speed is not None
+                and home_speed is not None
+                and actual_speed > home_speed
+                and humidity > humidity_avg
+            ):
+                return "humidity_boost"
+
+        boost_timer = data.get("boost_timer")
+        if boost_timer is not None and boost_timer > 0:
+            return "boost"
+
+        summer_mode = data.get("summer_mode", 0)
+        if summer_mode != 0:
+            summer_state = data.get("summer_mode_state")
+            summer_season_ok = summer_state == 2 if summer_state is not None else True
+            lto_control = data.get("lto_heat_recovery_control")
+            fresh_temp = data.get("fresh_air_temp")
+            exhaust_temp = data.get("exhaust_temp")
+            summer_temp_limit = data.get("summer_mode_temp_limit") or 21.0
+
+            if (
+                summer_season_ok
+                and lto_control is not None
+                and lto_control < 10.0
+                and fresh_temp is not None
+                and exhaust_temp is not None
+                and fresh_temp < exhaust_temp
+                and exhaust_temp >= summer_temp_limit
+            ):
+                return "summer"
+
+        return "home"
+
+    if control_state == 1:
+        return "away"
+
+    return None

@@ -1,3 +1,17 @@
+## 1.1.3 - Real-Time Operational Mode in Lovelace Card & Physical Summer Cooling Fix (2026-10-22)
+
+### Bug Fixes & Operational State Improvements
+- **Fixed False-Positive Summer Cooling** — corrected `sensor.parmair_mac_operational_mode` which previously stayed in "Summer Cooling" 24/7 all summer long due to conflating the seasonal calendar state (`SUMMER_MODE_I == 2`) with active cooling. It now validates physical cooling conditions: LTO bypass damper must be actively open (`lto_heat_recovery_control < 10%`), outdoor air must be cooler than exhaust air (`fresh_air_temp < exhaust_temp`), and indoor temperature must be at or above cooling setpoint.
+- **Robust Humidity Boost Detection** — enhanced humidity boost recognition to detect both delta rises (+5% RH) and elevated running fan speeds (`actual_speed > home_speed`) above average humidity, ensuring accurate detection across custom device sensitivities.
+- **Centralized Operational Mode Derivation** — extracted `derive_operational_mode` to `const.py` for 100% offline test coverage and modular reuse.
+
+### Lovelace Card Enhancements
+- **Live Automated State in Status Pill** — prioritized `operational_mode` in the header status pill (`custom:parmair-mac-card`), allowing active automation overrides (*Kosteustehostus*, *CO2-tehostus*, *Kesäjäähdytys*) to display dynamically.
+- **Base Mode Preservation on Controls** — decoupled the header status indicator from the bottom 5 mode buttons so that the active user base program (*Home*, *Away*, etc.) remains highlighted during temporary automation boosts.
+- **Adaptive Accent Styling & Inspection** — styled status pill with mode-specific accent classes (`.status-boost-humidity`, `.status-boost-co2`, `.status-summer`) and wired tap action to open operational mode history.
+
+---
+
 ## 1.1.2 - Native Home Assistant Theme Harmonization & Full Light Theme Support (2026-10-17)
 
 ### Frontend & Styling
