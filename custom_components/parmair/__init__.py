@@ -91,6 +91,7 @@ async def _async_register_frontend(hass: HomeAssistant) -> None:
     # If Home Assistant is still starting up, also register on EVENT_HOMEASSISTANT_STARTED
     # to guarantee lovelace storage collection is loaded and ready
     if not hass.is_running:
+
         async def _register_when_started(_event: object = None) -> None:
             await _async_register_lovelace_resource(hass)
 
