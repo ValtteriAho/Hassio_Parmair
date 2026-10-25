@@ -119,9 +119,6 @@ async def _async_register_lovelace_resource(hass: HomeAssistant) -> None:
         _LOGGER.debug("Added %s via add_extra_js_url", card_url)
     except Exception as ex:
         _LOGGER.debug("Could not call add_extra_js_url: %s", ex)
-        if "frontend_extra_module_url" not in hass.data:
-            hass.data["frontend_extra_module_url"] = set()
-        hass.data["frontend_extra_module_url"].add(card_url)
 
     # Also register into Lovelace ResourceStorageCollection so it persists in Dashboard Resources
     if "lovelace" in hass.data:

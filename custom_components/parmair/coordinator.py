@@ -339,6 +339,11 @@ class ParmairCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         return success
 
     @property
+    def is_connected(self) -> bool:
+        """Return True if last update was successful."""
+        return self.last_update_success
+
+    @property
     def device_info(self) -> dict[str, Any]:
         """Return device information."""
         sw_version = self.data.get("software_version")

@@ -110,6 +110,11 @@ class MockCoordinator:
         return self._software_version
 
     @property
+    def is_connected(self) -> bool:
+        """Return connection status (always True for mock)."""
+        return True
+
+    @property
     def device_info(self) -> dict[str, Any]:
         """Return device information (compatible with HA device_info)."""
         sw_version = self._data.get("software_version")

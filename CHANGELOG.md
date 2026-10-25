@@ -1,3 +1,12 @@
+## 1.1.5 - HACS Review Compliance & Security Hardening (2026-10-25)
+
+### Bug Fixes & Security Hardening
+- **Added `is_connected` Coordinator Property** — implemented `@property def is_connected(self) -> bool` on `ParmairCoordinator` returning `last_update_success`. This fixes an `AttributeError` when downloading Home Assistant diagnostics (`diagnostics.py`).
+- **Sanitized DOM Updates in Lovelace Card (XSS Prevention)** — replaced unsanitized `innerHTML` assignments with safe DOM construction (`textContent`, `document.createElement`, `document.createTextNode`) for device model and fan speed displays in `parmair-mac-card.js`.
+- **Declared Frontend Dependency & Cleaned Up Loader** — added `"frontend"` to integration `dependencies` in `manifest.json` and removed direct fallback manipulation of `hass.data["frontend_extra_module_url"]` in `__init__.py`.
+
+---
+
 ## 1.1.4 - Lovelace Resource Registration Schema Fix & Hard Refresh Resilience (2026-10-22)
 
 ### Bug Fixes & Frontend Hard Refresh Resilience

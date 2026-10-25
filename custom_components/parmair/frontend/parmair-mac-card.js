@@ -1007,11 +1007,14 @@ class ParmairMacCard extends HTMLElement {
     if (elTitle) {
       if (model && model !== "unknown" && model !== "None") {
         const cleanModel = String(model).trim();
-        if (cleanModel.toUpperCase().startsWith("MAC")) {
-          elTitle.innerHTML = `PARMAIR <span class="model-badge">${cleanModel}</span>`;
-        } else {
-          elTitle.innerHTML = `PARMAIR <span class="model-badge">MAC ${cleanModel}</span>`;
-        }
+        const modelText = cleanModel.toUpperCase().startsWith("MAC")
+          ? cleanModel
+          : `MAC ${cleanModel}`;
+        elTitle.textContent = "PARMAIR ";
+        const badge = document.createElement("span");
+        badge.className = "model-badge";
+        badge.textContent = modelText;
+        elTitle.appendChild(badge);
       } else {
         elTitle.textContent = "PARMAIR MAC";
       }
@@ -1052,7 +1055,11 @@ class ParmairMacCard extends HTMLElement {
 
     const speedBadge = this.shadowRoot.getElementById("speed");
     if (speedBadge) {
-      speedBadge.innerHTML = `<ha-icon icon="mdi:fan"></ha-icon> ${this._t("speed")} ${speed}`;
+      speedBadge.textContent = "";
+      const icon = document.createElement("ha-icon");
+      icon.setAttribute("icon", "mdi:fan");
+      speedBadge.appendChild(icon);
+      speedBadge.appendChild(document.createTextNode(` ${this._t("speed")} ${speed}`));
     }
 
     // Highlight active button based on the base user control setting (Home, Away, Boost, Sauna, Fireplace)

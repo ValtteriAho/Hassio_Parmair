@@ -59,6 +59,10 @@ class TestFixtureLoading:
 class TestSystemInfo:
     """Test system information interpretation."""
 
+    def test_coordinator_connection_status(self, coordinator: MockCoordinator) -> None:
+        """Coordinator should expose is_connected property."""
+        assert coordinator.is_connected is True
+
     def test_software_version_present(self, coordinator: MockCoordinator) -> None:
         """Software version should be present and valid."""
         sw_ver = coordinator.data.get("software_version")
