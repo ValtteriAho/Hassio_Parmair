@@ -128,11 +128,11 @@ Once installed, you'll have control over:
 - **Total Power (`W`)** - Real-time electrical power consumption of the entire ventilation unit (fans + active electric heating + 5 W standby electronics).
 - **Fan Power (`W`)** - Active electrical power drawn by EC supply and exhaust fans, calculated via a calibrated empirical affinity law model ($P = P_{\text{max}} \times (\text{speed}/100)^{2.55}$).
 - **Post-Heater Power (`W`)** - Active electrical power consumed by electric post-heating (0 W for water-heated or unequipped systems).
-- **Heat Recovery Thermal Power (`W`)** - Live thermal power recovered from exhaust air by the rotary heat exchanger (LTO).
+- **Heat Recovery Thermal Power (`W`)** - Live thermal power recovered from exhaust air by the rotary heat exchanger.
 - **Heat Recovery Efficiency (`%`)** - Real-time thermal efficiency percentage of heat recovery.
 
 ### Monitoring
-- **Temperatures** - Fresh air (*ulkoilma*), supply air (*tuloilma*), exhaust air (*poistoilma*), waste air (*jäteilma*), and supply after recovery (*LTO jälkeen*)
+- **Temperatures** - Fresh air, supply air, exhaust air, waste air, and supply air after heat recovery
 - **Fan Speeds** - Running fan speed percentages for supply and exhaust fans
 - **Humidity** - Current level and 24-hour average (if equipped)
 - **CO2 Levels** - Exhaust air quality monitoring (if equipped)
@@ -146,7 +146,7 @@ Once installed, you'll have control over:
 - **CO2 Automations** - Auto Boost or Home/Away switching when CO2 exceeds thresholds *(v2.x)*
 - **Humidity Automation** - Auto Boost when humidity rises above 24h average *(v2.x)*
 - **Cold Speed Reduction** - Automatically reduce fan speed in very cold conditions *(v2.x)*
-- **Heat Pump Module** - Status and settings for the maalämpömoduuli add-on, when installed *(v2.x)*
+- **Heat Pump Module** - Status and settings for the geothermal heat pump add-on, when installed *(v2.x)*
 - **Time Programs** - Enable/disable scheduled operation
 - **Heater Control** - Manage heating elements (see warning below)
 - **Filter Tracking** - Monitor when filters need replacement
@@ -163,20 +163,20 @@ Once installed, you'll have control over:
 
 ### Built-in Parmair MAC Card (`custom:parmair-mac-card`)
 
-The integration ships with a built-in Lovelace card featuring an authentic Scandinavian 2D schematic, animated airflow arrows, live air duct temperatures, rotating heat recovery exchanger (LTO), heating element glow effects, real-time power metrics, and one-touch mode buttons.
+The integration ships with a built-in Lovelace card featuring an authentic Scandinavian 2D schematic, animated airflow arrows, live air duct temperatures, a rotating heat recovery exchanger, heating element glow effects, real-time power metrics, and one-touch mode buttons (automatically localized to your Home Assistant language, including English and Finnish).
 
 #### ✨ Key Features
 - **Interactive 2D HVAC Schematic:**
-  - **4 Air Duct Badges:** Fresh air (*Ulkoilma*), Supply air (*Tuloilma*), Exhaust air (*Poistoilma*), and Waste air (*Jäteilma*) with live temperatures.
+  - **4 Air Duct Badges:** Outdoor Air, Supply Air, Extract Air, and Waste Air with live temperatures.
   - **Animated Airflow Arrows:** Directional glowing chevron arrows representing physical air circulation.
-  - **Rotary Heat Exchanger (LTO):** Animated rotating rotor showing thermal recovery efficiency (%) and recovered heat power (W).
+  - **Rotary Heat Exchanger:** Animated rotating rotor showing thermal recovery efficiency (%) and recovered heat power (W).
   - **Electric / Water Post-Heater:** Visual heater glow with active heating output (%) and real-time heating power (W).
   - **Interactive Tap Actions:** Clicking any temperature badge or metric opens Home Assistant's detailed `more-info` dialog with history graphs.
 - **Power & Energy Metrics:**
-  - Live EC fan power (W) and speed percentages (*Tulo / Poisto*).
+  - Live EC fan power (W) and speed percentages (Supply / Extract).
   - Post-heater electric power (W) and total ventilation unit electrical power (W).
 - **One-Touch Mode Selector:**
-  - Direct touch controls matching the Parmair physical controller: **Poissa** (*Away*), **Kotona** (*Home*), **Tehostus** (*Boost*), **Sauna**, and **Takka** (*Fireplace*).
+  - Direct touch controls matching the Parmair physical controller: **Away**, **Home**, **Boost**, **Sauna**, and **Fireplace**.
 - **Maintenance & Diagnostics:**
   - Filter replacement countdown bar (days remaining).
   - Active alarms and defrost protection status.
@@ -199,7 +199,7 @@ type: custom:parmair-mac-card
 *(Optional customization parameters)*:
 ```yaml
 type: custom:parmair-mac-card
-title: "Ilmanvaihto" # Custom card title (defaults to Parmair MAC)
+title: "Ventilation" # Custom card title (defaults to Parmair MAC)
 ```
 
 > [!TIP]
