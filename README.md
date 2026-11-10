@@ -1,14 +1,15 @@
 # Parmair MAC for Home Assistant (v1.1.5)
 
 <p align="center">
-  <img src="custom_components/parmair/brand/icon@2x.png" width="160" height="160" alt="Parmair MAC Logo">
+  <img src="https://raw.githubusercontent.com/ValtteriAho/Hassio_Parmair/main/custom_components/parmair/brand/icon@2x.png" width="160" height="160" alt="Parmair MAC Logo">
 </p>
 
 **Control your Parmair ventilation system from Home Assistant.**
 
 Perfect for creating smart automations, monitoring air quality, and managing your home's ventilation from anywhere.
 
-[![hacs_badge](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://github.com/hacs/default)
+[![hacs_badge](https://img.shields.io/badge/HACS-Default-41BDF5.svg)](https://github.com/hacs/default)
+[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=ValtteriAho&repository=Hassio_Parmair&category=integration)
 [![GitHub release](https://img.shields.io/github/v/release/ValtteriAho/Hassio_Parmair?include_prereleases)](https://github.com/ValtteriAho/Hassio_Parmair/releases)
 [![License](https://img.shields.io/github/license/ValtteriAho/Hassio_Parmair)](LICENSE)
 [![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-yellow.svg?logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/valtteriah0)
@@ -31,12 +32,21 @@ Perfect for creating smart automations, monitoring air quality, and managing you
 
 ### Installation (3 Steps)
 
-**1. Add to HACS**
-- Open HACS → Click ⋮ (top right) → Custom repositories
-- Add: `https://github.com/ValtteriAho/Hassio_Parmair`
-- Category: Integration → Add
-- Find "Parmair MAC" → Download
+**1. Install via HACS (Recommended)**
+- Open **HACS** in Home Assistant
+- Search for **"Parmair MAC"** (or click the **Open in HACS** badge above)
+- Click **Download**
 - Restart Home Assistant
+
+<details>
+<summary><b>Fallback: Add as Custom Repository</b> (if not yet visible in your HACS catalog)</summary>
+
+1. Open HACS → Click **⋮** (top right) → **Custom repositories**
+2. Add: `https://github.com/ValtteriAho/Hassio_Parmair`
+3. Category: **Integration** → Add
+4. Find **"Parmair MAC"** → Download
+5. Restart Home Assistant
+</details>
 
 **2. Find Your Device IP**
 - Check your router's connected devices list
