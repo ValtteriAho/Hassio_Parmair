@@ -364,39 +364,13 @@ If auto-detection fails, you can manually select these during setup.
 
 See [CHANGELOG.md](CHANGELOG.md) for complete version history.
 
-- **v1.1.5**: HACS review fixes: coordinator `is_connected` property for diagnostics, safe textContent DOM updates in card (XSS hardening), manifest frontend dependency.
-- **v1.1.4**: Fix Lovelace resource registration schema (`type` vs `res_type`), resolve hard refresh (`Ctrl + F5`) 'Configuration error: Custom element doesn't exist' by ensuring reliable dashboard resource storage, and add defensive shadowRoot guards.
-- **v1.1.3**: Fix false-positive summer cooling detection by verifying physical LTO bypass damper opening and temperature delta, enhance automated humidity boost detection, surface live operational state in Lovelace card status pill with accent styling, and preserve base mode selection on buttons.
-- **v1.1.2**: Harmonize dark mode background with official Home Assistant theme (`#1c1c1c` / `--ha-card-background`), full dynamic light theme compatibility (`.theme-dark` vs `.theme-light`), theme-adaptive vector chassis, and dynamic CSS text/border variables.
-- **v1.1.1**: Dynamic manifest-driven cache-busting (`integration.version`), resilient resource lifecycle during configuration reloads, customElements double-definition protection, and DevTools console version badge.
-- **v1.1.0**: Detected unit hardware model displayed dynamically in card header (e.g. `PARMAIR MAC 120`), in-card filter replacement confirmation and direct Modbus counter acknowledgment (`✓ Kuittaa`), locked 48px metric element height for zero layout shift, and new diagnostic `ParmairModelSensor` entity.
-- **v1.0.0**: Official major production release and HACS default inclusion milestone, complete support for v1.x and v2.x Parmair MAC units, built-in dynamic Lovelace card (`custom:parmair-mac-card`), and calibrated power & energy telemetry.
-- **v0.90.1**: Precision `<clipPath>` core boundary eliminating any lamella overhang beyond diamond perimeter, with 16 symmetrical crossing heat exchange lamellas (8+8) creating an authentic counterflow plate matrix.
-- **v0.90.0**: Constant heat recovery (LTO) counterflow visualization subtly visible in the background through a modern translucent frosted metrics badge (`rgba(8, 12, 18, 0.76)`), with diamond base and lamella layering precision.
-- **v0.80.0**: Full canonical English foundation, dynamic bilingual card localization (English & Finnish), Home Assistant native `_attr_translation_key` architecture, and automated Lovelace cache-busting.
-- **v0.51.0**: Symmetrical 16px chevron arrow gaps with zero badge collision across all 4 ducts, two-line stacked post-heater badge (`Lämmitin` / `0.0 W`) preventing text overflow, comprehensive typography enlargement for mobile dashboards, and balanced 750px viewBox.
-- **v0.50.1**: Compact two-line duct badges embedded inside pipes (`Ulkoilma`, `Poistoilma`, `Jäteilma`, `Tuloilma`), narrowed SVG viewBox (`68 15 664 438`) for better aspect ratio, unified central LTO diamond badge combining efficiency, intermediate temperature, and recovery power, physically accurate G4/G4/F7 filter placements, symmetric fan elevations, and mobile typography boost.
-- **v0.30.1**: Instant Lovelace card static path registration during early component startup (`async_setup`), immediate card shadowRoot initialization for zero-wait dashboard card picker previews, and automated cache-busting Lovelace resource URL management.
-- **v0.21.12**: Unobstructed duct airflow paths with channel temperature badges relocated above/below ducts, header chips for Humidity and CO2 sensors, 98% card loading speedup via Parmair entity caching, and enabled frontend HTTP caching.
-- **v0.21.11**: Finnish LVI standard color palette, swapped supply/waste duct layout (crossed airflow architecture: Tuloilma on bottom-right, Jäteilma on bottom-left), and added interactive Humidity and CO2 sensor badges in the exhaust stream.
-- **v0.21.10**: Optimize Home Assistant entity categories: promote waste air temperature, heat recovery efficiency, and fan speeds to primary Sensors, and move post-heater switch to Controls.
-- **v0.21.9**: Calibrate EC fan power calculation exponent from 2.2 to 2.55 based on real-world Shelly energy meter measurements on Parmair MAC 150 across all 5 speeds, achieving 1–2 W precision.
-- **v0.21.8**: Fix card element spacing and add real-time fan speed percentages directly beneath fan icons on the built-in card.
-- **v0.21.7**: Built-in card overhaul (`custom:parmair-mac-card` / Tapa 1) with glowing multi-chevron airflow direction arrows and native click-to-inspect (`hass-more-info`) popup interaction across all sensors and metrics, establishing automatic zero-YAML HACS updates.
-- **v0.21.6**: Add prominent multi-chevron airflow direction arrows with soft glowing tips in schematic SVG, make all card values interactive with `more-info` tap actions, and optimize channel coordinate alignment.
-- **v0.21.5**: Fix post-heater electric power and energy estimation on firmware v2.xx units by correctly handling heater type enum inversion.
-- **v0.21.4**: Add crisp vector channel titles (**ULKOILMA**, **POISTOILMA**, **TULOILMA**, **JÄTEILMA**) to schematic SVG, clear center LTO backdrop plate to prevent double-text overlapping in `picture-elements` cards, and align coordinate templates in dashboard examples.
-- **v0.21.3**: Fully responsive Inline-SVG card architecture (`custom:parmair-mac-card`) with 100% vector-locked coordinates across all card sizes, physically accurate counterflow heat recovery airflow, fan speed and filter entity detection fixes, dynamic heater element illumination, and Ruff code formatting.
-- **v0.21.2**: Fix automatic Lovelace card registration using `add_extra_js_url` and resource storage pre-loading so `custom:parmair-mac-card` is immediately available in the visual "Add Card" picker.
-- **v0.21.1**: Add automatic Lovelace resource registration and visual editor support so `Parmair MAC Card` appears directly in the standard graphical **Add Card** dialog.
-- **v0.21.0**: Ship built-in Lovelace custom card (`custom:parmair-mac-card`) served directly by the integration, providing an interactive Scandinavian 2D schematic, live temperatures, LTO recovery, electric heater monitoring, and mode control buttons.
-- **v0.20.1**: Add native `sensor.parmair_mac_total_energy` (kWh) state-restoring sensor for out-of-the-box Home Assistant Energy Dashboard integration, and provide a full Scandinavian 2D schematic card in dashboard examples.
-- **v0.20.0**: Add model-based power and energy estimation (EC fan power, electric heater power, total power, heat recovery thermal power) across all Parmair MAC hardware models, Home Assistant diagnostics support, and options flow overrides.
-- **v0.19.0**: Refine v1/v2 select architecture (remove incompatible manual speed control on firmware 2.xx), enforce Home Assistant Core ENUM sensor contracts, fix typing annotations, and clean up switch logic.
-- **v0.18.4**: Clean up coordinator connection lifecycle, remove redundant fan platform registration, type number device classes, and align polling documentation.
-- **v0.18.3**: Fix decimal temperature setpoint truncation (0.5 °C steps), heater type auto-detection on firmware 2.xx, and options schema.
-- **v0.18.2**: Ensure reliable Modbus write persistence with fresh connection per write; surface proper Home Assistant errors on write failures.
-- **v0.18.1**: Fix Operational Mode automation detection (Humidity & CO2 Boost) in Home state.
+- **v1.1.5**: HACS review fixes (`is_connected` diagnostics property, safe DOM updates in card, `frontend` manifest dependency).
+- **v1.1.4**: Fix Lovelace resource registration schema and hard-refresh (`Ctrl + F5`) resilience.
+- **v1.1.3**: Fix physical summer cooling detection, enhance humidity boost detection, and display live operational mode in the card.
+- **v1.1.2**: Harmonize dark mode with Home Assistant theme and add full light theme compatibility.
+- **v1.1.1**: Manifest-driven cache-busting and resilient Lovelace resource lifecycle.
+- **v1.1.0**: Hardware model in card header, in-card filter replacement acknowledgment, and `ParmairModelSensor`.
+- **v1.0.0**: Official major release and HACS default milestone; full v1.x/v2.x support, built-in Lovelace card, and calibrated power/energy telemetry.
 
 ## ☕ Support Ongoing Development
 
